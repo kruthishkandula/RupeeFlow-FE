@@ -42,12 +42,6 @@ const TabRoutes = [
         icon: 'ChartBar',
     },
     {
-        id: 'addexpense',
-        name: 'AddExpense',
-        component: Wallet,
-        icon: 'Send',
-    },
-    {
         id: 'wallet',
         name: 'Wallet',
         component: Wallet,
@@ -78,7 +72,7 @@ export default function BottomNav() {
                     <Icon
                         name={tabData?.icon}
                         size={24}
-                        color={focused ? colors.primary : colors.textPrimary}
+                        color={focused ? colors.primary : colors.white}
                     />
                 );
         }

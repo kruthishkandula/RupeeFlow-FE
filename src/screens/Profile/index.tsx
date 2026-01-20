@@ -135,11 +135,11 @@ export default function Profile() {
         <DynamicHeader title='Profile' rightComponent={<Icon name='Bell' size={24} color={colors.textPrimary} />} />
         <View className='flex bg-surfaceBase mx-4 my-8 rounded-[30px] justify-center items-center py-6' >
           <Image source={{ uri: 'https://icons.veryicon.com/png/o/miscellaneous/user-avatar/user-avatar-male-5.png' }} style={{ width: 100, height: 100, backgroundColor: colors.black, borderRadius: 60 }}  />
-          <Text className='text-xl font-poppins mt-6'>Enjelin Morgeana</Text>
+          <Text className='text-xl font-poppins mt-6 text-textPrimary'>Enjelin Morgeana</Text>
           <Text className='text-md font-bold text-primary' >@enjelinmorgeana</Text>
         </View>
         {/* Settings Options */}
-        <View className='flex px-6 mx-4 rounded-[30px] bg-surfaceBase' >
+        <View className='flex px-6 mx-2 rounded-[30px] bg-surfaceBase' >
           <FlatList
             data={settingsCms?.settings_options.filter(item => item.is_active)}
             keyExtractor={(item) => item.id.toString()}

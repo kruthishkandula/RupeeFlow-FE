@@ -2,6 +2,7 @@ import ChangeTheme from '@/screens/ChangeTheme'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import BottomNav from './BottomNav'
+import Add from '@/screens/Expense/Add'
 
 const MainStack = createNativeStackNavigator()
 
@@ -12,6 +13,7 @@ export default function MainNav() {
         }}>
             <MainStack.Screen name="Home" component={BottomNav} />
             <MainStack.Screen name="ChangeTheme" component={ChangeTheme} />
+            <MainStack.Screen name="AddExpense" component={Add} />
         </MainStack.Navigator>
     )
 }

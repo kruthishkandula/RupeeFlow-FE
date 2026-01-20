@@ -35,10 +35,10 @@ export default function DynamicHeader({
     <View className="flex-row items-start justify-between px-4 py-3" style={[{
     }, style]}>
       <View className="flex-col items-start">
-        <Text className="text-sm font-bold text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '500', fontSize: gpsh(12), color: colors?.textPrimary }}>
+        <Text className="text-sm font-bold text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '500', fontSize: gpsh(12), color: colors?.white }}>
           {title}
         </Text>
-        <Text className="text-md font-bold text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '700', fontSize: gpsh(16), color: colors?.textPrimary }}>
+        <Text className="text-md font-bold text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '700', fontSize: gpsh(16), color: colors?.white }}>
           {subtitle}
         </Text>
       </View>

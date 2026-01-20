@@ -22,7 +22,7 @@ export const generateTailwindColorsConfig = () => {
   output += '},';
   
   // Console as single string - now copyable!
-  console.log(output);
+  // console.log(output);
   
   return tailwindColors;
 };

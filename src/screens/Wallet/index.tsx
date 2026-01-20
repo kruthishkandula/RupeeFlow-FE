@@ -1,10 +1,14 @@
-import { View, Text } from 'react-native'
+import SafeAreaContainer from '@/components/SafeAreaContainer'
 import React from 'react'
+import MainBG from '../../components/Backgrounds/MainBG'
+import DynamicHeader from '../../components/Header/DynamicHeader'
 
 export default function Wallet() {
   return (
-    <View>
-      <Text>Wallet</Text>
-    </View>
+    <MainBG>
+      <SafeAreaContainer className='mt-8'>
+        <DynamicHeader title='Wallet' />
+      </SafeAreaContainer>
+    </MainBG>
   )
 }
