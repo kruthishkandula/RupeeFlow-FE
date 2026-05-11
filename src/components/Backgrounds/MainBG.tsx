@@ -3,7 +3,7 @@ import useTheme from '@/hooks/useTheme';
 import React from 'react';
 import { ImageBackground } from 'react-native';
 
-export default function MainBG({ children }: { children: React.ReactNode }) {
+export default function MainBG({ children }: Readonly<{ children: React.ReactNode }>) {
     const { colors } = useTheme();
     let bgImage = Images[colors.bgType || 'Background'];
 

@@ -9,6 +9,13 @@ interface MainWalletCardProps {
   currency?: string;
 }
 
+const formatAmount = (amount: number | undefined, currency: string) => {
+  if (amount === undefined) return `${currency}0`;
+  const absAmount = Math.abs(amount);
+  const formatted = absAmount.toLocaleString('en-IN');
+  return `${amount < 0 ? '-' : ''}${currency}${formatted}`;
+}
+
 export default function MainWalletCard({ balance = 0, income = 0, expense = 0, currency = '₹' }: MainWalletCardProps) {
 
   return (
@@ -22,21 +29,21 @@ export default function MainWalletCard({ balance = 0, income = 0, expense = 0, c
         <Text style={styles.title} >Total Balance</Text>
         <Icon name='Ellipsis' size={24} color='white' />
       </View>
-      <Text style={styles.balance} >{currency}{balance}</Text>
+      <Text style={styles.balance} >{formatAmount(balance, currency)}</Text>
       <View className='flex-row justify-between mt-4' >
         <View className='items-start'>
           <View className='flex-row items-center gap-1' >
             <Icon name='ArrowDownLeft' size={16} color='white' />
             <Text style={styles.income} >Income</Text>
           </View>
-          <Text style={styles.incomeAmount} >{currency}{income}</Text>
+          <Text style={styles.incomeAmount} >{formatAmount(income, currency)}</Text>
         </View>
         <View className='items-start' >
           <View className='flex-row items-center gap-1' >
             <Icon name='ArrowUpRight' size={16} color='white' />
             <Text style={styles.expense} >Expense</Text>
           </View>
-          <Text style={styles.expenseAmount} >{currency}{expense}</Text>
+          <Text style={styles.expenseAmount} >{formatAmount(expense, currency)}</Text>
         </View>
       </View>
     </View>

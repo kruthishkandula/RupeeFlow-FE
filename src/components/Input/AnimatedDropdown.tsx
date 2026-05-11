@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
   Animated,
-  StyleSheet,
   LayoutAnimation,
   Platform,
-  UIManager,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
 } from 'react-native';
 
 if (
@@ -31,7 +31,7 @@ interface Props {
   error?: string;
 }
 
-const ITEM_HEIGHT = 48;
+const ITEM_HEIGHT = 60;
 const MAX_VISIBLE_ITEMS = 4;
 
 export default function DropdownInput({
@@ -70,7 +70,7 @@ export default function DropdownInput({
   return (
     <View style={{ marginBottom: 22 }}>
       {/* Label */}
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, {color: '#000000'}]}>{label}</Text>
 
       {/* Unified input + list */}
       <View
@@ -108,7 +108,7 @@ export default function DropdownInput({
         {open && (
           <View style={{ height: dropdownHeight }}>
             <ScrollView
-              showsVerticalScrollIndicator={false}
+              showsVerticalScrollIndicator={true}
             >
               {options.map(item => {
                 const selected =

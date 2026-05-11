@@ -1,29 +1,54 @@
+import useTheme from '@/hooks/useTheme';
 import { TransactionType } from '@/typings/global';
+import { useNavigation } from '@react-navigation/native';
+import { capitalize } from 'lodash';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Icon from '../Icon';
 
 type TranscationCardProps = TransactionType;
+
+const IconMapping: { [key: string]: string } = {
+    Food: 'UtensilsCrossed',
+    Travel: 'Plane',
+    Bills: 'Receipt',
+    Entertainment: 'Film',
+    Health: 'HeartPulse',
+    Shopping: 'ShoppingBag',
+    Salary: 'CircleEllipsis',
+    Education: 'GraduationCap',
+    Freelance: 'Freelance',
+    Investment: 'CircleEllipsis',
+    Gift: 'Gift',
+    Other: 'CircleEllipsis',
+}
 
 export default function TranscationCard({
     data,
     currency = '₹',
-}: { data: TranscationCardProps, currency?: string }) {
+}: Readonly<{ data: TranscationCardProps, currency?: string }>) {
+    const { colors } = useTheme();
+    const { navigate } = useNavigation<any>();
+
     let display_date: string | Date = new Date(data.date);
-    // check if date is today
+
     if (display_date.toDateString() === new Date().toDateString()) {
         display_date = 'Today';
     } else if (display_date.toDateString() === new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()) {
         display_date = 'Yesterday';
     } else {
-        // display in DD MM,YYYY format
         display_date = `${display_date.getDate()} ${display_date.toLocaleString('default', { month: 'short' })}, ${display_date.getFullYear()}`;
     }
 
+    const handleOnPress = () => {
+        navigate('ExpenseDetail', data);
+    }
+
     return (
-        <View className='flex-row justify-between border-[0px] rounded-[12px] py-2' >
-            <View className='flex-row gap-2' >
+        <Pressable className='flex-row justify-between border-[0px] rounded-[12px] py-2 border-b-[0.2px] border-[#5f5f5f]' onPress={handleOnPress}>
+            <View className='flex-row gap-2 items-center' >
                 <View>
-                    <Image resizeMode='contain' resizeMethod='resize' source={{ uri: 'https://img.icons8.com/arcade/64/fast-moving-consumer-goods.png' }} width={50} height={50} />
+                    <Icon name={IconMapping?.[capitalize?.(data.category)] || 'Info'} color={colors.accent} size={38} />
                 </View>
                 <View>
                     <Text style={[styles.title]} className='text-textPrimary'>{data.title}</Text>
@@ -33,7 +58,7 @@ export default function TranscationCard({
             <View>
                 {data?.type == 'income' ? <Text style={styles.incomeText}>+ {currency} {data.amount}</Text> : <Text style={styles.expenseText}>- {currency} {data.amount}</Text>}
             </View>
-        </View>
+        </Pressable>
     )
 }
 
