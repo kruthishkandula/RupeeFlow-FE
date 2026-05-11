@@ -7,7 +7,6 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import Icon from '../components/Icon';
-import Home from '../screens/Home';
 import Profile from '../screens/Profile';
 import Statistics from '../screens/Statistics';
 
@@ -18,7 +17,7 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 type CustomButtonProps = BottomTabBarButtonProps & {
     containerStyle?: ViewStyle;
     isFloat?: boolean;
-    label: 'dashboard' | 'statistics' | 'addexpense' | 'wallet' | 'profile';
+    label: 'dashboard' | 'statistics' | 'addexpense' | 'profile';
 };
 
 type tabIconProp = {
@@ -32,7 +31,7 @@ const TabRoutes = [
     {
         id: 'dashboard',
         name: 'Dashboard',
-        component: Home,
+        component: Wallet,
         icon: 'House',
     },
     {
@@ -40,12 +39,6 @@ const TabRoutes = [
         name: 'Statistics',
         component: Statistics,
         icon: 'ChartBar',
-    },
-    {
-        id: 'wallet',
-        name: 'Wallet',
-        component: Wallet,
-        icon: 'Wallet',
     },
     {
         id: 'profile',
