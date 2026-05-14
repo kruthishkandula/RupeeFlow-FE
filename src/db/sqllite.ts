@@ -35,6 +35,13 @@ export const initDB = async (): Promise<void> => {
       );
     `);
 
+    await db.executeSql(`
+      CREATE TABLE IF NOT EXISTS budgets (
+        category TEXT PRIMARY KEY,
+        amount REAL NOT NULL
+      );
+    `);
+
     const [result] = await db.executeSql(
       `SELECT COUNT(*) as count FROM expenses`
     );

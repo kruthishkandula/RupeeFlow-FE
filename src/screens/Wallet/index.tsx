@@ -1,3 +1,4 @@
+import TranscationCard from '@/components/Cards/TranscationCard'
 import DynamicHeader2 from '@/components/Header/DynamicHeader2'
 import Icon from '@/components/Icon'
 import SafeAreaContainer from '@/components/SafeAreaContainer'
@@ -14,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import Animated from 'react-native-reanimated'
 import MainBG from '../../components/Backgrounds/MainBG'
 import BudgetTab from './BudgetTab'
 import {
@@ -23,6 +25,7 @@ import {
   ICON_MAP,
 } from './walletConstants'
 
+const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 const OverviewSeparator = () => <View style={{ height: 14 }} />
 
 // ── Section types for FlatList ────────────────────────────────────────────────
@@ -113,7 +116,7 @@ export default function Wallet() {
         <Text style={styles.walletCardBadgeText}>Main Wallet</Text>
       </View>
       <Text style={styles.walletLabel}>Total Balance</Text>
-      <Text style={styles.walletBalance}>{fmtFull(allTimeBalance)}</Text>
+      <Text style={styles.walletBalance}>{allTimeBalance < 0 ? '-' : ''}{fmtFull(allTimeBalance)}</Text>
       <View style={styles.walletRow}>
         <View style={styles.walletStat}>
           <Icon name="ArrowDownLeft" size={16} color="#fff" />
@@ -182,30 +185,8 @@ export default function Wallet() {
   )
 
   const renderTransaction = (item: TransactionType) => {
-    const cat = capitalize(item.category)
-    const color = CATEGORY_COLORS[cat] || '#999'
-    const d = new Date(item.date)
-    const dateStr = d.toDateString() === now.toDateString()
-      ? 'Today'
-      : `${d.getDate()} ${d.toLocaleString('en', { month: 'short' })}`
-
     return (
-      <TouchableOpacity
-        onPress={() => handleTransactionPress(item)}
-        activeOpacity={0.7}
-        style={[styles.txRow, { borderColor: colors.borderSubtle }]}
-      >
-        <View style={[styles.txIcon, { backgroundColor: `${color}22` }]}>
-          <Icon name={(ICON_MAP[cat] || 'CircleEllipsis') as any} size={20} color={color} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>{item.title}</Text>
-          <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{cat} · {dateStr}</Text>
-        </View>
-        <Text style={{ color: item.type === 'income' ? '#4CAF50' : '#FF4C4C', fontSize: 14, fontWeight: '700' }}>
-          {item.type === 'income' ? '+' : '-'}{fmtFull(item.amount)}
-        </Text>
-      </TouchableOpacity>
+      <TranscationCard key={`transaction-${item.id}`} data={item} />
     )
   }
 
@@ -259,14 +240,26 @@ export default function Wallet() {
         </View>
 
         {activeTab === 'overview' ? (
-          <FlatList
-            data={overviewData}
-            keyExtractor={(item, index) => `${item.type}-${index}`}
-            renderItem={renderOverviewItem}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scroll}
-            ItemSeparatorComponent={OverviewSeparator}
-          />
+          <>
+            <FlatList
+              data={overviewData}
+              keyExtractor={(item, index) => `${item.type}-${index}`}
+              renderItem={renderOverviewItem}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.scroll}
+              ItemSeparatorComponent={OverviewSeparator}
+            />
+            {/* add expense btn */}
+            <AnimatedPressable
+              activeOpacity={0.8}
+              onPress={() => {
+                navigate('AddExpense');
+              }}
+              style={[styles.floatingButton, { backgroundColor: `${colors.textPrimary}80` }]}
+            >
+              <Icon name="Plus" size={32} color={colors.textInverse} strokeWidth={3} />
+            </AnimatedPressable>
+          </>
         ) : (
           <BudgetTab
             categories={categories}
@@ -347,4 +340,28 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 0.5,
   },
+  floatingButton: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 120,
+    right: 20,
+    alignSelf: 'flex-end',
+    flex: 1,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+    zIndex: 10,
+    gap: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
 })
+
