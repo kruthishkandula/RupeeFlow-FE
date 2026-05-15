@@ -1,4 +1,6 @@
 import ChangeTheme from '@/screens/ChangeTheme'
+import About from '@/screens/About'
+import Help from '@/screens/Help'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import BottomNav from './BottomNav'
@@ -15,6 +17,8 @@ export default function MainNav() {
         }}>
             <MainStack.Screen name="Home" component={BottomNav} />
             <MainStack.Screen name="ChangeTheme" component={ChangeTheme} />
+            <MainStack.Screen name="About" component={About} />
+            <MainStack.Screen name="Help" component={Help} />
             <MainStack.Screen name="AddExpense" component={Add} />
             <MainStack.Screen name="ExpenseDetail" component={ExpenseDetail} />
             <MainStack.Screen name="Transactions" component={Transactions} />

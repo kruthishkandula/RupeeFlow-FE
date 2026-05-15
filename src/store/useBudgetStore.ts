@@ -1,5 +1,8 @@
+import { getFirebaseAuth } from '@/config/firebase';
 import { getDB } from '@/db/sqllite';
 import { create } from 'zustand';
+
+const getUserId = (): string => getFirebaseAuth()?.currentUser?.uid ?? '';
 
 export type BudgetMap = Record<string, number>;
 
@@ -16,7 +19,11 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
     getStoreBudgets: async () => {
         try {
             const db = await getDB();
-            const [result] = await db.executeSql(`SELECT category, amount FROM budgets`);
+            const userId = getUserId();
+            const [result] = await db.executeSql(
+                `SELECT category, amount FROM budgets WHERE user_id = ?`,
+                [userId]
+            );
             const map: BudgetMap = {};
             for (let i = 0; i < result.rows.length; i++) {
                 const row = result.rows.item(i);
@@ -31,10 +38,11 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
     setStoreBudget: async (category: string, amount: number) => {
         try {
             const db = await getDB();
+            const userId = getUserId();
             await db.executeSql(
-                `INSERT INTO budgets (category, amount) VALUES (?, ?)
-                 ON CONFLICT(category) DO UPDATE SET amount = excluded.amount`,
-                [category, amount],
+                `INSERT INTO budgets (id, user_id, category, amount) VALUES (?, ?, ?, ?)
+                 ON CONFLICT(id) DO UPDATE SET amount = excluded.amount`,
+                [`${userId}_${category}`, userId, category, amount],
             );
             set({ budgets: { ...get().budgets, [category]: amount } });
         } catch (error) {
@@ -45,7 +53,11 @@ export const useBudgetStore = create<BudgetStore>((set, get) => ({
     removeStoreBudget: async (category: string) => {
         try {
             const db = await getDB();
-            await db.executeSql(`DELETE FROM budgets WHERE category = ?`, [category]);
+            const userId = getUserId();
+            await db.executeSql(
+                `DELETE FROM budgets WHERE category = ? AND user_id = ?`,
+                [category, userId]
+            );
             const next = { ...get().budgets };
             delete next[category];
             set({ budgets: next });

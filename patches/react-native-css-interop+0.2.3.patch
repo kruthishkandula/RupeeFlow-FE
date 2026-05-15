@@ -1,0 +1,234 @@
+diff --git a/node_modules/react-native-css-interop/.cache/android.js b/node_modules/react-native-css-interop/.cache/android.js
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-css-interop/.cache/ios.js b/node_modules/react-native-css-interop/.cache/ios.js
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-css-interop/.cache/macos.js b/node_modules/react-native-css-interop/.cache/macos.js
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-css-interop/.cache/native.js b/node_modules/react-native-css-interop/.cache/native.js
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-css-interop/.cache/windows.js b/node_modules/react-native-css-interop/.cache/windows.js
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-css-interop/dist/metro/index.js b/node_modules/react-native-css-interop/dist/metro/index.js
+index c91ba6a..2c50ee3 100644
+--- a/node_modules/react-native-css-interop/dist/metro/index.js
++++ b/node_modules/react-native-css-interop/dist/metro/index.js
+@@ -188,6 +188,12 @@ async function startCSSProcessor(filePath, platform, isDev, { input, getCSSForPl
+                         type: "change",
+                     },
+                 ],
++                changes: {
++                    addedFiles: [],
++                    modifiedFiles: [[filePath, { modifiedTime: Date.now(), size: 1, type: "virtual" }]],
++                    removedFiles: [],
++                },
++                rootDir: "",
+             });
+         }).then((css) => {
+             debug(`virtualStyles.initial ${platform}`);
+diff --git a/node_modules/react-native-css-interop/dist/runtime/components.js b/node_modules/react-native-css-interop/dist/runtime/components.js
+index 8835a2d..7bb1ae4 100644
+--- a/node_modules/react-native-css-interop/dist/runtime/components.js
++++ b/node_modules/react-native-css-interop/dist/runtime/components.js
+@@ -5,7 +5,6 @@ const react_native_1 = require("react-native");
+ const api_1 = require("./api");
+ (0, api_1.cssInterop)(react_native_1.Image, { className: "style" });
+ (0, api_1.cssInterop)(react_native_1.Pressable, { className: "style" });
+-(0, api_1.cssInterop)(react_native_1.SafeAreaView, { className: "style" });
+ (0, api_1.cssInterop)(react_native_1.Switch, { className: "style" });
+ (0, api_1.cssInterop)(react_native_1.Text, { className: "style" });
+ (0, api_1.cssInterop)(react_native_1.TouchableHighlight, { className: "style" });
+diff --git a/node_modules/react-native-css-interop/dist/runtime/components.js.map b/node_modules/react-native-css-interop/dist/runtime/components.js.map
+index 488bc2a..e6c7433 100644
+--- a/node_modules/react-native-css-interop/dist/runtime/components.js.map
++++ b/node_modules/react-native-css-interop/dist/runtime/components.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"components.js","sourceRoot":"","sources":["../../src/runtime/components.ts"],"names":[],"mappings":";AAAA,YAAY,CAAC;;AAEb,+CAkBsB;AAEtB,+BAA+C;AAE/C,IAAA,gBAAU,EAAC,oBAAK,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC1C,IAAA,gBAAU,EAAC,wBAAS,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC9C,IAAA,gBAAU,EAAC,2BAAY,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACjD,IAAA,gBAAU,EAAC,qBAAM,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC3C,IAAA,gBAAU,EAAC,mBAAI,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACzC,IAAA,gBAAU,EAAC,iCAAkB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACvD,IAAA,gBAAU,EAAC,+BAAgB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACrD,IAAA,gBAAU,EAAC,uCAAwB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC7D,IAAA,gBAAU,EAAC,mBAAI,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACzC,IAAA,gBAAU,EAAC,gCAAiB,EAAE;IAC5B,SAAS,EAAE,EAAE,MAAM,EAAE,OAAO,EAAE,iBAAiB,EAAE,EAAE,KAAK,EAAE,IAAI,EAAE,EAAE;CACnE,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,wBAAS,EAAE;IACpB,SAAS,EAAE,EAAE,MAAM,EAAE,KAAK,EAAE,iBAAiB,EAAE,EAAE,eAAe,EAAE,IAAI,EAAE,EAAE;CAC3E,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,yBAAU,EAAE;IACrB,SAAS,EAAE,OAAO;IAClB,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,wBAAS,EAAE;IACpB,SAAS,EAAE,EAAE,MAAM,EAAE,OAAO,EAAE,iBAAiB,EAAE,EAAE,SAAS,EAAE,IAAI,EAAE,EAAE;CACvE,CAAC,CAAC;AAEH,IAAA,gBAAU,EAAC,uBAAQ,EAAE;IACnB,SAAS,EAAE,OAAO;IAClB,4BAA4B,EAAE,0BAA0B;IACxD,4BAA4B,EAAE,0BAA0B;IACxD,sBAAsB,EAAE,oBAAoB;IAC5C,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,8BAAe,EAAE;IAC1B,SAAS,EAAE,OAAO;IAClB,cAAc,EAAE,YAAY;CAC7B,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,mCAAoB,EAAE;IAC/B,SAAS,EAAE,OAAO;IAClB,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,8BAAe,EAAE;IAC1B,SAAS,EAAE,OAAO;IAClB,4BAA4B,EAAE,0BAA0B;IACxD,4BAA4B,EAAE,0BAA0B;IACxD,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AAEH,IAAI,CAAC;IACH,MAAM,YAAY,GAAG,OAAO,CAAC,gCAAgC,CAAC,CAAC,YAAY,CAAC;IAC5E,IAAA,gBAAU,EAAC,YAAY,EAAE;QACvB,SAAS,EAAE,OAAO;KACnB,CAAC,CAAC;AACL,CAAC;AAAC,MAAM,CAAC,CAAA,CAAC"}
+\ No newline at end of file
++{"version":3,"file":"components.js","sourceRoot":"","sources":["../../src/runtime/components.ts"],"names":[],"mappings":";AAAA,YAAY,CAAC;;AAEb,+CAiBsB;AAEtB,+BAA+C;AAE/C,IAAA,gBAAU,EAAC,oBAAK,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC1C,IAAA,gBAAU,EAAC,wBAAS,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC9C,IAAA,gBAAU,EAAC,qBAAM,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC3C,IAAA,gBAAU,EAAC,mBAAI,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACzC,IAAA,gBAAU,EAAC,iCAAkB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACvD,IAAA,gBAAU,EAAC,+BAAgB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACrD,IAAA,gBAAU,EAAC,uCAAwB,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AAC7D,IAAA,gBAAU,EAAC,mBAAI,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,CAAC,CAAC;AACzC,IAAA,gBAAU,EAAC,gCAAiB,EAAE;IAC5B,SAAS,EAAE,EAAE,MAAM,EAAE,OAAO,EAAE,iBAAiB,EAAE,EAAE,KAAK,EAAE,IAAI,EAAE,EAAE;CACnE,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,wBAAS,EAAE;IACpB,SAAS,EAAE,EAAE,MAAM,EAAE,KAAK,EAAE,iBAAiB,EAAE,EAAE,eAAe,EAAE,IAAI,EAAE,EAAE;CAC3E,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,yBAAU,EAAE;IACrB,SAAS,EAAE,OAAO;IAClB,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,wBAAS,EAAE;IACpB,SAAS,EAAE,EAAE,MAAM,EAAE,OAAO,EAAE,iBAAiB,EAAE,EAAE,SAAS,EAAE,IAAI,EAAE,EAAE;CACvE,CAAC,CAAC;AAEH,IAAA,gBAAU,EAAC,uBAAQ,EAAE;IACnB,SAAS,EAAE,OAAO;IAClB,4BAA4B,EAAE,0BAA0B;IACxD,4BAA4B,EAAE,0BAA0B;IACxD,sBAAsB,EAAE,oBAAoB;IAC5C,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,8BAAe,EAAE;IAC1B,SAAS,EAAE,OAAO;IAClB,cAAc,EAAE,YAAY;CAC7B,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,mCAAoB,EAAE;IAC/B,SAAS,EAAE,OAAO;IAClB,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AACH,IAAA,gBAAU,EAAC,8BAAe,EAAE;IAC1B,SAAS,EAAE,OAAO;IAClB,4BAA4B,EAAE,0BAA0B;IACxD,4BAA4B,EAAE,0BAA0B;IACxD,yBAAyB,EAAE,uBAAuB;CACnD,CAAC,CAAC;AAEH,IAAI,CAAC;IACH,MAAM,YAAY,GAAG,OAAO,CAAC,gCAAgC,CAAC,CAAC,YAAY,CAAC;IAC5E,IAAA,gBAAU,EAAC,YAAY,EAAE;QACvB,SAAS,EAAE,OAAO;KACnB,CAAC,CAAC;AACL,CAAC;AAAC,MAAM,CAAC,CAAA,CAAC"}
+\ No newline at end of file
+diff --git a/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js b/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js
+index b860320..ff931dc 100644
+--- a/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js
++++ b/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js
+@@ -10,7 +10,12 @@ const colorSchemeObservable = (0, observable_1.observable)(undefined);
+ exports.colorScheme = {
+     set(value) {
+         if (value === "system") {
+-            appearance.setColorScheme(null);
++            if ((react_native_1.Platform.constants?.reactNativeVersion?.minor ?? 0) >= 82) {
++                appearance.setColorScheme("unspecified");
++            }
++            else {
++                appearance.setColorScheme(null);
++            }
+         }
+         else {
+             appearance.setColorScheme(value);
+diff --git a/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js.map b/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js.map
+index f8d5422..aad5f62 100644
+--- a/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js.map
++++ b/node_modules/react-native-css-interop/dist/runtime/native/appearance-observables.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"appearance-observables.js","sourceRoot":"","sources":["../../../src/runtime/native/appearance-observables.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
++{"version":3,"file":"appearance-observables.js","sourceRoot":"","sources":["../../../src/runtime/native/appearance-observables.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/react-native-css-interop/src/__tests__/appearance.test.tsx b/node_modules/react-native-css-interop/src/__tests__/appearance.test.tsx
+new file mode 100644
+index 0000000..ccde966
+--- /dev/null
++++ b/node_modules/react-native-css-interop/src/__tests__/appearance.test.tsx
+@@ -0,0 +1,53 @@
++import { Appearance, Platform } from "react-native";
++
++import { colorScheme } from "test";
++
++describe("colorScheme.set", () => {
++  let setColorSchemeSpy: jest.SpyInstance;
++
++  beforeEach(() => {
++    // Mock the implementation to avoid RN's built-in validation,
++    // which doesn't know about "unspecified" in older RN versions
++    setColorSchemeSpy = jest
++      .spyOn(Appearance, "setColorScheme")
++      .mockImplementation(() => {});
++  });
++
++  afterEach(() => {
++    setColorSchemeSpy.mockRestore();
++  });
++
++  test('passes "unspecified" to Appearance.setColorScheme on RN 0.82+', () => {
++    const original = Platform.constants.reactNativeVersion;
++    (Platform.constants as any).reactNativeVersion = { ...original, minor: 82 };
++
++    try {
++      colorScheme.set("system");
++      expect(setColorSchemeSpy).toHaveBeenCalledWith("unspecified");
++    } finally {
++      (Platform.constants as any).reactNativeVersion = original;
++    }
++  });
++
++  test("passes null to Appearance.setColorScheme on RN < 0.82", () => {
++    const original = Platform.constants.reactNativeVersion;
++    (Platform.constants as any).reactNativeVersion = { ...original, minor: 81 };
++
++    try {
++      colorScheme.set("system");
++      expect(setColorSchemeSpy).toHaveBeenCalledWith(null);
++    } finally {
++      (Platform.constants as any).reactNativeVersion = original;
++    }
++  });
++
++  test("passes value directly for light/dark", () => {
++    colorScheme.set("dark");
++    expect(setColorSchemeSpy).toHaveBeenCalledWith("dark");
++
++    setColorSchemeSpy.mockClear();
++
++    colorScheme.set("light");
++    expect(setColorSchemeSpy).toHaveBeenCalledWith("light");
++  });
++});
+diff --git a/node_modules/react-native-css-interop/src/__tests__/debugging.test.tsx b/node_modules/react-native-css-interop/src/__tests__/debugging.test.tsx
+index faf6607..cea518c 100644
+--- a/node_modules/react-native-css-interop/src/__tests__/debugging.test.tsx
++++ b/node_modules/react-native-css-interop/src/__tests__/debugging.test.tsx
+@@ -41,8 +41,8 @@ describe("debugging", () => {
+     "className": "my-class"
+   },
+   "props": {
+-    "testID": "debugClassName",
+     "ref": null,
++    "testID": "debugClassName",
+     "style": {
+       "color": "#ef4444",
+       "padding": 10
+@@ -79,8 +79,8 @@ describe("debugging", () => {
+     "className": "my-class"
+   },
+   "props": {
+-    "testID": "debugClassName",
+     "ref": null,
++    "testID": "debugClassName",
+     "style": {
+       "color": "#ef4444 (animated value)",
+       "padding": 10
+@@ -115,8 +115,8 @@ describe("debugging", () => {
+     "className": "my-class"
+   },
+   "props": {
+-    "testID": "debugClassName",
+     "ref": null,
++    "testID": "debugClassName",
+     "style": {
+       "color": "hsl(0, 84.2%, 50%)"
+     }
+@@ -153,6 +153,7 @@ describe("debugging", () => {
+     "className": "my-class"
+   },
+   "props": {
++    "ref": null,
+     "testID": "debugClassName",
+     "onPressIn": "[Function]",
+     "onPressOut": "[Function]",
+@@ -162,7 +163,6 @@ describe("debugging", () => {
+     "onBlur": "[Function]",
+     "onPress": "[Function]",
+     "onLayout": "[Function]",
+-    "ref": null,
+     "style": {
+       "color": "#ef4444"
+     }
+diff --git a/node_modules/react-native-css-interop/src/runtime/components.ts b/node_modules/react-native-css-interop/src/runtime/components.ts
+index c46327e..aaf822d 100644
+--- a/node_modules/react-native-css-interop/src/runtime/components.ts
++++ b/node_modules/react-native-css-interop/src/runtime/components.ts
+@@ -7,7 +7,6 @@ import {
+   ImageBackground,
+   KeyboardAvoidingView,
+   Pressable,
+-  SafeAreaView,
+   ScrollView,
+   StatusBar,
+   Switch,
+@@ -24,7 +23,6 @@ import { cssInterop, remapProps } from "./api";
+ 
+ cssInterop(Image, { className: "style" });
+ cssInterop(Pressable, { className: "style" });
+-cssInterop(SafeAreaView, { className: "style" });
+ cssInterop(Switch, { className: "style" });
+ cssInterop(Text, { className: "style" });
+ cssInterop(TouchableHighlight, { className: "style" });
+diff --git a/node_modules/react-native-css-interop/src/runtime/native/appearance-observables.ts b/node_modules/react-native-css-interop/src/runtime/native/appearance-observables.ts
+index c235c2d..e0fb8a0 100644
+--- a/node_modules/react-native-css-interop/src/runtime/native/appearance-observables.ts
++++ b/node_modules/react-native-css-interop/src/runtime/native/appearance-observables.ts
+@@ -3,6 +3,7 @@ import {
+   Appearance,
+   AppState,
+   NativeEventSubscription,
++  Platform,
+ } from "react-native";
+ 
+ import { INTERNAL_RESET } from "../../shared";
+@@ -22,7 +23,11 @@ const colorSchemeObservable = observable<"light" | "dark" | undefined>(
+ export const colorScheme = {
+   set(value: "light" | "dark" | "system") {
+     if (value === "system") {
+-      appearance.setColorScheme(null);
++      if ((Platform.constants?.reactNativeVersion?.minor ?? 0) >= 82) {
++        appearance.setColorScheme("unspecified" as any);
++      } else {
++        appearance.setColorScheme(null);
++      }
+     } else {
+       appearance.setColorScheme(value);
+     }

@@ -7,6 +7,7 @@ import AnimatedInput from '@/components/Input/AnimatedInput';
 import CalendarDropdown from '@/components/Input/CalendarDropdown';
 import SafeAreaContainer from '@/components/SafeAreaContainer';
 import { CATEGORY_COLORS, CATEGORY_ICON_MAP, EXPENSE_CATEGORIES, INCOME_CATEGORIES, QUICK_AMOUNTS } from '@/fixtures/constants';
+import useTheme from '@/hooks/useTheme';
 import { useExpenseStore } from '@/store/useExpenseStore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -51,7 +52,6 @@ function getRawValue(formatted: string): string {
 
 function TypeToggle({ value, onChange }: Readonly<{ value: string; onChange: (v: string) => void }>) {
     const incomeAnim = useRef(new Animated.Value(value === 'income' ? 1 : 0)).current;
-
     const handlePress = (type: 'income' | 'expense') => {
         Animated.timing(incomeAnim, {
             toValue: type === 'income' ? 1 : 0,
@@ -94,9 +94,11 @@ function TypeToggle({ value, onChange }: Readonly<{ value: string; onChange: (v:
 
 function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string; onChange: (v: string) => void; error?: string; type: string }>) {
     const list = (type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map(c => ({ label: c, value: c }));
+    const { colors } = useTheme();
+
     return (
-        <View style={styles.categoryWrapper}>
-            <Text style={styles.sectionLabel}>Category</Text>
+        <View style={[styles.categoryWrapper]}>
+            <Text style={[styles.sectionLabel, { color: colors?.textPrimary }]}>Category</Text>
             <View style={styles.categoryGrid}>
                 {list.map((cat) => {
                     const selected = value === cat.value;
@@ -117,7 +119,7 @@ function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string
                             </View>
                             <Text
                                 numberOfLines={1}
-                                style={[styles.categoryLabel, selected && { color, fontWeight: '700' }]}
+                                style={[styles.categoryLabel, { color: colors?.dark }, selected && { color, fontWeight: '700', }]}
                             >
                                 {cat.label}
                             </Text>
@@ -154,6 +156,7 @@ export default function AddExpenseScreen() {
     const amount = watch('amount');
     const isEditing = Boolean(params?.amount);
     const accentColor = type === 'income' ? '#22C55E' : '#EF4444';
+    const { colors } = useTheme();
 
     const allTimeBalance = useMemo(() => {
         let inc = 0, exp = 0;
@@ -231,7 +234,7 @@ export default function AddExpenseScreen() {
                     </View>
 
                     {/* Amount hero */}
-                    <View style={[styles.amountCard, { borderColor: accentColor + '55', shadowColor: accentColor }]}>
+                    <View style={[styles.amountCard, { borderColor: accentColor + '55', shadowColor: accentColor, backgroundColor: colors?.surfaceOverlay }]}>
                         <Text style={[styles.amountLabel, { color: accentColor }]}>Amount (₹)</Text>
                         <Controller
                             control={control}
@@ -296,7 +299,7 @@ export default function AddExpenseScreen() {
                     )}
 
                     {/* Category grid */}
-                    <View style={[styles.glassCard, styles.mx4]}>
+                    <View style={[styles.glassCard, styles.mx4, { backgroundColor: colors.surfaceOverlay }]}>
                         <Controller
                             control={control}
                             name="category"
@@ -316,8 +319,8 @@ export default function AddExpenseScreen() {
                     </View>
 
                     {/* Details card */}
-                    <View style={[styles.glassCard, styles.mx4, { marginTop: 12 }]}>
-                        <Text style={styles.sectionLabel}>Details</Text>
+                    <View style={[styles.glassCard, styles.mx4, { marginTop: 12, backgroundColor: colors.surfaceOverlay }]}>
+                        <Text style={[styles.sectionLabel, { color: colors.textPrimary }]}>Details</Text>
 
                         <Controller
                             control={control}

@@ -26,6 +26,7 @@ export const initDB = async (): Promise<void> => {
     await db.executeSql(`
       CREATE TABLE IF NOT EXISTS expenses (
         id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
         title TEXT,
         amount REAL,
         type TEXT,
@@ -35,30 +36,59 @@ export const initDB = async (): Promise<void> => {
       );
     `);
 
+    // Migrate existing table: add user_id column if missing
+    try {
+      await db.executeSql(`ALTER TABLE expenses ADD COLUMN user_id TEXT NOT NULL DEFAULT ''`);
+    } catch {
+      // Column already exists in upgraded installs.
+    }
+
+    // Ensure budgets table exists first, then migrate legacy schemas if needed.
     await db.executeSql(`
       CREATE TABLE IF NOT EXISTS budgets (
-        category TEXT PRIMARY KEY,
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL DEFAULT '',
+        category TEXT,
         amount REAL NOT NULL
       );
     `);
 
-    const [result] = await db.executeSql(
-      `SELECT COUNT(*) as count FROM expenses`
-    );
+    const [budgetInfo] = await db.executeSql(`PRAGMA table_info(budgets)`);
+    const budgetColumns = new Set<string>();
+    for (let i = 0; i < budgetInfo.rows.length; i++) {
+      budgetColumns.add(String(budgetInfo.rows.item(i).name));
+    }
 
-    const count = result.rows.item(0).count;
-
-    if (count === 0) {
+    const needsMigration = !budgetColumns.has('id') || !budgetColumns.has('user_id');
+    if (needsMigration) {
+      await db.executeSql(`ALTER TABLE budgets RENAME TO budgets_old`);
       await db.executeSql(`
-        INSERT INTO expenses
-        (id, title, amount, type, date, category, created_at)
-        VALUES
-        ('1', 'Salary', 5000, 'income', '2026-05-01', 'Salary', '2026-05-01T10:00:00Z'),
-        ('2', 'Groceries', 1200, 'expense', '2026-05-02', 'Food', '2026-05-02T12:00:00Z'),
-        ('3', 'Netflix', 649, 'expense', '2026-05-03', 'Entertainment', '2026-05-03T08:00:00Z');
+        CREATE TABLE budgets (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL DEFAULT '',
+          category TEXT,
+          amount REAL NOT NULL
+        );
       `);
 
-      console.log('Dummy data inserted');
+      try {
+        await db.executeSql(
+          `INSERT INTO budgets (id, user_id, category, amount)
+           SELECT id, user_id, category, amount FROM budgets_old`
+        );
+      } catch (copyError) {
+        console.log('BUDGETS MIGRATION FALLBACK:', copyError);
+        try {
+          await db.executeSql(
+            `INSERT INTO budgets (id, user_id, category, amount)
+             SELECT category, '', category, amount FROM budgets_old`
+          );
+        } catch (legacyCopyError) {
+          console.log('LEGACY BUDGETS MIGRATION ERROR:', legacyCopyError);
+        }
+      }
+
+      await db.executeSql(`DROP TABLE IF EXISTS budgets_old`);
     }
 
     console.log('DB Initialized');

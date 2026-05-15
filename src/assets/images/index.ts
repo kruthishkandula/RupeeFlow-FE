@@ -1,6 +1,6 @@
 export const Images = {
-    Background: require('./Background.png'),
+    Background: require('./Frame.png'),
     DarkBg: require('./DarkBg.png'),
-    XmasBg: require('./XmasBg.png'),
+    XmasBg: require('./RupeeBG.png'),
     Empty: require('./Empty.png'),
 }

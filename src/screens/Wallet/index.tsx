@@ -3,6 +3,7 @@ import DynamicHeader2 from '@/components/Header/DynamicHeader2'
 import Icon from '@/components/Icon'
 import SafeAreaContainer from '@/components/SafeAreaContainer'
 import useTheme from '@/hooks/useTheme'
+import { useAuthStore } from '@/store/useAuthStore'
 import { useExpenseStore } from '@/store/useExpenseStore'
 import { TransactionType } from '@/typings/global'
 import { useNavigation } from '@react-navigation/native'
@@ -41,6 +42,7 @@ export default function Wallet() {
   const { colors } = useTheme()
   const { navigate } = useNavigation<any>()
   const { expenses, getStoreExpenses } = useExpenseStore()
+  const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'budget'>('overview')
 
   useEffect(() => {
@@ -89,10 +91,6 @@ export default function Wallet() {
     () => [...currentMonth].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5),
     [currentMonth],
   )
-
-  const handleTransactionPress = (item: TransactionType) => {
-    navigate('ExpenseDetail', item)
-  }
 
   // Build flat section data for the overview FlatList
   const overviewData = useMemo((): SectionItem[] => {
@@ -211,12 +209,19 @@ export default function Wallet() {
     }
   }
 
+  const greetingMessage = useMemo(() => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good Morning'
+    else if (hour < 18) return 'Good Afternoon'
+    else return 'Good Evening'
+  }, [])
+
   return (
     <MainBG>
       <SafeAreaContainer className="mt-8">
         <DynamicHeader2
-          title="Good Morning,"
-          subtitle="Kruthish Kandula"
+          title={greetingMessage}
+          subtitle={user?.displayName || 'RupeeFlow User'}
           rightComponent={
             <TouchableOpacity>
               <Icon name="Bell" size={32} color={colors.white} />
@@ -357,7 +362,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8,
     zIndex: 10,
     gap: 10,
     paddingHorizontal: 20,

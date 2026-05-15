@@ -1,13 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   StyleSheet,
   Text,
   TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import Icon from '@/components/Icon';
 
-interface Props {
+interface Props extends TextInputProps {
   label: string;
   value?: string;
   onChange?: (text: string) => void;
@@ -16,29 +20,23 @@ interface Props {
   keyboardType?: any;
   amount?: boolean;
   currency?: string;
+  isDark?: boolean;
 }
 
-// Formats a raw numeric string into "1 23 456.78" (Indian-style space grouping)
 function formatAmount(raw: string): string {
-  // Remove anything that's not digit or dot
   let cleaned = raw.replaceAll(/[^0-9.]/g, '');
-  // Allow only one dot
   const parts = cleaned.split('.');
   let intPart = parts[0];
   const decPart = parts.length > 1 ? '.' + parts[1] : '';
-
-  // Indian grouping: last 3 digits, then groups of 2
   if (intPart.length > 3) {
     const last3 = intPart.slice(-3);
     const rest = intPart.slice(0, -3);
     const grouped = rest.replaceAll(/\B(?=(\d{2})+(?!\d))/g, ' ');
     intPart = grouped + ' ' + last3;
   }
-
   return intPart + decPart;
 }
 
-// Strips spaces to get the raw numeric value for onChange
 function getRawValue(formatted: string): string {
   return formatted.replaceAll(' ', '');
 }
@@ -52,65 +50,140 @@ export default function AnimatedInput({
   keyboardType,
   amount,
   currency = '₹',
+  isDark = false,
+  secureTextEntry,
+  ...rest
 }: Readonly<Props>) {
-  const animated = useRef(new Animated.Value(value ? 1 : 0)).current;
+  // Single animated value drives both label float AND border color
+  const floatAnim = useRef(new Animated.Value(value ? 1 : 0)).current;
+  const borderAnim = useRef(new Animated.Value(0)).current;
+
+  // Only used for eye icon color — does NOT affect TextInput rendering
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isFocusedRef = useRef(false);
+
+  const inputRef = useRef<TextInput>(null);
+
+  const bgColor = isDark ? '#1E1E2E' : '#FFFFFF';
+  const textColor = isDark ? '#F0F0F0' : '#000000';
 
   useEffect(() => {
-    Animated.timing(animated, {
-      toValue: value ? 1 : 0,
+    Animated.timing(floatAnim, {
+      toValue: isFocusedRef.current || !!value ? 1 : 0,
       duration: 180,
       useNativeDriver: false,
     }).start();
   }, [value]);
 
-  const labelStyle = {
-    top: animated.interpolate({
-      inputRange: [0, 1],
-      outputRange: [18, -8],
-    }),
-    fontSize: animated.interpolate({
-      inputRange: [0, 1],
-      outputRange: [16, 12],
-    }),
-    color: animated.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['#000000', '#2F7E79'],
-    }),
+  const handleFocus = (e: any) => {
+    isFocusedRef.current = true;
+    Animated.timing(floatAnim, {
+      toValue: 1,
+      duration: 180,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(borderAnim, {
+      toValue: 1,
+      duration: 180,
+      useNativeDriver: false,
+    }).start();
+    rest.onFocus?.(e);
   };
 
+  const handleBlur = (e: any) => {
+    isFocusedRef.current = false;
+    if (!value) {
+      Animated.timing(floatAnim, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: false,
+      }).start();
+    }
+    Animated.timing(borderAnim, {
+      toValue: 0,
+      duration: 180,
+      useNativeDriver: false,
+    }).start();
+    onBlur?.();
+    rest.onBlur?.(e);
+  };
+
+  const labelTop = floatAnim.interpolate({ inputRange: [0, 1], outputRange: [18, -8] });
+  const labelFontSize = floatAnim.interpolate({ inputRange: [0, 1], outputRange: [16, 12] });
+  const labelColor = error
+    ? '#EF4444'
+    : floatAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [isDark ? '#9E9E9E' : '#757575', '#2F7E79'],
+      });
+
+  const animatedBorderColor = error
+    ? '#EF4444'
+    : borderAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [isDark ? '#3A3A4A' : '#E5E7EB', '#2F7E79'],
+      });
+
   return (
-    <View style={styles.wrapper}>
-      <Animated.Text style={[styles.label, labelStyle, { color: error ? '#EF4444' : labelStyle.color }]}>
-        {label}
-      </Animated.Text>
+    <TouchableWithoutFeedback onPress={() => inputRef.current?.focus()}>
+      <View style={styles.wrapper}>
+        <Animated.Text
+          pointerEvents="none"
+          style={[
+            styles.label,
+            { top: labelTop, fontSize: labelFontSize, color: labelColor, backgroundColor: bgColor },
+          ]}>
+          {label}
+        </Animated.Text>
 
-      <View style={[styles.input, styles.inputRow, error ? { borderColor: '#EF4444' } : null]}>
-        <TextInput
-          value={amount ? formatAmount(value ?? '') : value}
-          onChangeText={(text) => {
-            if (amount) {
-              // Block commas, allow only digits and single dot, max 2 decimals
-              const filtered = text.replaceAll(',', '');
-              const raw = getRawValue(filtered);
-              // Restrict to 2 decimal places
-              const dotIndex = raw.indexOf('.');
-              if (dotIndex !== -1 && raw.length - dotIndex - 1 > 2) return;
-              onChange?.(raw);
-            } else {
-              onChange?.(text);
-            }
-          }}
-          onBlur={onBlur}
-          keyboardType={amount ? 'decimal-pad' : keyboardType}
-          style={styles.innerInput}
-          cursorColor="#2F7E79"
-          selectionColor="#2F7E79"
-        />
-        {amount && <Text style={styles.currency}>{currency}</Text>}
+        <Animated.View
+          style={[
+            styles.input,
+            styles.inputRow,
+            { borderColor: animatedBorderColor, backgroundColor: bgColor },
+          ]}>
+          <TextInput
+            ref={inputRef}
+            value={amount ? formatAmount(value ?? '') : value}
+            onChangeText={(text) => {
+              if (amount) {
+                const filtered = text.replaceAll(',', '');
+                const raw = getRawValue(filtered);
+                const dotIndex = raw.indexOf('.');
+                if (dotIndex !== -1 && raw.length - dotIndex - 1 > 2) return;
+                onChange?.(raw);
+              } else {
+                onChange?.(text);
+              }
+            }}
+            keyboardType={amount ? 'decimal-pad' : keyboardType}
+            style={[styles.innerInput, { color: textColor }]}
+            cursorColor="#2F7E79"
+            selectionColor="#2F7E79"
+            secureTextEntry={secureTextEntry && !isPasswordVisible}
+            placeholderTextColor={isDark ? '#6B7280' : '#9CA3AF'}
+            {...rest}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+          {amount && <Text style={[styles.currency, { color: textColor }]}>{currency}</Text>}
+          {secureTextEntry && (
+            <TouchableOpacity
+              onPress={() => setIsPasswordVisible((v) => !v)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={styles.eyeButton}>
+              <Icon
+                name={isPasswordVisible ? 'EyeOff' : 'Eye'}
+                size={20}
+                color={isDark ? '#6B7280' : '#9CA3AF'}
+              />
+            </TouchableOpacity>
+          )}
+        </Animated.View>
+
+        {error && <Text style={styles.error}>{error}</Text>}
       </View>
-
-      {error && <Text style={styles.error}>{error}</Text>}
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -121,16 +194,14 @@ const styles = StyleSheet.create({
   label: {
     position: 'absolute',
     left: 16,
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 6,
+    marginHorizontal: 10,
     zIndex: 10,
+    paddingHorizontal: 2,
   },
   input: {
     height: 56,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
   },
   inputRow: {
     flexDirection: 'row',
@@ -139,14 +210,16 @@ const styles = StyleSheet.create({
   },
   currency: {
     fontSize: 16,
-    color: '#000000',
     marginRight: 4,
   },
   innerInput: {
     flex: 1,
     height: 56,
     fontSize: 16,
-    color: '#000000',
+  },
+  eyeButton: {
+    padding: 4,
+    marginLeft: 8,
   },
   error: {
     marginTop: 6,
@@ -154,3 +227,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
+

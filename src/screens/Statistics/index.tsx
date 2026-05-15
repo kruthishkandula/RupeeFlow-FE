@@ -1,5 +1,5 @@
-import SafeAreaContainer from '@/components/SafeAreaContainer'
 import Icon from '@/components/Icon'
+import SafeAreaContainer from '@/components/SafeAreaContainer'
 import useTheme from '@/hooks/useTheme'
 import { useExpenseStore } from '@/store/useExpenseStore'
 import { gpsw } from '@/style/theme'
@@ -98,7 +98,7 @@ function getBarLabels(period: Period): string[] {
     for (let i = 1; i <= 4; i++) weeks.push(`W${i}`);
     return weeks;
   }
-  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 }
 
 function getBucketIndex(date: Date, period: Period, now: Date): number {
@@ -264,7 +264,7 @@ export default function Statistics() {
   return (
     <MainBG>
       <SafeAreaContainer className='mt-8'>
-        <DynamicHeader title='Statistics'  />
+        <DynamicHeader title='Statistics' />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16, gap: 16 }}>
 
@@ -355,7 +355,7 @@ export default function Statistics() {
 
           {/* Top Expenses */}
           {topExpense.length > 0 && (
-            <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
+            <View style={[styles.card, { backgroundColor: colors.surfaceElevated, marginBottom: 30 }]}>
               <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Top Expenses</Text>
               <View style={{ gap: 12 }}>
                 {topExpense.map((t, i) => (
