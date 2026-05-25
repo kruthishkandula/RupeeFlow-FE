@@ -57,7 +57,7 @@ export default function Button({
 
     return (
         <TouchableOpacity className={`min-h-12 justify-center ${ButtonClassName} ${className}`} onPress={onPress} style={[style, disabled && { backgroundColor: '#afafaf' }]} disabled={disabled}>
-            {loading ? <ActivityIndicator size={'large'} className='text-text2' /> : <Text className={`text-center ${textClassName}`} style={textStyle}>{title}</Text>}
+            {loading ? <ActivityIndicator size={'small'} className='text-text2' /> : <Text className={`text-center ${textClassName}`} style={textStyle}>{title}</Text>}
         </TouchableOpacity>
     )
 }

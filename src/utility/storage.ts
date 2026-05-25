@@ -2,18 +2,18 @@ import { createMMKV } from 'react-native-mmkv';
 
 const storage = createMMKV({ id: 'rupeeflow-storage' });
 
-export const createItem = async (key: string, value: string) => {
+export const createItem = (key: string, value: string) => {
   storage.set(key, value);
 };
 
-export const getItem = async (key: string) => {
+export const getItem = (key: string) => {
   return storage.getString(key) ?? null;
 };
 
-export const removeItem = async (key: string) => {
+export const removeItem = (key: string) => {
   storage.remove(key);
 };
 
-export const clearAllItems = async () => {
+export const clearAllItems = () => {
   storage.clearAll();
 };

@@ -2,9 +2,9 @@ import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
 import OverlayLoader from '@/components/Loader/OverlayLoader';
-import SafeAreaContainer from '@/components/SafeAreaContainer';
 import useTheme from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/useAuthStore';
+import { APP_VERSION } from '@/utility/config';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -20,7 +20,16 @@ import Toast from 'react-native-toast-message';
 import { z } from 'zod';
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Enter a valid email')
+    .refine((val) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val), {
+      message: 'Enter a valid email address',
+    })
+    .refine((val) => !val.includes('+'), {
+      message: 'Email aliases with "+" are not allowed',
+    }),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -37,113 +46,120 @@ export default function LoginScreen({ navigation }: Readonly<Props>) {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = async (data: LoginForm) => {
     const result = await login(data.email, data.password);
-    console.log('result---', result)
     if (!result.success) {
-      Toast.show({ type: 'error', text1: 'Login Failed', text2: result.error });
+      if (result.requiresVerification) {
+        navigation.navigate('EmailVerification', { email: data.email });
+      } else {
+        Toast.show({ type: 'error', text1: 'Login Failed', text2: result.error });
+      }
     }
   };
 
   return (
-    <SafeAreaContainer className='flex-1'>
-      <MainBG>
-        <OverlayLoader open={loading} text='Loading...' />
-        <KeyboardAvoidingView
-          className="flex-1"
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyboardShouldPersistTaps="handled">
-            <View className="flex-1 px-6 justify-center">
-              {/* Header */}
-              <View className="mb-10">
-                <Text
-                  className="text-4xl font-bold mb-2"
-                  style={{ color: colors?.textPrimary }}>
-                  Welcome Back 👋
-                </Text>
-                <Text
-                  className="text-base"
-                  style={{ color: colors?.textPrimary }}>
-                  Sign in to manage your finances
-                </Text>
-              </View>
+    <MainBG>
+      <OverlayLoader open={loading} text='Loading...' />
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled">
+          <View className="flex-1 px-6 justify-center">
+            {/* Header */}
+            <View className="mb-10">
+              <Text
+                className="text-4xl font-bold mb-2"
+                style={{ color: colors?.textPrimary }}>
+                Welcome Back 👋
+              </Text>
+              <Text
+                className="text-base"
+                style={{ color: colors?.textPrimary }}>
+                Sign in to manage your finances
+              </Text>
+            </View>
 
-              {/* Form */}
-              <View className="gap-y-5 mb-8">
-                <Controller
-                  control={control}
-                  name="email"
-                  render={({ field: { onChange, value } }) => (
-                    <AnimatedInput
-                      label="Email Address"
-                      value={value}
-                      onChange={onChange}
-                      keyboardType="email-address"
-                      error={errors.email?.message}
-                      isDark={isDark}
-                      autoCapitalize="none"
-                      autoComplete="email"
-                      textContentType="emailAddress"
-                    />
-                  )}
-                />
-                <Controller
-                  control={control}
-                  name="password"
-                  render={({ field: { onChange, value } }) => (
-                    <AnimatedInput
-                      label="Password"
-                      value={value}
-                      onChange={onChange}
-                      error={errors.password?.message}
-                      isDark={isDark}
-                      secureTextEntry
-                      autoComplete="current-password"
-                      textContentType="password"
-                    />
-                  )}
-                />
-              </View>
-
-              {/* Submit */}
-              <Button
-                title="Sign In"
-                onPress={handleSubmit(onSubmit)}
-                loading={loading}
-                disabled={loading}
-                variant='primary'
-                className="mb-4 rounded-3xl"
+            {/* Form */}
+            <View className="gap-y-5 mb-8">
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <AnimatedInput
+                    label="Email Address"
+                    value={value}
+                    onChange={onChange}
+                    keyboardType="email-address"
+                    error={errors.email?.message}
+                    isDark={isDark}
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    textContentType="emailAddress"
+                  />
+                )}
               />
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <AnimatedInput
+                    label="Password"
+                    value={value}
+                    onChange={onChange}
+                    error={errors.password?.message}
+                    isDark={isDark}
+                    secureTextEntry
+                    autoComplete="current-password"
+                    textContentType="password"
+                  />
+                )}
+              />
+            </View>
 
-              {/* Forgot Password */}
-              <TouchableOpacity
-                className="items-center mb-6"
-                onPress={() => navigation.navigate('ForgotPassword')}>
-                <Text className="font-medium" style={{ color: '#2F7E79' }}>
-                  Forgot Password?
+            {/* Submit */}
+            <Button
+              title="Sign In"
+              onPress={handleSubmit(onSubmit)}
+              loading={loading}
+              disabled={loading || !isValid}
+              variant='primary'
+              className="mb-4 rounded-3xl"
+            />
+
+            {/* Forgot Password */}
+            <TouchableOpacity
+              className="items-center mb-6"
+              onPress={() => navigation.navigate('ForgotPin')}>
+              <Text className="font-medium text-primary">
+                Forgot PIN?
+              </Text>
+            </TouchableOpacity>
+
+            {/* Footer */}
+            <View className="flex-row justify-center items-center">
+              <Text style={{ color: colors.textPrimary }}>
+                Don't have an account?{' '}
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                <Text className="font-semibold text-primary">
+                  Sign Up
                 </Text>
               </TouchableOpacity>
-
-              {/* Footer */}
-              <View className="flex-row justify-center items-center">
-                <Text style={{ color: isDark ? '#9E9E9E' : '#616161' }}>
-                  Don't have an account?{' '}
-                </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                  <Text className="font-semibold" style={{ color: '#2F7E79' }}>
-                    Sign Up
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </MainBG >
-    </SafeAreaContainer>
+            {/* Version - Bottom Right */}
+            <View style={{ position: 'absolute', right: 25, bottom: 30 }} pointerEvents="none">
+              <Text style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
+                v{APP_VERSION}
+              </Text>
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </MainBG >
   );
 }

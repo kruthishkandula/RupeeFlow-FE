@@ -1,18 +1,19 @@
 import { createItem, getItem, removeItem } from "@/utility/storage";
+import { StateStorage } from "zustand/middleware";
 
-export const local_storage = {
-    setItem: async (key: string, value: any) => {
+export const local_storage: StateStorage = {
+    setItem: (key: string, value: any) => {
         let encryptedData = JSON.stringify(value);
-        await createItem(key, encryptedData);
+        createItem(key, encryptedData);
         return true;
     },
-    getItem: async (key: string) => {
-        const value = await getItem(key);
+    getItem: (key: string) => {
+        const value = getItem(key);
         let decryptedData =
             value && typeof value == 'string' ? JSON.parse(value) : {};
         return decryptedData;
     },
-    removeItem: async (key: string) => {
-        await removeItem(key);
+    removeItem: (key: string) => {
+        removeItem(key);
     },
 };

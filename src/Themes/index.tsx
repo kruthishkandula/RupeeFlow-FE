@@ -46,9 +46,12 @@ export function Theme(props: ThemeProps) {
 
   useEffect(() => {
     if (colorScheme && isDefaultTheme) {
-      setTheme(colorScheme === 'dark' ? 'dark' : 'light');
+      const systemTheme = colorScheme === 'dark' ? 'dark' : 'light';
+      if (theme !== systemTheme) {
+        setTheme(systemTheme);
+      }
     }
-  }, [colorScheme, isDefaultTheme]);
+  }, [colorScheme, isDefaultTheme, theme]);
 
   return (
     <View style={Themes[theme]} className={'flex-1' + ' ' + props.className}>

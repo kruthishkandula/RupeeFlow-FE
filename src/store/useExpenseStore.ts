@@ -8,6 +8,7 @@ const getUserId = (): string => getFirebaseAuth()?.currentUser?.uid ?? '';
 type ExpenseStore = {
   expenses: TransactionType[];
   getStoreExpenses: () => Promise<void>;
+  getExpenseById: (id: string) => Promise<TransactionType | null>;
   addStoreExpense: (expense: TransactionType) => Promise<{ success: boolean; data?: TransactionType; error?: any }>;
   updateStoreExpense: (expense: Omit<TransactionType, 'created_at'>) => Promise<{ success: boolean; data?: TransactionType; error?: any }>;
   deleteStoreExpense: (id: string) => Promise<{ success: boolean; data?: TransactionType; error?: any }>;
@@ -29,7 +30,28 @@ export const useExpenseStore = create<ExpenseStore>((set, get) => ({
       set({ expenses: data });
     } catch (error) {
       console.log('GET EXPENSE ERROR:', error);
-      return [];
+      return;
+    }
+  },
+
+  getExpenseById: async (id: string) => {
+    try {
+      const db = await getDB();
+      const userId = getUserId();
+
+      const [result] = await db.executeSql(
+        `SELECT * FROM expenses WHERE id = ? AND user_id = ? LIMIT 1`,
+        [id, userId]
+      );
+
+      if (!result.rows.length) {
+        return null;
+      }
+
+      return result.rows.item(0) as TransactionType;
+    } catch (error) {
+      console.log('GET EXPENSE BY ID ERROR:', error);
+      return null;
     }
   },
 

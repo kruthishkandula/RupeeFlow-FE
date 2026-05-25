@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Icon from '@/components/Icon';
+import useTheme from '@/hooks/useTheme';
 
 interface Props extends TextInputProps {
   label: string;
@@ -57,6 +58,7 @@ export default function AnimatedInput({
   // Single animated value drives both label float AND border color
   const floatAnim = useRef(new Animated.Value(value ? 1 : 0)).current;
   const borderAnim = useRef(new Animated.Value(0)).current;
+  const { colors } = useTheme();
 
   // Only used for eye icon color — does NOT affect TextInput rendering
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -114,14 +116,14 @@ export default function AnimatedInput({
     ? '#EF4444'
     : floatAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: [isDark ? '#9E9E9E' : '#757575', '#2F7E79'],
+        outputRange: [isDark ? '#9E9E9E' : '#757575', colors?.primary],
       });
 
   const animatedBorderColor = error
     ? '#EF4444'
     : borderAnim.interpolate({
         inputRange: [0, 1],
-        outputRange: [isDark ? '#3A3A4A' : '#E5E7EB', '#2F7E79'],
+        outputRange: [isDark ? '#3A3A4A' : '#E5E7EB', colors?.primary],
       });
 
   return (
@@ -158,8 +160,8 @@ export default function AnimatedInput({
             }}
             keyboardType={amount ? 'decimal-pad' : keyboardType}
             style={[styles.innerInput, { color: textColor }]}
-            cursorColor="#2F7E79"
-            selectionColor="#2F7E79"
+            cursorColor={colors?.textPrimary}
+            selectionColor={colors?.textPrimary}
             secureTextEntry={secureTextEntry && !isPasswordVisible}
             placeholderTextColor={isDark ? '#6B7280' : '#9CA3AF'}
             {...rest}

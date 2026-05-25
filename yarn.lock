@@ -2781,6 +2781,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/messaging@npm:^24.0.0":
+  version: 24.0.0
+  resolution: "@react-native-firebase/messaging@npm:24.0.0"
+  peerDependencies:
+    "@react-native-firebase/app": 24.0.0
+    expo: ">=47.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 81dabf2f77c435736a2f5cd55afdb41cadb4d14908f4a15e0b80faef3b2241b06c6f3a462dbf9e65c9883c94b299afd0ca852edb86c1a93fb6e5384ebc314340
+  languageName: node
+  linkType: hard
+
 "@react-native-google-signin/google-signin@npm:^16.1.2":
   version: 16.1.2
   resolution: "@react-native-google-signin/google-signin@npm:16.1.2"
@@ -3580,6 +3593,7 @@ __metadata:
     "@react-native-community/cli-platform-ios": 20.0.0
     "@react-native-firebase/app": ^24.0.0
     "@react-native-firebase/auth": ^24.0.0
+    "@react-native-firebase/messaging": ^24.0.0
     "@react-native-google-signin/google-signin": ^16.1.2
     "@react-native/babel-preset": 0.83.1
     "@react-native/eslint-config": 0.83.1
@@ -3608,7 +3622,9 @@ __metadata:
     react: 19.2.0
     react-hook-form: ^7.71.1
     react-native: 0.83.1
+    react-native-device-info: ^15.0.2
     react-native-keyboard-aware-scroll-view: ^0.9.5
+    react-native-linear-gradient: ^2.8.3
     react-native-markdown-display: ^7.0.2
     react-native-mmkv: ^4.3.1
     react-native-nitro-modules: ^0.35.6
@@ -9592,6 +9608,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-device-info@npm:^15.0.2":
+  version: 15.0.2
+  resolution: "react-native-device-info@npm:15.0.2"
+  peerDependencies:
+    react-native: "*"
+  checksum: 932ec7ccfc885aeb39c455b31c55a1b345bd6fcfc8cf22f63fff88f42aefc82bf44e4b05daeaaa1231c4ea8590f25740ce6a0f38bc24a5c89d68702de832e8d6
+  languageName: node
+  linkType: hard
+
 "react-native-fit-image@npm:^1.5.5":
   version: 1.5.5
   resolution: "react-native-fit-image@npm:1.5.5"
@@ -9629,6 +9654,16 @@ __metadata:
   peerDependencies:
     react-native: ">=0.48.4"
   checksum: 5eec2aedb886213dfed4c8428a443b565dce80ba9fcf5897171e4c8829d4dd64c5011ac004d93f29adfc83ad6f88c2838d1a5b45255dc4a49bd1c0a169245800
+  languageName: node
+  linkType: hard
+
+"react-native-linear-gradient@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "react-native-linear-gradient@npm:2.8.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
   languageName: node
   linkType: hard
 

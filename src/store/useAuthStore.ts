@@ -2,9 +2,11 @@ import { getFirebaseAuth } from '@/config/firebase';
 import {
   createUserWithEmailAndPassword,
   FirebaseAuthTypes,
+  sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from '@react-native-firebase/auth';
 import { create } from 'zustand';
 
@@ -15,9 +17,12 @@ type AuthStore = {
   setUser: (user: FirebaseAuthTypes.User | null) => void;
   setLoading: (loading: boolean) => void;
   setInitializing: (initializing: boolean) => void;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; requiresVerification?: boolean }>;
   signup: (email: string, password: string, displayName: string) => Promise<{ success: boolean; error?: string }>;
+  sendVerificationEmail: () => Promise<{ success: boolean; error?: string }>;
+  checkEmailVerified: () => Promise<boolean>;
   logout: () => Promise<void>;
+  sendPinResetEmail: (email: string) => Promise<{ success: boolean; error?: string }>;
 };
 
 const parseFirebaseError = (code: string): string => {
@@ -61,10 +66,19 @@ export const useAuthStore = create<AuthStore>((set) => ({
       if (!auth) {
         return { success: false, error: 'Authentication is not ready yet. Please restart the app.' };
       }
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      if (!credential.user.emailVerified) {
+        try {
+          await sendEmailVerification(credential.user);
+          console.log('[Auth] Verification email sent to', email.trim());
+        } catch (verifyError: any) {
+          console.error('[Auth] sendEmailVerification failed:', verifyError?.code, verifyError?.message);
+        }
+        return { success: false, requiresVerification: true, error: 'Please verify your email before signing in.' };
+      }
       return { success: true };
     } catch (error: any) {
-      console.log('error', error)
+      console.log('error', error);
       return { success: false, error: parseFirebaseError(error?.code) };
     } finally {
       set({ loading: false });
@@ -80,11 +94,47 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(credential.user, { displayName });
+      try {
+        await sendEmailVerification(credential.user);
+        console.log('[Auth] Verification email sent to', email.trim());
+      } catch (verifyError: any) {
+        console.error('[Auth] sendEmailVerification failed:', verifyError?.code, verifyError?.message);
+      }
       return { success: true };
     } catch (error: any) {
       return { success: false, error: parseFirebaseError(error?.code) };
     } finally {
       set({ loading: false });
+    }
+  },
+
+  sendVerificationEmail: async () => {
+    try {
+      const auth = getFirebaseAuth();
+      if (!auth?.currentUser) {
+        return { success: false, error: 'No user signed in.' };
+      }
+      let res = await sendEmailVerification(auth.currentUser);
+      console.log('res---', res)
+      return { success: true };
+    } catch (error: any) {
+      console.log('erro----', error)
+      return { success: false, error: parseFirebaseError(error?.code) };
+    }
+  },
+
+  checkEmailVerified: async () => {
+    try {
+      const auth = getFirebaseAuth();
+      if (!auth?.currentUser) return false;
+      await auth.currentUser.reload();
+      const verified = auth.currentUser.emailVerified;
+      if (verified) {
+        set({ user: auth.currentUser });
+      }
+      return verified;
+    } catch {
+      return false;
     }
   },
 
@@ -96,5 +146,20 @@ export const useAuthStore = create<AuthStore>((set) => ({
     }
     await signOut(auth);
     set({ user: null });
+  },
+  sendPinResetEmail: async (email) => {
+    set({ loading: true });
+    try {
+      const auth = getFirebaseAuth();
+      if (!auth) {
+        return { success: false, error: 'Authentication is not ready yet. Please restart the app.' };
+      }
+      await sendPasswordResetEmail(auth, email.trim());
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, error: parseFirebaseError(error?.code) };
+    } finally {
+      set({ loading: false });
+    }
   },
 }));

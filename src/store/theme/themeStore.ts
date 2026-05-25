@@ -1,7 +1,7 @@
 import { local_storage } from '@/storage';
 import { ThemesVariant } from '@/Themes/theme-config';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ThemesVariants = ThemesVariant;
 
@@ -30,7 +30,7 @@ export const useThemeStore = create<ThemeStore>()(
         },
         {
             name: 'theme-items-storage2',
-            storage: local_storage,
+            storage: createJSONStorage(() => local_storage),
         }
     )
 );

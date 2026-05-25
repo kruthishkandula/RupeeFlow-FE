@@ -1,4 +1,5 @@
 {
   "name": "RupeeFlow",
-  "displayName": "RupeeFlow"
+  "displayName": "RupeeFlow",
+  "scheme": "rupeeflow"
 }
