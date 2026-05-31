@@ -106,7 +106,6 @@ export default function Transactions() {
                         value={search}
                         onChangeText={setSearch}
                         returnKeyType='search'
-                        clearButtonMode='while-editing'
                         label="Search by title, category…"
                         search
                         onClear={() => setSearch('')}

@@ -184,7 +184,7 @@ export default function AnimatedInput({
           )}
           {search && value?.length > 0 && (
             <TouchableOpacity onPress={onClear} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Icon name="X" size={20} color="#9CA3AF" style={{ marginLeft: 8 }} />
+              <Icon name="CircleX" size={20} color="#9CA3AF" style={{ marginLeft: 8 }} />
             </TouchableOpacity>
           )}
           {amount && <AppText style={[styles.currency, { color: textColor }]}>{currency}</AppText>}
