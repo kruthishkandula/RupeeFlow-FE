@@ -6,10 +6,11 @@ import { gpsw } from '@/style/theme'
 import { TransactionType } from '@/typings/global'
 import { capitalize } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { G, Path, Svg, Text as SvgText } from 'react-native-svg'
 import MainBG from '../../components/Backgrounds/MainBG'
 import DynamicHeader from '../../components/Header/DynamicHeader'
+import AppText from '@/components/AppText'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CHART_SIZE = SCREEN_WIDTH * 0.55;
@@ -194,7 +195,7 @@ function BarChart({ labels, income, expense }: Readonly<{ labels: string[]; inco
                 borderRadius: 4,
               }} />
             </View>
-            <Text style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{label}</Text>
+            <AppText style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{label}</AppText>
           </View>
         ))}
       </View>
@@ -202,11 +203,11 @@ function BarChart({ labels, income, expense }: Readonly<{ labels: string[]; inco
       <View style={{ flexDirection: 'row', gap: 16, marginTop: 8, justifyContent: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <View style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: '#4CAF50' }} />
-          <Text style={{ color: colors.textSecondary, fontSize: 12 }}>Income</Text>
+          <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>Income</AppText>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <View style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: '#FF4C4C' }} />
-          <Text style={{ color: colors.textSecondary, fontSize: 12 }}>Expense</Text>
+          <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>Expense</AppText>
         </View>
       </View>
     </View>
@@ -276,9 +277,9 @@ export default function Statistics() {
                 onPress={() => setPeriod(p.value)}
                 style={[styles.periodTab, period === p.value && { backgroundColor: colors.primary }]}
               >
-                <Text style={{ color: period === p.value ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
+                <AppText style={{ color: period === p.value ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
                   {p.label}
-                </Text>
+                </AppText>
               </TouchableOpacity>
             ))}
           </View>
@@ -292,34 +293,34 @@ export default function Statistics() {
             ].map(item => (
               <View key={item.label} style={[styles.summaryCard, { backgroundColor: colors.surfaceElevated, flex: 1 }]}>
                 <Icon name={item.icon} size={18} color={item.color} />
-                <Text style={{ color: colors.textSecondary, fontSize: 11, marginTop: 4 }}>{item.label}</Text>
-                <Text style={{ color: item.color, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>
+                <AppText style={{ color: colors.textSecondary, fontSize: 11, marginTop: 4 }}>{item.label}</AppText>
+                <AppText style={{ color: item.color, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>
                   ₹{Math.abs(item.value).toLocaleString('en-IN')}
-                </Text>
+                </AppText>
               </View>
             ))}
           </View>
 
           {/* Bar Chart */}
           <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Income vs Expense</Text>
+            <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Income vs Expense</AppText>
             <BarChart labels={labels} income={incomeB} expense={expenseB} />
           </View>
 
           {/* Donut Chart + Category Legend */}
           {categoryData.length > 0 ? (
             <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Expenses by Category</Text>
+              <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Expenses by Category</AppText>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                 <DonutChart data={categoryData} />
                 <View style={{ flex: 1, gap: 8 }}>
                   {categoryData.slice(0, 5).map(cat => (
                     <View key={cat.label} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                       <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: cat.color, flexShrink: 0 }} />
-                      <Text style={{ color: colors.textSecondary, fontSize: 11, flex: 1 }} numberOfLines={1}>{cat.label}</Text>
-                      <Text style={{ color: colors.textPrimary, fontSize: 11, fontWeight: '600' }}>
+                      <AppText style={{ color: colors.textSecondary, fontSize: 11, flex: 1 }} numberOfLines={1}>{cat.label}</AppText>
+                      <AppText style={{ color: colors.textPrimary, fontSize: 11, fontWeight: '600' }}>
                         {totalExpensePie > 0 ? Math.round((cat.value / totalExpensePie) * 100) : 0}%
-                      </Text>
+                      </AppText>
                     </View>
                   ))}
                 </View>
@@ -330,7 +331,7 @@ export default function Statistics() {
           {/* Category Breakdown */}
           {categoryData.length > 0 && (
             <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Category Breakdown</Text>
+              <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Category Breakdown</AppText>
               <View style={{ gap: 14 }}>
                 {categoryData.map(cat => {
                   const pct = totalExpensePie > 0 ? cat.value / totalExpensePie : 0;
@@ -339,9 +340,9 @@ export default function Statistics() {
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                           <Icon name={(iconMap[cat.label] || 'CircleEllipsis') as any} size={18} color={cat.color} />
-                          <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500' }}>{cat.label}</Text>
+                          <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500' }}>{cat.label}</AppText>
                         </View>
-                        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>₹{cat.value.toLocaleString('en-IN')}</Text>
+                        <AppText style={{ color: colors.textSecondary, fontSize: 13 }}>₹{cat.value.toLocaleString('en-IN')}</AppText>
                       </View>
                       <View style={{ height: 6, backgroundColor: colors.borderDefault, borderRadius: 3 }}>
                         <View style={{ height: 6, backgroundColor: cat.color, borderRadius: 3, width: `${Math.round(pct * 100)}%` }} />
@@ -356,18 +357,18 @@ export default function Statistics() {
           {/* Top Expenses */}
           {topExpense.length > 0 && (
             <View style={[styles.card, { backgroundColor: colors.surfaceElevated, marginBottom: 30 }]}>
-              <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Top Expenses</Text>
+              <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Top Expenses</AppText>
               <View style={{ gap: 12 }}>
                 {topExpense.map((t, i) => (
                   <View key={t.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={[styles.rank, { backgroundColor: colors.primary }]}>
-                      <Text style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>#{i + 1}</Text>
+                      <AppText style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>#{i + 1}</AppText>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>{t.title}</Text>
-                      <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{capitalize(t.category)}</Text>
+                      <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>{t.title}</AppText>
+                      <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>{capitalize(t.category)}</AppText>
                     </View>
-                    <Text style={{ color: '#FF4C4C', fontSize: 15, fontWeight: '700' }}>₹{t.amount.toLocaleString('en-IN')}</Text>
+                    <AppText style={{ color: '#FF4C4C', fontSize: 15, fontWeight: '700' }}>₹{t.amount.toLocaleString('en-IN')}</AppText>
                   </View>
                 ))}
               </View>
@@ -378,9 +379,9 @@ export default function Statistics() {
           {filtered.length === 0 && (
             <View style={{ alignItems: 'center', marginTop: 60, gap: 12 }}>
               <Icon name="ChartNoAxesColumn" size={56} color={colors.textTertiary} />
-              <Text style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
+              <AppText style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
                 No transactions found{'\n'}for this period
-              </Text>
+              </AppText>
             </View>
           )}
         </ScrollView>

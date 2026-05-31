@@ -5,7 +5,8 @@ import { TransactionType } from '@/typings/global';
 import { useNavigation } from '@react-navigation/native';
 import { capitalize } from 'lodash';
 import React, { useState } from 'react';
-import { Animated, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Modal, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import AppText from '../AppText';
 import Icon from '../Icon';
 
 type TranscationCardProps = TransactionType;
@@ -76,12 +77,12 @@ export default function TranscationCard({
                     <Icon name={(CATEGORY_ICON_MAP[cat] || 'CircleEllipsis') as any} size={20} color={color} />
                 </View>
                 <View style={{ flex: 1 }}>
-                    <Text style={[styles.title, { color: colors.textPrimary }]} numberOfLines={1}>{data.title}</Text>
-                    <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{cat} · {display_date}</Text>
+                    <AppText style={[styles.title, { color: colors.textPrimary }]} numberOfLines={1}>{data.title}</AppText>
+                    <AppText style={[styles.subtitle, { color: colors.textSecondary }]}>{cat} · {display_date}</AppText>
                 </View>
-                <Text style={[styles.amount, { color: data.type === 'income' ? '#4CAF50' : '#FF4C4C' }]}>
+                <AppText style={[styles.amount, { color: data.type === 'income' ? '#4CAF50' : '#FF4C4C' }]}>
                     {data.type === 'income' ? '+' : '-'}{fmtFull(data.amount)}
-                </Text>
+                </AppText>
             </Pressable>
 
             <Modal
@@ -102,29 +103,29 @@ export default function TranscationCard({
                                 <Icon name={(CATEGORY_ICON_MAP[cat] || 'CircleEllipsis') as any} size={22} color={color} />
                             </View>
                             <View style={{ flex: 1 }}>
-                                <Text style={[styles.menuTitle, { color: colors.textPrimary }]} numberOfLines={1}>{data.title}</Text>
-                                <Text style={[styles.menuSub, { color: colors.textSecondary }]}>{cat} · {display_date}</Text>
+                                <AppText style={[styles.menuTitle, { color: colors.textPrimary }]} numberOfLines={1}>{data.title}</AppText>
+                                <AppText style={[styles.menuSub, { color: colors.textSecondary }]}>{cat} · {display_date}</AppText>
                             </View>
-                            <Text style={[styles.menuAmount, { color: data.type === 'income' ? '#4CAF50' : '#FF4C4C' }]}>
+                            <AppText style={[styles.menuAmount, { color: data.type === 'income' ? '#4CAF50' : '#FF4C4C' }]}>
                                 {data.type === 'income' ? '+' : '-'}{fmtFull(data.amount)}
-                            </Text>
+                            </AppText>
                         </View>
 
                         {confirming ? (
                             /* Delete confirmation */
                             <View style={styles.confirmSection}>
                                 <Icon name="TriangleAlert" size={28} color="#EF4444" />
-                                <Text style={[styles.confirmTitle, { color: colors.textPrimary }]}>Delete transaction?</Text>
-                                <Text style={[styles.confirmSub, { color: colors.textSecondary }]}>
+                                <AppText style={[styles.confirmTitle, { color: colors.textPrimary }]}>Delete transaction?</AppText>
+                                <AppText style={[styles.confirmSub, { color: colors.textSecondary }]}>
                                     This action cannot be undone.
-                                </Text>
+                                </AppText>
                                 <View style={styles.confirmButtons}>
                                     <TouchableOpacity
                                         style={[styles.confirmBtn, { backgroundColor: colors.borderDefault }]}
                                         activeOpacity={0.8}
                                         onPress={() => setConfirming(false)}
                                     >
-                                        <Text style={[styles.confirmBtnText, { color: colors.textPrimary }]}>No, keep it</Text>
+                                        <AppText style={[styles.confirmBtnText, { color: colors.textPrimary }]}>No, keep it</AppText>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={[styles.confirmBtn, styles.deleteBtn]}
@@ -132,7 +133,7 @@ export default function TranscationCard({
                                         onPress={handleDelete}
                                     >
                                         <Icon name="Trash2" size={15} color="#fff" />
-                                        <Text style={[styles.confirmBtnText, { color: '#fff' }]}>Yes, delete</Text>
+                                        <AppText style={[styles.confirmBtnText, { color: '#fff' }]}>Yes, delete</AppText>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -145,7 +146,7 @@ export default function TranscationCard({
                                     onPress={() => { closeMenu(); navigate('ExpenseDetail', data); }}
                                 >
                                     <Icon name="Eye" size={18} color={colors.textPrimary} />
-                                    <Text style={[styles.menuItemText, { color: colors.textPrimary }]}>View details</Text>
+                                    <AppText style={[styles.menuItemText, { color: colors.textPrimary }]}>View details</AppText>
                                 </TouchableOpacity>
 
                                 <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
@@ -156,7 +157,7 @@ export default function TranscationCard({
                                     onPress={() => setConfirming(true)}
                                 >
                                     <Icon name="Trash2" size={18} color="#EF4444" />
-                                    <Text style={[styles.menuItemText, { color: '#EF4444' }]}>Delete</Text>
+                                    <AppText style={[styles.menuItemText, { color: '#EF4444' }]}>Delete</AppText>
                                 </TouchableOpacity>
 
                                 <View style={[styles.divider, { backgroundColor: colors.borderSubtle }]} />
@@ -167,7 +168,7 @@ export default function TranscationCard({
                                     onPress={closeMenu}
                                 >
                                     <Icon name="X" size={18} color={colors.textSecondary} />
-                                    <Text style={[styles.menuItemText, { color: colors.textSecondary }]}>Cancel</Text>
+                                    <AppText style={[styles.menuItemText, { color: colors.textSecondary }]}>Cancel</AppText>
                                 </TouchableOpacity>
                             </>
                         )}

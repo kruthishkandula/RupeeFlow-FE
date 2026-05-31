@@ -4,15 +4,16 @@ import { findObject } from '@/utility/utilties';
 import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useLinkBuilder } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import Icon from '../components/Icon';
 import Profile from '../screens/Profile';
 import Statistics from '../screens/Statistics';
+import AppText from '@/components/AppText';
 
 const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 const AnimatedView = Animated.createAnimatedComponent(View);
-const AnimatedText = Animated.createAnimatedComponent(Text);
+const AnimatedText = Animated.createAnimatedComponent(AppText);
 
 type CustomButtonProps = BottomTabBarButtonProps & {
     containerStyle?: ViewStyle;
@@ -59,31 +60,40 @@ export default function BottomNav() {
             value: label,
         });
 
-        switch (label) {
-            default:
-                return (
-                    <Icon
-                        name={tabData?.icon}
-                        size={24}
-                        color={focused ? colors.primary : colors.white}
-                    />
-                );
+        // Using if statements for readability
+        if (label === 'dashboard' || label === 'statistics' || label === 'addexpense' || label === 'profile') {
+            return (
+                <Icon
+                    name={tabData?.icon}
+                    size={24}
+                    color={focused ? colors.primary : colors.white}
+                />
+            );
         }
+        // Default fallback (if needed)
+        return (
+            <Icon
+                name={tabData?.icon}
+                size={24}
+                color={focused ? colors.primary : colors.white}
+            />
+        );
     }
 
     const MyTabBar = ({ state, descriptors, navigation, ...props }: any) => {
-
         return (
             <View style={[styles.container, { backgroundColor: colors.primary }]} >
                 {
                     state.routes.map((route: any, index: number) => {
                         const { options } = descriptors[route.key];
-                        const label =
-                            options.tabBarLabel !== undefined
-                                ? options.tabBarLabel
-                                : options.title !== undefined
-                                    ? options.title
-                                    : route.name;
+                        let label;
+                        if (options.tabBarLabel !== undefined) {
+                            label = options.tabBarLabel;
+                        } else if (options.title === undefined) {
+                            label = route.name;
+                        } else {
+                            label = options.title;
+                        }
 
                         const isFocused = state.index === index;
 
@@ -94,9 +104,10 @@ export default function BottomNav() {
                                 canPreventDefault: true,
                             });
 
-                            if (!isFocused && !event.defaultPrevented) {
-                                navigation.navigate(route.name, route.params);
+                            if (isFocused || event.defaultPrevented) {
+                                return;
                             }
+                            navigation.navigate(route.name, route.params);
                         };
 
                         const onLongPress = () => {
@@ -139,7 +150,7 @@ export default function BottomNav() {
             {
                 TabRoutes?.map((route: any, index: number) => (
                     <TabNav.Screen
-                        key={`Tab-${index}`}
+                        key={`Tab-${route.name}-${index}`}
                         name={route.name}
                         component={route.component}
                         options={{

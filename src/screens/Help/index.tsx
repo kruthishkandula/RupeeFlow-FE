@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText'
 import MainBG from '@/components/Backgrounds/MainBG'
 import DynamicHeader from '@/components/Header/DynamicHeader'
 import Icon from '@/components/Icon'
@@ -5,7 +6,7 @@ import SafeAreaContainer from '@/components/SafeAreaContainer'
 import { CONTACT, FAQS } from '@/fixtures/cmsdata'
 import useTheme from '@/hooks/useTheme'
 import React, { useState } from 'react'
-import { Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Linking, ScrollView, TouchableOpacity, View } from 'react-native'
 
 
 function FAQItem({ q, a, colors, isDark, open, onToggle }: Readonly<{ q: string; a: string; colors: any; isDark: boolean; open: boolean; onToggle: () => void }>) {
@@ -24,13 +25,13 @@ function FAQItem({ q, a, colors, isDark, open, onToggle }: Readonly<{ q: string;
                 }}>
                     <Icon name={open ? 'Minus' : 'Plus'} size={14} color={colors?.primary} />
                 </View>
-                <Text style={{ flex: 1, color: colors.textPrimary, fontSize: 14, fontWeight: '600', lineHeight: 20 }}>{q}</Text>
+                <AppText style={{ flex: 1, color: colors.textPrimary, fontSize: 14, fontWeight: '600', lineHeight: 20 }}>{q}</AppText>
             </View>
             {open && (
-                <Text style={{
+                <AppText style={{
                     color: colors.textSecondary, fontSize: 13, lineHeight: 20,
                     marginTop: 10, marginLeft: 40,
-                }}>{a}</Text>
+                }}>{a}</AppText>
             )}
         </TouchableOpacity>
     )
@@ -58,10 +59,10 @@ export default function Help() {
                         }}>
                             <Icon name='Headphones' size={28} color='#fff' />
                         </View>
-                        <Text style={{ color: '#fff', fontSize: 18, fontWeight: '800' }}>How can we help?</Text>
-                        <Text style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 6, textAlign: 'center' }}>
+                        <AppText style={{ color: '#fff', fontSize: 18, fontWeight: '800' }}>How can we help?</AppText>
+                        <AppText style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, marginTop: 6, textAlign: 'center' }}>
                             Browse FAQs or reach out to our support team
-                        </Text>
+                        </AppText>
                     </View>
 
                     {/* FAQs */}
@@ -69,11 +70,11 @@ export default function Help() {
                         marginHorizontal: 16, borderRadius: 24,
                         backgroundColor: colors.surfaceBase, overflow: 'hidden', marginBottom: 16,
                     }}>
-                        <Text style={{
+                        <AppText style={{
                             color: colors.textSecondary, fontSize: 11, fontWeight: '700',
                             letterSpacing: 1, paddingHorizontal: 20, paddingTop: 18, paddingBottom: 4,
                             textTransform: 'uppercase',
-                        }}>Frequently Asked Questions</Text>
+                        }}>Frequently Asked Questions</AppText>
                         {FAQS.map((item, i) => (
                             <FAQItem key={`${i}-${item.q}`} q={item.q} a={item.a} colors={colors} isDark={isDark} open={openFaq === i} onToggle={() => setOpenFaq(openFaq === i ? null : i)} />
                         ))}
@@ -84,11 +85,11 @@ export default function Help() {
                         marginHorizontal: 16, borderRadius: 24,
                         backgroundColor: colors.surfaceBase, overflow: 'hidden', marginBottom: 16,
                     }}>
-                        <Text style={{
+                        <AppText style={{
                             color: colors.textSecondary, fontSize: 11, fontWeight: '700',
                             letterSpacing: 1, paddingHorizontal: 20, paddingTop: 18, paddingBottom: 4,
                             textTransform: 'uppercase',
-                        }}>Contact Us</Text>
+                        }}>Contact Us</AppText>
                         {CONTACT.map((c, i) => (
                             <TouchableOpacity
                                 key={i}
@@ -107,8 +108,8 @@ export default function Help() {
                                     <Icon name={c.icon} size={19} color={c.color} />
                                 </View>
                                 <View style={{ flex: 1 }}>
-                                    <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>{c.label}</Text>
-                                    <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>{c.value}</Text>
+                                    <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>{c.label}</AppText>
+                                    <AppText style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>{c.value}</AppText>
                                 </View>
                                 <Icon name='ChevronRight' size={16} color={colors.textSecondary} />
                             </TouchableOpacity>

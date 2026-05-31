@@ -1,5 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native'
+import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
+import AppText from '../AppText'
 
 type DetailsType = { 
     topData: Record<string, any>, 
@@ -18,8 +19,8 @@ export default function Details({ topData, bottomData, mainContainerStyle, botto
                     Object.keys(topData).map((key, index) => {
                         return (
                             <View key={`${key}-${index}`} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={[styles.topTextStyle, topTextStyle]}>{key}</Text>
-                                <Text style={[styles.topTextStyle, topTextStyle]}>{topData[key]}</Text>
+                                <AppText style={[styles.topTextStyle, topTextStyle]}>{key}</AppText>
+                                <AppText style={[styles.topTextStyle, topTextStyle]}>{topData[key]}</AppText>
                             </View>
                         )
                     })
@@ -30,8 +31,8 @@ export default function Details({ topData, bottomData, mainContainerStyle, botto
                     Object.keys(bottomData).map((key, index) => {
                         return (
                             <View key={`${key}-${index}`} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={[styles.bottomTextStyle, bottomTextStyle]}>{key}</Text>
-                                <Text style={[styles.bottomTextStyle, bottomTextStyle]}>{bottomData[key]}</Text>
+                                <AppText style={[styles.bottomTextStyle, bottomTextStyle]}>{key}</AppText>
+                                <AppText style={[styles.bottomTextStyle, bottomTextStyle]}>{bottomData[key]}</AppText>
                             </View>
                         )
                     })

@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
@@ -12,9 +13,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { z } from 'zod';
@@ -72,16 +72,16 @@ export default function LoginScreen({ navigation }: Readonly<Props>) {
           <View className="flex-1 px-6 justify-center">
             {/* Header */}
             <View className="mb-10">
-              <Text
+              <AppText 
                 className="text-4xl font-bold mb-2"
                 style={{ color: colors?.textPrimary }}>
                 Welcome Back 👋
-              </Text>
-              <Text
+              </AppText>
+              <AppText 
                 className="text-base"
                 style={{ color: colors?.textPrimary }}>
                 Sign in to manage your finances
-              </Text>
+              </AppText>
             </View>
 
             {/* Form */}
@@ -135,27 +135,27 @@ export default function LoginScreen({ navigation }: Readonly<Props>) {
             <TouchableOpacity
               className="items-center mb-6"
               onPress={() => navigation.navigate('ForgotPin')}>
-              <Text className="font-medium text-primary">
+              <AppText className="font-medium text-primary">
                 Forgot PIN?
-              </Text>
+              </AppText>
             </TouchableOpacity>
 
             {/* Footer */}
             <View className="flex-row justify-center items-center">
-              <Text style={{ color: colors.textPrimary }}>
+              <AppText style={{ color: colors.textPrimary }}>
                 Don't have an account?{' '}
-              </Text>
+              </AppText>
               <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                <Text className="font-semibold text-primary">
+                <AppText className="font-semibold text-primary">
                   Sign Up
-                </Text>
+                </AppText>
               </TouchableOpacity>
             </View>
             {/* Version - Bottom Right */}
             <View style={{ position: 'absolute', right: 25, bottom: 30 }} pointerEvents="none">
-              <Text style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
+              <AppText style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
                 v{APP_VERSION}
-              </Text>
+              </AppText>
             </View>
           </View>
         </ScrollView>

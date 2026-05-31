@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Icon from '../Icon';
+import AppText from '../AppText';
 
 interface MainWalletCardProps {
   balance?: number;
@@ -22,28 +23,28 @@ export default function MainWalletCard({ balance = 0, income = 0, expense = 0, c
     <View style={styles.container} >
       {/* header */}
       <View style={styles.header} >
-        <Text style={styles.headerTitle} >Main Wallet</Text>
+        <AppText style={styles.headerTitle} >Main Wallet</AppText>
       </View>
 
       <View className='flex-row justify-between' >
-        <Text style={styles.title} >Total Balance</Text>
+        <AppText style={styles.title} >Total Balance</AppText>
         <Icon name='Ellipsis' size={24} color='white' />
       </View>
-      <Text style={styles.balance} >{formatAmount(balance, currency)}</Text>
+      <AppText style={styles.balance} >{formatAmount(balance, currency)}</AppText>
       <View className='flex-row justify-between mt-4' >
         <View className='items-start'>
           <View className='flex-row items-center gap-1' >
             <Icon name='ArrowDownLeft' size={16} color='white' />
-            <Text style={styles.income} >Income</Text>
+            <AppText style={styles.income} >Income</AppText>
           </View>
-          <Text style={styles.incomeAmount} >{formatAmount(income, currency)}</Text>
+          <AppText style={styles.incomeAmount} >{formatAmount(income, currency)}</AppText>
         </View>
         <View className='items-start' >
           <View className='flex-row items-center gap-1' >
             <Icon name='ArrowUpRight' size={16} color='white' />
-            <Text style={styles.expense} >Expense</Text>
+            <AppText style={styles.expense} >Expense</AppText>
           </View>
-          <Text style={styles.expenseAmount} >{formatAmount(expense, currency)}</Text>
+          <AppText style={styles.expenseAmount} >{formatAmount(expense, currency)}</AppText>
         </View>
       </View>
     </View>

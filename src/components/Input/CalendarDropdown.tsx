@@ -4,11 +4,11 @@ import {
   LayoutAnimation,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   UIManager,
-  View,
+  View
 } from 'react-native';
+import AppText from '../AppText';
 
 if (
   Platform.OS === 'android' &&
@@ -166,16 +166,16 @@ export default function CalendarDropdown({
 
   return (
     <View style={{ marginBottom: 22 }}>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
 
       <View style={[styles.container, error && { borderColor: '#EF4444' }]}>
         {/* Trigger row */}
         <TouchableOpacity activeOpacity={0.8} style={styles.inputRow} onPress={toggle}>
           <View style={styles.inputLeft}>
-            <Text style={styles.calendarIcon}>📅</Text>
-            <Text style={[styles.value, !value && { color: '#9CA3AF' }]}>
+            <AppText style={styles.calendarIcon}>📅</AppText>
+            <AppText style={[styles.value, !value && { color: '#9CA3AF' }]}>
               {value ? formatDate(value) : 'Select date'}
-            </Text>
+            </AppText>
           </View>
           <Animated.Text style={[styles.arrow, { transform: [{ rotate: arrowRotate }] }]}>
             ▼
@@ -191,7 +191,7 @@ export default function CalendarDropdown({
             <View style={styles.monthNav}>
               {mode === 'day' && (
                 <TouchableOpacity onPress={goToPrevMonth} style={styles.navBtn}>
-                  <Text style={styles.navArrow}>‹</Text>
+                  <AppText style={styles.navArrow}>‹</AppText>
                 </TouchableOpacity>
               )}
 
@@ -207,13 +207,13 @@ export default function CalendarDropdown({
                     setMode(prev => prev === 'month' ? 'day' : 'month');
                   }}
                 >
-                  <Text style={[styles.monthYear, mode === 'month' && styles.pillSegmentActiveText]}>
+                  <AppText style={[styles.monthYear, mode === 'month' && styles.pillSegmentActiveText]}>
                     {MONTHS[viewMonth].slice(0, 3)}
-                    <Text style={styles.modeCaret}>{mode === 'month' ? ' ▴' : ' ▾'}</Text>
-                  </Text>
+                    <AppText style={styles.modeCaret}>{mode === 'month' ? ' ▴' : ' ▾'}</AppText>
+                  </AppText>
                 </TouchableOpacity>
 
-                <Text style={styles.pillDivider}>·</Text>
+                <AppText style={styles.pillDivider}>·</AppText>
 
                 {/* Tap year → year picker */}
                 <TouchableOpacity
@@ -226,16 +226,16 @@ export default function CalendarDropdown({
                     setMode(prev => prev === 'year' ? 'day' : 'year');
                   }}
                 >
-                  <Text style={[styles.yearPill, mode === 'year' && styles.pillSegmentActiveText]}>
+                  <AppText style={[styles.yearPill, mode === 'year' && styles.pillSegmentActiveText]}>
                     {viewYear}
-                    <Text style={styles.modeCaret}>{mode === 'year' ? ' ▴' : ' ▾'}</Text>
-                  </Text>
+                    <AppText style={styles.modeCaret}>{mode === 'year' ? ' ▴' : ' ▾'}</AppText>
+                  </AppText>
                 </TouchableOpacity>
               </View>
 
               {mode === 'day' && (
                 <TouchableOpacity onPress={goToNextMonth} style={styles.navBtn}>
-                  <Text style={styles.navArrow}>›</Text>
+                  <AppText style={styles.navArrow}>›</AppText>
                 </TouchableOpacity>
               )}
             </View>
@@ -246,13 +246,13 @@ export default function CalendarDropdown({
                 {/* Year range nav */}
                 <View style={styles.monthNav}>
                   <TouchableOpacity onPress={goToPrevYears} style={styles.navBtn}>
-                    <Text style={styles.navArrow}>‹</Text>
+                    <AppText style={styles.navArrow}>‹</AppText>
                   </TouchableOpacity>
-                  <Text style={styles.monthYear}>
+                  <AppText style={styles.monthYear}>
                     {yearDecadeStart} – {yearDecadeStart + 11}
-                  </Text>
+                  </AppText>
                   <TouchableOpacity onPress={goToNextYears} style={styles.navBtn}>
-                    <Text style={styles.navArrow}>›</Text>
+                    <AppText style={styles.navArrow}>›</AppText>
                   </TouchableOpacity>
                 </View>
 
@@ -266,13 +266,13 @@ export default function CalendarDropdown({
                         style={[styles.yearCell, isSelected && styles.selectedCell]}
                         onPress={() => handleYearSelect(y)}
                       >
-                        <Text style={[
+                        <AppText style={[
                           styles.yearText,
                           isCurrent && !isSelected && styles.todayText,
                           isSelected && styles.selectedText,
                         ]}>
                           {y}
-                        </Text>
+                        </AppText>
                       </TouchableOpacity>
                     );
                   })}
@@ -292,13 +292,13 @@ export default function CalendarDropdown({
                       style={[styles.monthCell, isSelected && styles.selectedCell]}
                       onPress={() => handleMonthSelect(idx)}
                     >
-                      <Text style={[
+                      <AppText style={[
                         styles.monthCellText,
                         isCurrent && !isSelected && styles.todayText,
                         isSelected && styles.selectedText,
                       ]}>
                         {m.slice(0, 3)}
-                      </Text>
+                      </AppText>
                     </TouchableOpacity>
                   );
                 })}
@@ -310,7 +310,7 @@ export default function CalendarDropdown({
               <>
                 <View style={styles.row}>
                   {DAYS.map(d => (
-                    <Text key={d} style={styles.dayHeader}>{d}</Text>
+                    <AppText key={d} style={styles.dayHeader}>{d}</AppText>
                   ))}
                 </View>
 
@@ -336,14 +336,14 @@ export default function CalendarDropdown({
                           onPress={() => handleDayPress(day)}
                           activeOpacity={disabled ? 1 : 0.7}
                         >
-                          <Text style={[
+                          <AppText style={[
                             styles.dayText,
                             todayCell && !selected && styles.todayText,
                             selected && styles.selectedText,
                             disabled && styles.disabledText,
                           ]}>
                             {day}
-                          </Text>
+                          </AppText>
                         </TouchableOpacity>
                       );
                     })}
@@ -362,7 +362,7 @@ export default function CalendarDropdown({
                     rotate.setValue(0);
                   }}
                 >
-                  <Text style={styles.todayBtnText}>Today</Text>
+                  <AppText style={styles.todayBtnText}>Today</AppText>
                 </TouchableOpacity>
               </>
             )}
@@ -370,7 +370,7 @@ export default function CalendarDropdown({
         )}
       </View>
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <AppText style={styles.error}>{error}</AppText>}
     </View>
   );
 }

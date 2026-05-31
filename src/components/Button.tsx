@@ -1,5 +1,6 @@
 import React from 'react';
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import AppText from './AppText';
 
 export type ButtonProps = {
     variant?: "primary" | "secondary" | "tertiary" | "danger" | "success";
@@ -57,7 +58,7 @@ export default function Button({
 
     return (
         <TouchableOpacity className={`min-h-12 justify-center ${ButtonClassName} ${className}`} onPress={onPress} style={[style, disabled && { backgroundColor: '#afafaf' }]} disabled={disabled}>
-            {loading ? <ActivityIndicator size={'small'} className='text-text2' /> : <Text className={`text-center ${textClassName}`} style={textStyle}>{title}</Text>}
+            {loading ? <ActivityIndicator size={'small'} className='text-text2' /> : <AppText className={`text-center ${textClassName}`} style={textStyle}>{title}</AppText>}
         </TouchableOpacity>
     )
 }

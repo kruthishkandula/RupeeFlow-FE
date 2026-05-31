@@ -1,7 +1,7 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import TranscationCard from '@/components/Cards/TranscationCard';
 import DynamicHeader from '@/components/Header/DynamicHeader';
-import DynamicHeader2 from '@/components/Header/DynamicHeader2';
 import Icon from '@/components/Icon';
 import Empty from '@/components/Organisms/Empty';
 import useTheme from '@/hooks/useTheme';
@@ -13,9 +13,8 @@ import {
     Pressable,
     RefreshControl,
     StyleSheet,
-    Text,
     TextInput,
-    View,
+    View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -101,7 +100,7 @@ export default function Transactions() {
                 />
 
                 {/* Search bar */}
-                <View style={[styles.searchRow, { borderColor: colors?.border ?? '#E5E7EB', backgroundColor: colors?.surfaceOverlay }]}>
+                <View style={[styles.searchRow, { borderColor: colors?.borderSubtle ?? '#E5E7EB', backgroundColor: colors?.surfaceOverlay }]}>
                     <Icon name='Search' size={16} color='#9CA3AF' />
                     <TextInput
                         style={[styles.searchInput, { color: colors?.textPrimary ?? '#111827' }]}
@@ -125,7 +124,7 @@ export default function Transactions() {
                     <View style={[styles.filterSection, { borderBottomColor: colors?.dark }]}>
                         {/* Sort label + chips */}
                         <View style={styles.filterRow}>
-                            <Text style={[styles.filterLabel, { color: colors?.textPrimary }]}>Sort by</Text>
+                            <AppText style={[styles.filterLabel, { color: colors?.textPrimary }]}>Sort by</AppText>
                             {(['title', 'amount', 'date'] as SortField[]).map(field => {
                                 const active = sortField === field;
                                 return (
@@ -143,14 +142,14 @@ export default function Transactions() {
                                             size={13}
                                             color={active ? colors?.textPrimary : (colors?.textInverse ?? '#374151')}
                                         />
-                                        <Text
+                                        <AppText
                                             style={[
                                                 styles.chipText,
                                                 { color: active ? colors?.textPrimary : (colors?.textInverse ?? '#374151') },
                                             ]}
                                         >
                                             {field.charAt(0).toUpperCase() + field.slice(1)}
-                                        </Text>
+                                        </AppText>
                                     </Pressable>
                                 );
                             })}
@@ -158,16 +157,16 @@ export default function Transactions() {
 
                         {/* Result count + clear */}
                         <View style={styles.filterMeta}>
-                            <Text style={[styles.resultCount, { color: colors?.textPrimary, fontWeight: '800', fontFamily: 'Poppins' }]}>
+                            <AppText style={[styles.resultCount, { color: colors?.textPrimary, fontWeight: '800', fontFamily: 'Poppins' }]}>
                                 {processed.length} result{processed.length !== 1 ? 's' : ''}
-                            </Text>
+                            </AppText>
                             {(sortField !== 'date' || sortDir !== 'desc') && (
                                 <Pressable
                                     style={styles.clearChip}
                                     onPress={() => { setSortField('date'); setSortDir('desc'); }}
                                 >
                                     <Icon name='X' size={12} color='#EF4444' />
-                                    <Text style={styles.clearChipText}>Clear</Text>
+                                    <AppText style={styles.clearChipText}>Clear</AppText>
                                 </Pressable>
                             )}
                         </View>

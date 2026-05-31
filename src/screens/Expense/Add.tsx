@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert/Alert';
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import DynamicHeader from '@/components/Header/DynamicHeader';
@@ -16,10 +17,9 @@ import {
     Animated,
     ScrollView,
     StyleSheet,
-    Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -80,12 +80,12 @@ function TypeToggle({ value, onChange }: Readonly<{ value: string; onChange: (v:
                     style={styles.toggleOption}
                     onPress={() => handlePress(type)}
                 >
-                    <Text style={[
+                    <AppText style={[
                         styles.toggleText,
                         value === type && styles.toggleTextActive,
                     ]}>
                         {type === 'income' ? '📈 Income' : '📉 Expense'}
-                    </Text>
+                    </AppText>
                 </TouchableOpacity>
             ))}
         </View>
@@ -98,7 +98,7 @@ function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string
 
     return (
         <View style={[styles.categoryWrapper]}>
-            <Text style={[styles.sectionLabel, { color: colors?.textPrimary }]}>Category</Text>
+            <AppText style={[styles.sectionLabel, { color: colors?.textPrimary }]}>Category</AppText>
             <View style={styles.categoryGrid}>
                 {list.map((cat) => {
                     const selected = value === cat.value;
@@ -117,17 +117,17 @@ function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string
                             <View style={[styles.categoryIconBg, { backgroundColor: selected ? color : color + '33' }]}>
                                 <Icon name={iconName} size={18} color={selected ? '#fff' : color} />
                             </View>
-                            <Text
+                            <AppText 
                                 numberOfLines={1}
                                 style={[styles.categoryLabel, { color: colors?.dark }, selected && { color, fontWeight: '700', }]}
                             >
                                 {cat.label}
-                            </Text>
+                            </AppText>
                         </TouchableOpacity>
                     );
                 })}
             </View>
-            {error && <Text style={styles.errorText}>{error}</Text>}
+            {error && <AppText style={styles.errorText}>{error}</AppText>}
         </View>
     );
 }
@@ -235,7 +235,7 @@ export default function AddExpenseScreen() {
 
                     {/* Amount hero */}
                     <View style={[styles.amountCard, { borderColor: accentColor + '55', shadowColor: accentColor, backgroundColor: colors?.surfaceOverlay }]}>
-                        <Text style={[styles.amountLabel, { color: accentColor }]}>Amount (₹)</Text>
+                        <AppText style={[styles.amountLabel, { color: accentColor }]}>Amount (₹)</AppText>
                         <Controller
                             control={control}
                             name="amount"
@@ -246,7 +246,7 @@ export default function AddExpenseScreen() {
                             render={({ field, fieldState }) => (
                                 <>
                                     <View style={styles.amountRow}>
-                                        <Text style={[styles.currencySymbol, { color: accentColor }]}>₹</Text>
+                                        <AppText style={[styles.currencySymbol, { color: accentColor }]}>₹</AppText>
                                         <TextInput
                                             style={[styles.amountTextInput, { color: accentColor }]}
                                             value={formatAmount(field.value ?? '')}
@@ -266,7 +266,7 @@ export default function AddExpenseScreen() {
                                         />
                                     </View>
                                     {fieldState.error && (
-                                        <Text style={styles.errorText}>{fieldState.error.message}</Text>
+                                        <AppText style={styles.errorText}>{fieldState.error.message}</AppText>
                                     )}
                                     {/* Quick amount chips */}
                                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipsRow}>
@@ -277,9 +277,9 @@ export default function AddExpenseScreen() {
                                                 onPress={() => field.onChange(amt)}
                                                 activeOpacity={0.75}
                                             >
-                                                <Text style={[styles.chipText, { color: field.value === amt ? '#fff' : accentColor }]}>
+                                                <AppText style={[styles.chipText, { color: field.value === amt ? '#fff' : accentColor }]}>
                                                     ₹{Number(amt).toLocaleString('en-IN')}
-                                                </Text>
+                                                </AppText>
                                             </TouchableOpacity>
                                         ))}
                                     </ScrollView>
@@ -292,9 +292,9 @@ export default function AddExpenseScreen() {
                     {showBalanceWarn && (
                         <View style={styles.warnBanner}>
                             <Icon name="TriangleAlert" size={16} color="#92400E" />
-                            <Text style={styles.warnText}>
+                            <AppText style={styles.warnText}>
                                 This expense (₹{enteredAmount.toLocaleString('en-IN')}) exceeds your current balance of ₹{allTimeBalance.toLocaleString('en-IN', { maximumFractionDigits: 2 })}.
-                            </Text>
+                            </AppText>
                         </View>
                     )}
 
@@ -320,7 +320,7 @@ export default function AddExpenseScreen() {
 
                     {/* Details card */}
                     <View style={[styles.glassCard, styles.mx4, { marginTop: 12, backgroundColor: colors.surfaceOverlay }]}>
-                        <Text style={[styles.sectionLabel, { color: colors.textPrimary }]}>Details</Text>
+                        <AppText style={[styles.sectionLabel, { color: colors.textPrimary }]}>Details</AppText>
 
                         <Controller
                             control={control}

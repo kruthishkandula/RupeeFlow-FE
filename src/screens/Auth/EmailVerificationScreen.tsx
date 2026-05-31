@@ -1,10 +1,11 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import SafeAreaContainer from '@/components/SafeAreaContainer';
 import useTheme from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/useAuthStore';
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 type Props = {
@@ -98,32 +99,32 @@ export default function EmailVerificationScreen({ navigation, route }: Readonly<
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={{ fontSize: 36 }}>📧</Text>
+              <AppText style={{ fontSize: 36 }}>📧</AppText>
             </View>
           </View>
 
           {/* Heading */}
-          <Text
+          <AppText 
             className="text-3xl font-bold text-center mb-3"
             style={{ color: colors?.textPrimary }}>
             Verify Your Email
-          </Text>
-          <Text
+          </AppText>
+          <AppText 
             className="text-base text-center mb-2"
             style={{ color: isDark ? '#9E9E9E' : '#616161' }}>
             We've sent a verification link to
-          </Text>
-          <Text
+          </AppText>
+          <AppText 
             className="text-base font-semibold text-center mb-8"
             style={{ color: '#2F7E79' }}>
             {email}
-          </Text>
+          </AppText>
 
-          <Text
+          <AppText 
             className="text-sm text-center mb-8"
             style={{ color: isDark ? '#9E9E9E' : '#616161' }}>
             Click the link in your email to verify your account. This page will update automatically once verified.
-          </Text>
+          </AppText>
 
           {/* Check manually */}
           <Button
@@ -140,23 +141,23 @@ export default function EmailVerificationScreen({ navigation, route }: Readonly<
             className="items-center mb-6 py-3"
             onPress={handleResend}
             disabled={cooldown > 0 || loading}>
-            <Text
+            <AppText 
               className="font-medium"
               style={{ color: cooldown > 0 ? (isDark ? '#555' : '#aaa') : '#2F7E79' }}>
               {cooldown > 0
                 ? `Resend Email (${cooldown}s)`
                 : 'Resend Verification Email'}
-            </Text>
+            </AppText>
           </TouchableOpacity>
 
           {/* Back to login */}
           <TouchableOpacity className="items-center" onPress={handleBack}>
-            <Text style={{ color: isDark ? '#9E9E9E' : '#616161' }}>
+            <AppText style={{ color: isDark ? '#9E9E9E' : '#616161' }}>
               Back to{' '}
-              <Text className="font-semibold" style={{ color: '#2F7E79' }}>
+              <AppText className="font-semibold" style={{ color: '#2F7E79' }}>
                 Sign In
-              </Text>
-            </Text>
+              </AppText>
+            </AppText>
           </TouchableOpacity>
         </View>
       </MainBG>

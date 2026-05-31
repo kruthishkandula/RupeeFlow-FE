@@ -1,8 +1,9 @@
 import { commonColors } from '@/Themes/theme-config';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 import Toast, { ToastConfig, ToastConfigParams } from 'react-native-toast-message';
+import AppText from '../AppText';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -32,11 +33,11 @@ function CustomToast({ type, text1, text2 }: Readonly<ToastConfigParams<any>>) {
   return (
     <View style={[styles.container, { backgroundColor: t.bg, borderLeftColor: t.border }]}>
       <View style={[styles.iconWrapper, { backgroundColor: t.border }]}>
-        <Text style={styles.icon}>{t.icon}</Text>
+        <AppText style={styles.icon}>{t.icon}</AppText>
       </View>
       <View style={styles.textWrapper}>
-        {!!text1 && <Text style={styles.title} numberOfLines={1}>{text1}</Text>}
-        {!!text2 && <Markdown style={[styles.message]} numberOfLines={2}>{text2}</Markdown>}
+        {!!text1 && <AppText style={styles.title} numberOfLines={1}>{text1}</AppText>}
+        {!!text2 && <AppText style={styles.message} numberOfLines={2}>{text2}</AppText>}
       </View>
     </View>
   );

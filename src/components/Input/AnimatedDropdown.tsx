@@ -1,15 +1,15 @@
+import useTheme from '@/hooks/useTheme';
 import React, { useRef, useState } from 'react';
 import {
   Animated,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   UIManager,
-  View,
+  View
 } from 'react-native';
-import useTheme from '@/hooks/useTheme';
+import AppText from '../AppText';
 
 if (
   Platform.OS === 'android' &&
@@ -111,7 +111,7 @@ export default function DropdownInput({
 
   return (
     <View style={{ marginBottom: 22 }}>
-      <Text style={styles.label}>{label}</Text>
+      <AppText style={styles.label}>{label}</AppText>
 
       {/* Outer wrapper carries shadow; inner clips border-radius children */}
       <View style={[styles.shadow, open && styles.shadowOpen, error && styles.shadowError]}>
@@ -123,9 +123,9 @@ export default function DropdownInput({
             style={[styles.inputRow, open && styles.inputRowOpen]}
             onPress={toggle}
           >
-            <Text style={[styles.value, !selectedLabel && styles.placeholder]}>
+            <AppText style={[styles.value, !selectedLabel && styles.placeholder]}>
               {selectedLabel || 'Select'}
-            </Text>
+            </AppText>
             <Animated.Text style={[styles.arrow, { transform: [{ rotate: arrowRotate }] }]}>
               ▼
             </Animated.Text>
@@ -159,10 +159,10 @@ export default function DropdownInput({
                       }}
                     >
                       <View style={styles.optionInner}>
-                        <Text style={[styles.optionText, selected && styles.selectedText]}>
+                        <AppText style={[styles.optionText, selected && styles.selectedText]}>
                           {item.label}
-                        </Text>
-                        {selected && <Text style={[styles.checkmark, { color: colors.primary }]}>✓</Text>}
+                        </AppText>
+                        {selected && <AppText style={[styles.checkmark, { color: colors.primary }]}>✓</AppText>}
                       </View>
                     </TouchableOpacity>
                   );
@@ -200,7 +200,7 @@ export default function DropdownInput({
         </View>
       </View>
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      {error && <AppText style={styles.error}>{error}</AppText>}
     </View>
   );
 }

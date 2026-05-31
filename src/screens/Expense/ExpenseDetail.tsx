@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert/Alert';
+import AppText from '@/components/AppText';
 import Button from '@/components/Button';
 import DynamicHeader from '@/components/Header/DynamicHeader';
 import Icon from '@/components/Icon';
@@ -15,8 +16,7 @@ import {
     Modal,
     Pressable,
     StyleSheet,
-    Text,
-    View,
+    View
 } from 'react-native';
 
 export default function ExpenseDetail() {
@@ -62,16 +62,16 @@ export default function ExpenseDetail() {
                     <View style={[styles.iconWrap, { backgroundColor: `${catColor}22` }]}>
                         <Icon name={catIcon} size={32} color={catColor} />
                     </View>
-                    <Text style={[styles.heroTitle, { color: colors.textPrimary }]} numberOfLines={1}>
+                    <AppText style={[styles.heroTitle, { color: colors.textPrimary }]} numberOfLines={1}>
                         {params?.title}
-                    </Text>
-                    <Text style={[styles.heroAmount, { color: isCredit ? '#4CAF50' : '#FF4C4C' }]}>
+                    </AppText>
+                    <AppText style={[styles.heroAmount, { color: isCredit ? '#4CAF50' : '#FF4C4C' }]}>
                         {isCredit ? '+' : '-'}{fmtFull(params?.amount)}
-                    </Text>
+                    </AppText>
                     <View style={[styles.typeBadge, { backgroundColor: isCredit ? '#E8F5E9' : '#FFEBEE' }]}>
-                        <Text style={{ color: isCredit ? '#4CAF50' : '#FF4C4C', fontSize: 12, fontWeight: '700' }}>
+                        <AppText style={{ color: isCredit ? '#4CAF50' : '#FF4C4C', fontSize: 12, fontWeight: '700' }}>
                             {isCredit ? 'Income' : 'Expense'}
-                        </Text>
+                        </AppText>
                     </View>
                 </View>
 
@@ -84,12 +84,12 @@ export default function ExpenseDetail() {
                     ].map((row, i, arr) => (
                         <View key={row.label}>
                             <View style={styles.detailRow}>
-                                <View style={[styles.detailIconWrap, { backgroundColor: colors.background }]}>
+                                <View style={[styles.detailIconWrap, { backgroundColor: colors.surfaceBase }]}>
                                     <Icon name={row.icon} size={16} color={colors.textSecondary} />
                                 </View>
                                 <View style={{ flex: 1 }}>
-                                    <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>{row.label}</Text>
-                                    <Text style={[styles.detailValue, { color: colors.textPrimary }]}>{row.value}</Text>
+                                    <AppText style={[styles.detailLabel, { color: colors.textSecondary }]}>{row.label}</AppText>
+                                    <AppText style={[styles.detailValue, { color: colors.textPrimary }]}>{row.value}</AppText>
                                 </View>
                             </View>
                             {i < arr.length - 1 && <View style={[styles.divider, { backgroundColor: colors.borderSubtle ?? '#F3F4F6' }]} />}
@@ -116,24 +116,24 @@ export default function ExpenseDetail() {
                         <View style={styles.modalIconWrap}>
                             <Icon name='Trash2' size={32} color='#EF4444' />
                         </View>
-                        <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>Delete Transaction?</Text>
-                        <Text style={[styles.modalBody, { color: colors.textSecondary }]}>
+                        <AppText style={[styles.modalTitle, { color: colors.textPrimary }]}>Delete Transaction?</AppText>
+                        <AppText style={[styles.modalBody, { color: colors.textSecondary }]}>
                             This will permanently remove{'\n'}
-                            <Text style={{ fontWeight: '700', color: colors.textPrimary }}>{params?.title}</Text>
+                            <AppText style={{ fontWeight: '700', color: colors.textPrimary }}>{params?.title}</AppText>
                             {'\n'}and cannot be undone.
-                        </Text>
+                        </AppText>
                         <View style={styles.modalActions}>
                             <Pressable
-                                style={[styles.modalBtn, { backgroundColor: colors.background, borderColor: colors.borderSubtle ?? '#E5E7EB', borderWidth: 1 }]}
+                                style={[styles.modalBtn, { backgroundColor: colors.surfaceElevated, borderColor: colors.borderSubtle ?? '#E5E7EB', borderWidth: 1 }]}
                                 onPress={() => setShowDeleteModal(false)}
                             >
-                                <Text style={{ color: colors.textPrimary, fontWeight: '600', fontSize: 15 }}>Cancel</Text>
+                                <AppText style={{ color: colors.textPrimary, fontWeight: '600', fontSize: 15 }}>Cancel</AppText>
                             </Pressable>
                             <Pressable
                                 style={[styles.modalBtn, { backgroundColor: '#EF4444' }]}
                                 onPress={confirmDelete}
                             >
-                                <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>Delete</Text>
+                                <AppText style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>Delete</AppText>
                             </Pressable>
                         </View>
                     </Pressable>

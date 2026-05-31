@@ -1,9 +1,10 @@
 import { Images } from '@/assets/images';
+import AppText from '@/components/AppText';
 import Button from '@/components/Button';
 import useTheme from '@/hooks/useTheme';
 import { createItem } from '@/utility/storage';
 import React, { useRef, useState } from 'react';
-import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -48,9 +49,8 @@ export default function Onboarding({ onFinish }: Readonly<Props>) {
             setIndex(next);
             return;
         }
-
         try {
-            await createItem('onboardingSeen', 'true');
+            createItem('onboardingSeen', 'true');
         } catch (e) {
             console.log('e', e)
         }
@@ -62,14 +62,14 @@ export default function Onboarding({ onFinish }: Readonly<Props>) {
             <View style={styles.imageWrap}>
                 <Image source={item.image} style={styles.image} />
             </View>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>{item.title}</Text>
-            <Text style={[styles.desc, { color: colors.textSecondary }]}>{item.description}</Text>
+            <AppText style={[styles.title, { color: colors.textPrimary }]}>{item.title}</AppText>
+            <AppText style={[styles.desc, { color: colors.textSecondary }]}>{item.description}</AppText>
         </View>
     );
 
     const handleSkip = async () => {
         try {
-            await createItem('onboardingSeen', 'true');
+            createItem('onboardingSeen', 'true');
         } catch (e) {
             console.log('e---', e)
         }

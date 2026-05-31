@@ -1,7 +1,11 @@
 import { Images } from '@/assets/images'
+import AppText from '@/components/AppText'
 import useTheme from '@/hooks/useTheme'
 import { StatusBarTheme } from '@/Themes/theme-config'
 import {
+    APP_NAME,
+    APP_SUBTITLE,
+    APP_VERSION,
     SPLASH_DURATION_MS,
     SPLASH_GLOW_ANIMATION_DURATION,
     SPLASH_GLOW_SCALE_MAX,
@@ -10,9 +14,6 @@ import {
     SPLASH_SCALE_FRICTION,
     SPLASH_SCALE_TENSION,
     SPLASH_TRANSLATEY_DURATION,
-    APP_VERSION,
-    APP_NAME,
-    APP_SUBTITLE,
 } from '@/utility/config'
 import React, { useEffect, useRef } from 'react'
 import {
@@ -21,8 +22,7 @@ import {
     Easing,
     StatusBar,
     StyleSheet,
-    Text,
-    View,
+    View
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -161,17 +161,17 @@ const SplashScreen = ({
                     },
                 ]}
             >
-                <Text className='text-textInverse' style={styles.title}>{APP_NAME}</Text>
+                <AppText className='text-textInverse' style={styles.title}>{APP_NAME}</AppText>
 
-                <Text style={[styles.subtitle, { color: colors.textInverse + '80'}]}>
+                <AppText style={[styles.subtitle, { color: colors.textInverse + '80'}]}>
                     {APP_SUBTITLE}
-                </Text>
+                </AppText>
             </Animated.View>
             {/* Version - Bottom Right */}
             <View style={{ position: 'absolute', right: 20, bottom: 40 }} pointerEvents="none">
-                <Text style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
+                <AppText style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
                     v{APP_VERSION}
-                </Text>
+                </AppText>
             </View>
         </LinearGradient>
     )

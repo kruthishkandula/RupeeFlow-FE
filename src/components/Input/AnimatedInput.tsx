@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Icon from '@/components/Icon';
 import useTheme from '@/hooks/useTheme';
+import AppText from '../AppText';
 
 interface Props extends TextInputProps {
   label: string;
@@ -168,7 +169,7 @@ export default function AnimatedInput({
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-          {amount && <Text style={[styles.currency, { color: textColor }]}>{currency}</Text>}
+          {amount && <AppText style={[styles.currency, { color: textColor }]}>{currency}</AppText>}
           {secureTextEntry && (
             <TouchableOpacity
               onPress={() => setIsPasswordVisible((v) => !v)}
@@ -183,7 +184,7 @@ export default function AnimatedInput({
           )}
         </Animated.View>
 
-        {error && <Text style={styles.error}>{error}</Text>}
+        {error && <AppText style={styles.error}>{error}</AppText>}
       </View>
     </TouchableWithoutFeedback>
   );

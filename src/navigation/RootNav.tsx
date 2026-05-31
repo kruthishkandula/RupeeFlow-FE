@@ -114,7 +114,7 @@ export default function RootNav() {
         );
     }
 
-    if (onboardingSeen === null) {
+    if (!onboardingSeen) {
         return (
             <Theme>
                 <Onboarding onFinish={() => setOnboardingSeen(true)} />
@@ -124,7 +124,7 @@ export default function RootNav() {
 
     return (
         <Theme>
-            <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={`${colors?.primary}CC`} />
+            <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'}  />
             {user?.emailVerified ? <MainNav /> : <AuthNav />}
         </Theme>
     );

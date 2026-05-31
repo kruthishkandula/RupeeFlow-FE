@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
@@ -11,9 +12,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { z } from 'zod';
@@ -97,18 +97,18 @@ export default function SignupScreen({ navigation }: Readonly<Props>) {
           <View className="flex-1 px-6 justify-center">
             {/* Header */}
             <View className="mb-10">
-              <Text
+              <AppText
                 className="text-4xl font-bold mb-2"
                 style={{ color: colors?.textPrimary }}>
                 Create Account ✨
-              </Text>
-              <Text
+              </AppText>
+              <AppText
                 className="text-base"
                 style={{
                   color: colors?.textPrimary
                 }}>
                 Start tracking your finances today
-              </Text>
+              </AppText>
             </View>
 
             {/* Form */}
@@ -166,9 +166,9 @@ export default function SignupScreen({ navigation }: Readonly<Props>) {
                         <View style={{ height: 4, borderRadius: 2, backgroundColor: isDark ? '#3A3A4A' : '#E5E7EB', overflow: 'hidden' }}>
                           <View style={{ height: '100%', width: Number(passwordStrength.width.replace('%', '')) || 0, backgroundColor: passwordStrength.color, borderRadius: 2 }} />
                         </View>
-                        <Text style={{ fontSize: 11, color: passwordStrength.color, marginTop: 4, fontWeight: '600' }}>
+                        <AppText style={{ fontSize: 11, color: passwordStrength.color, marginTop: 4, fontWeight: '600' }}>
                           {passwordStrength.label}
-                        </Text>
+                        </AppText>
                       </View>
                     )}
                   </>
@@ -203,21 +203,21 @@ export default function SignupScreen({ navigation }: Readonly<Props>) {
 
             {/* Footer */}
             <View className="flex-row justify-center items-center">
-              <Text style={{ color: colors.textPrimary }}>
+              <AppText style={{ color: colors.textPrimary }}>
                 Already have an account?{' '}
-              </Text>
+              </AppText>
               <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <Text className="font-semibold text-primary">
+                <AppText className="font-semibold text-primary">
                   Sign In
-                </Text>
+                </AppText>
               </TouchableOpacity>
             </View>
           </View>
           {/* Version - Bottom Right */}
           <View style={{ position: 'absolute', right: 25, bottom: 30 }} pointerEvents="none">
-            <Text style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
+            <AppText style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
               v{APP_VERSION}
-            </Text>
+            </AppText>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

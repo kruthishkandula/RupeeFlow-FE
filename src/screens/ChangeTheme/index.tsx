@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import DynamicHeader from '@/components/Header/DynamicHeader';
 import Icon from '@/components/Icon';
@@ -8,7 +9,7 @@ import { useThemeContextActions } from '@/Themes';
 import { Themes } from '@/Themes/theme-config';
 import { upperFirst } from 'lodash';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 const THEME_META: Record<string, { emoji: string; description: string; palette: string[] }> = {
   'System Default': {
@@ -47,9 +48,9 @@ const ChangeTheme = () => {
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}>
-          <Text style={{ color: colors.textSecondary, fontSize: 13, marginBottom: 16, marginLeft: 4 }}>
+          <AppText style={{ color: colors.textSecondary, fontSize: 13, marginBottom: 16, marginLeft: 4 }}>
             Choose how RupeeFlow looks to you
-          </Text>
+          </AppText>
           {allThemes.map(([t]) => {
             const isSelected = (t === 'System Default' && isDefaultTheme) || (t === theme && !isDefaultTheme);
             const meta = THEME_META[t] ?? { emoji: '🎨', description: '', palette: ['#2F7E79'] };
@@ -84,17 +85,17 @@ const ChangeTheme = () => {
                   backgroundColor: colors.surfaceElevated,
                   alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <Text style={{ fontSize: 26 }}>{meta.emoji}</Text>
+                  <AppText style={{ fontSize: 26 }}>{meta.emoji}</AppText>
                 </View>
 
                 {/* Info */}
                 <View style={{ flex: 1 }}>
-                  <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>
+                  <AppText style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>
                     {upperFirst(t)}
-                  </Text>
-                  <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>
+                  </AppText>
+                  <AppText style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>
                     {meta.description}
-                  </Text>
+                  </AppText>
                   {/* Color palette dots */}
                   <View style={{ flexDirection: 'row', gap: 6, marginTop: 8 }}>
                     {meta.palette.map((c, i) => (

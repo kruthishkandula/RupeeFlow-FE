@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText'
 import TranscationCard from '@/components/Cards/TranscationCard'
 import DynamicHeader2 from '@/components/Header/DynamicHeader2'
 import Icon from '@/components/Icon'
@@ -12,9 +13,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import {
   FlatList,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native'
 import Animated from 'react-native-reanimated'
 import MainBG from '../../components/Backgrounds/MainBG'
@@ -111,24 +111,24 @@ export default function Wallet() {
   const renderWalletCard = () => (
     <View style={[styles.walletCard, { backgroundColor: colors.primary }]}>
       <View style={styles.walletCardBadge}>
-        <Text style={styles.walletCardBadgeText}>Main Wallet</Text>
+        <AppText style={styles.walletCardBadgeText}>Main Wallet</AppText>
       </View>
-      <Text style={styles.walletLabel}>Total Balance</Text>
-      <Text style={styles.walletBalance}>{allTimeBalance < 0 ? '-' : ''}{fmtFull(allTimeBalance)}</Text>
+      <AppText style={styles.walletLabel}>Total Balance</AppText>
+      <AppText style={styles.walletBalance}>{allTimeBalance < 0 ? '-' : ''}{fmtFull(allTimeBalance)}</AppText>
       <View style={styles.walletRow}>
         <View style={styles.walletStat}>
           <Icon name="ArrowDownLeft" size={16} color="#fff" />
-          <Text style={styles.walletStatLabel}>Income</Text>
-          <Text style={styles.walletStatGreen}>{fmt(totalIncome)}</Text>
+          <AppText style={styles.walletStatLabel}>Income</AppText>
+          <AppText style={styles.walletStatGreen}>{fmt(totalIncome)}</AppText>
         </View>
         <View style={styles.walletDivider} />
         <View style={styles.walletStat}>
           <Icon name="ArrowUpRight" size={16} color="#fff" />
-          <Text style={styles.walletStatLabel}>Expense</Text>
-          <Text style={styles.walletStatRed}>{fmt(totalExpense)}</Text>
+          <AppText style={styles.walletStatLabel}>Expense</AppText>
+          <AppText style={styles.walletStatRed}>{fmt(totalExpense)}</AppText>
         </View>
       </View>
-      <Text style={styles.walletPeriod}>{monthName} {now.getFullYear()}</Text>
+      <AppText style={styles.walletPeriod}>{monthName} {now.getFullYear()}</AppText>
     </View>
   )
 
@@ -141,8 +141,8 @@ export default function Wallet() {
       ].map(s => (
         <View key={s.label} style={[styles.quickCard, { backgroundColor: colors.surfaceElevated, flex: 1 }]}>
           <Icon name={s.icon} size={18} color={s.color} />
-          <Text style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{s.label}</Text>
-          <Text style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>{s.value}</Text>
+          <AppText style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{s.label}</AppText>
+          <AppText style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>{s.value}</AppText>
         </View>
       ))}
     </View>
@@ -150,7 +150,7 @@ export default function Wallet() {
 
   const renderCategorySpending = () => (
     <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Spending by Category</Text>
+      <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Spending by Category</AppText>
       <View style={{ gap: 14 }}>
         {categories.map(cat => {
           const spent = categorySpend[cat]
@@ -160,8 +160,8 @@ export default function Wallet() {
             <View key={cat}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
                 <Icon name={(ICON_MAP[cat] || 'CircleEllipsis') as any} size={18} color={color} />
-                <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600', marginLeft: 8, flex: 1 }}>{cat}</Text>
-                <Text style={{ color: colors.textSecondary, fontSize: 12 }}>{fmtFull(spent)}</Text>
+                <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600', marginLeft: 8, flex: 1 }}>{cat}</AppText>
+                <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>{fmtFull(spent)}</AppText>
               </View>
               <View style={{ height: 6, backgroundColor: colors.borderDefault, borderRadius: 3, overflow: 'hidden' }}>
                 <View style={{ height: 6, borderRadius: 3, backgroundColor: color, width: `${Math.round(pct * 100)}%` }} />
@@ -175,9 +175,9 @@ export default function Wallet() {
 
   const renderRecentHeader = () => (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary, marginBottom: 0 }]}>Recent Transactions</Text>
+      <AppText style={[styles.sectionTitle, { color: colors.textPrimary, marginBottom: 0 }]}>Recent Transactions</AppText>
       <TouchableOpacity onPress={() => navigate('Transactions')}>
-        <Text style={{ color: colors.textSecondary, fontSize: 13 }}>See all</Text>
+        <AppText style={{ color: colors.textSecondary, fontSize: 13 }}>See all</AppText>
       </TouchableOpacity>
     </View>
   )
@@ -191,9 +191,9 @@ export default function Wallet() {
   const renderEmpty = () => (
     <View style={{ alignItems: 'center', marginTop: 60, gap: 12 }}>
       <Icon name="Wallet" size={56} color={colors.textTertiary} />
-      <Text style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
+      <AppText style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
         No transactions this month
-      </Text>
+      </AppText>
     </View>
   )
 
@@ -237,9 +237,9 @@ export default function Wallet() {
               style={[styles.tab, activeTab === tab && { backgroundColor: colors.primary }]}
               onPress={() => setActiveTab(tab)}
             >
-              <Text style={{ color: activeTab === tab ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
+              <AppText style={{ color: activeTab === tab ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </Text>
+              </AppText>
             </TouchableOpacity>
           ))}
         </View>

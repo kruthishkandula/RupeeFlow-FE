@@ -11,10 +11,9 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native'
 import {
   CATEGORY_COLORS,
@@ -22,6 +21,7 @@ import {
   fmtFull,
   ICON_MAP,
 } from './walletConstants'
+import AppText from '@/components/AppText'
 
 // ── Animated progress bar ────────────────────────────────────────────────────
 function ProgressBar({ pct, color }: Readonly<{ pct: number; color: string }>) {
@@ -69,14 +69,14 @@ function BudgetModal({ visible, category, current, onClose, onSave }: Readonly<B
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ width: '100%' }}>
           <Pressable style={[styles.modalSheet, { backgroundColor: colors.surfaceBase }]}>
             <View style={styles.modalHandle} />
-            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+            <AppText style={[styles.modalTitle, { color: colors.textPrimary }]}>
               Set Budget — {category}
-            </Text>
-            <Text style={{ color: colors.textSecondary, fontSize: 13, marginBottom: 16 }}>
+            </AppText>
+            <AppText style={{ color: colors.textSecondary, fontSize: 13, marginBottom: 16 }}>
               Enter your monthly spending limit for this category.
-            </Text>
+            </AppText>
             <View style={[styles.inputRow, { borderColor: colors.borderDefault }]}>
-              <Text style={{ color: colors.textSecondary, fontSize: 18, marginRight: 6 }}>{CURRENCY}</Text>
+              <AppText style={{ color: colors.textSecondary, fontSize: 18, marginRight: 6 }}>{CURRENCY}</AppText>
               <TextInput
                 style={[styles.input, { color: colors.textPrimary }]}
                 keyboardType="decimal-pad"
@@ -89,10 +89,10 @@ function BudgetModal({ visible, category, current, onClose, onSave }: Readonly<B
             </View>
             <View style={{ flexDirection: 'row', gap: 12, marginTop: 20 }}>
               <TouchableOpacity style={[styles.btn, { backgroundColor: colors.surfaceElevated, flex: 1 }]} onPress={onClose}>
-                <Text style={{ color: colors.textSecondary, fontWeight: '600' }}>Cancel</Text>
+                <AppText style={{ color: colors.textSecondary, fontWeight: '600' }}>Cancel</AppText>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.btn, { backgroundColor: colors.primary, flex: 1 }]} onPress={handleSave}>
-                <Text style={{ color: '#fff', fontWeight: '700' }}>Save</Text>
+                <AppText style={{ color: '#fff', fontWeight: '700' }}>Save</AppText>
               </TouchableOpacity>
             </View>
           </Pressable>
@@ -172,7 +172,7 @@ export default function BudgetTab({
         {over && (
           <View style={styles.overBanner}>
             <Icon name="TriangleAlert" size={12} color="#FDE68A" />
-            <Text style={styles.overBannerText}>Over Budget</Text>
+            <AppText style={styles.overBannerText}>Over Budget</AppText>
           </View>
         )}
         <View style={[styles.txIcon, { backgroundColor: over ? '#F59E0B18' : `${color}22` }]}>
@@ -180,7 +180,7 @@ export default function BudgetTab({
         </View>
         <View style={{ flex: 1, gap: 4 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>{cat}</Text>
+            <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>{cat}</AppText>
             <View className='mt-4' style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
               {!!budget && (
                 <TouchableOpacity onPress={() => removeBudget(cat)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
@@ -189,29 +189,29 @@ export default function BudgetTab({
               )}
               <TouchableOpacity onPress={() => setModalCat(cat)}>
                 <View style={[styles.setBudgetBtn, { borderColor: over ? '#F59E0B' : colors.primary }]}>
-                  <Text style={{ color: over ? '#F59E0B' : colors.primary, fontSize: 11, fontWeight: '700' }}>
+                  <AppText style={{ color: over ? '#F59E0B' : colors.primary, fontSize: 11, fontWeight: '700' }}>
                     {budget ? 'Edit' : 'Set'}
-                  </Text>
+                  </AppText>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ color: over ? '#F59E0B' : colors.textSecondary, fontSize: 12, fontWeight: over ? '600' : '400' }}>
+            <AppText style={{ color: over ? '#F59E0B' : colors.textSecondary, fontSize: 12, fontWeight: over ? '600' : '400' }}>
               Spent: {fmtFull(spent)}
-            </Text>
+            </AppText>
             {budget
-              ? <Text style={{ color: over ? '#F59E0B' : '#4CAF50', fontSize: 12, fontWeight: '600' }}>
+              ? <AppText style={{ color: over ? '#F59E0B' : '#4CAF50', fontSize: 12, fontWeight: '600' }}>
                 Limit: {fmtFull(budget)}
-              </Text>
-              : <Text style={{ color: colors.textTertiary, fontSize: 12 }}>No limit set</Text>
+              </AppText>
+              : <AppText style={{ color: colors.textTertiary, fontSize: 12 }}>No limit set</AppText>
             }
           </View>
           {!!budget && <ProgressBar pct={pct} color={over ? '#F59E0B' : color} />}
           {over && (
             <View style={styles.overPill}>
               <Icon name="TriangleAlert" size={11} color="#F59E0B" />
-              <Text style={styles.overPillText}>Over by {fmtFull(spent - (budget ?? 0))}</Text>
+              <AppText style={styles.overPillText}>Over by {fmtFull(spent - (budget ?? 0))}</AppText>
             </View>
           )}
         </View>
@@ -228,17 +228,17 @@ export default function BudgetTab({
           {budgetUsedPct > 1 && (
             <View style={styles.overallWarnBanner}>
               <Icon name="TriangleAlert" size={14} color="#FDE68A" />
-              <Text style={{ color: '#FDE68A', fontWeight: '600', fontSize: 13 }}>Budget limit reached</Text>
+              <AppText style={{ color: '#FDE68A', fontWeight: '600', fontSize: 13 }}>Budget limit reached</AppText>
             </View>
           )}
-          <Text style={styles.overallLabel}>Monthly Budget</Text>
-          <Text style={styles.overallBalance}>{fmtFull(totalBudget)}</Text>
+          <AppText style={styles.overallLabel}>Monthly Budget</AppText>
+          <AppText style={styles.overallBalance}>{fmtFull(totalBudget)}</AppText>
           <View style={{ marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
-              <Text style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>Spent {fmtFull(budgetedSpend)}</Text>
-              <Text style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 13, fontWeight: '700' }}>
+              <AppText style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>Spent {fmtFull(budgetedSpend)}</AppText>
+              <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 13, fontWeight: '700' }}>
                 {Math.round(budgetUsedPct * 100)}% used
-              </Text>
+              </AppText>
             </View>
             <View style={{ height: 8, backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: 4, overflow: 'hidden' }}>
               <View style={{
@@ -247,24 +247,24 @@ export default function BudgetTab({
                 width: `${Math.min(100, Math.round(budgetUsedPct * 100))}%`,
               }} />
             </View>
-            <Text style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 12, marginTop: 6, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>
+            <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 12, marginTop: 6, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>
               {budgetedSpend <= totalBudget
                 ? `${fmtFull(totalBudget - budgetedSpend)} remaining`
                 : `Over budget by ${fmtFull(budgetedSpend - totalBudget)}`}
-            </Text>
+            </AppText>
           </View>
-          <Text style={styles.overallPeriod}>{monthName} {year}</Text>
+          <AppText style={styles.overallPeriod}>{monthName} {year}</AppText>
         </View>
       )}
 
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Category Budgets</Text>
+      <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Category Budgets</AppText>
 
       {categories.length === 0 && (
         <View style={{ alignItems: 'center', paddingVertical: 40, gap: 10 }}>
           <Icon name="PiggyBank" size={48} color={colors.textTertiary} />
-          <Text style={{ color: colors.textSecondary, fontSize: 15, textAlign: 'center' }}>
+          <AppText style={{ color: colors.textSecondary, fontSize: 15, textAlign: 'center' }}>
             No spending categories this month yet.
-          </Text>
+          </AppText>
         </View>
       )}
     </>
@@ -274,9 +274,9 @@ export default function BudgetTab({
   const ListFooter = () => (
     <View style={[styles.tipCard, { backgroundColor: `${colors.primary}18`, borderColor: `${colors.primary}44` }]}>
       <Icon name="Lightbulb" size={18} color={colors.primary} />
-      <Text style={{ color: colors.textSecondary, fontSize: 13, flex: 1 }}>
-        Tap <Text style={{ fontWeight: '700', color: colors.textPrimary }}>Set</Text> next to a category to define a monthly spending limit.
-      </Text>
+      <AppText style={{ color: colors.textSecondary, fontSize: 13, flex: 1 }}>
+        Tap <AppText style={{ fontWeight: '700', color: colors.textPrimary }}>Set</AppText> next to a category to define a monthly spending limit.
+      </AppText>
     </View>
   )
 

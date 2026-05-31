@@ -1,3 +1,4 @@
+import AppText from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
@@ -7,7 +8,7 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { z } from 'zod';
 
@@ -38,8 +39,8 @@ export default function ForgotPinScreen({ navigation }: Readonly<Props>) {
       <OverlayLoader open={loading} text="Loading..." />
       <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View className="flex-1 px-6 justify-center">
-          <Text className="text-2xl font-bold mb-6" style={{ color: colors?.textPrimary }}>Forgot PIN</Text>
-          <Text className="mb-8" style={{ color: colors?.textPrimary }}>Enter your email to reset your PIN.</Text>
+          <AppText className="text-2xl font-bold mb-6" style={{ color: colors?.textPrimary }}>Forgot PIN</AppText>
+          <AppText className="mb-8" style={{ color: colors?.textPrimary }}>Enter your email to reset your PIN.</AppText>
           <Controller
             control={control}
             name="email"
@@ -66,7 +67,7 @@ export default function ForgotPinScreen({ navigation }: Readonly<Props>) {
             className="mt-8 rounded-3xl"
           />
           <TouchableOpacity className="items-center mt-6" onPress={() => navigation.goBack()}>
-            <Text className="font-medium text-primary">Back to Login</Text>
+            <AppText className="font-medium text-primary">Back to Login</AppText>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
