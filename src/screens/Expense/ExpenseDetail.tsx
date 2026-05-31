@@ -1,5 +1,5 @@
 import Alert from '@/components/Alert/Alert';
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import Button from '@/components/Button';
 import DynamicHeader from '@/components/Header/DynamicHeader';
 import Icon from '@/components/Icon';
@@ -79,7 +79,7 @@ export default function ExpenseDetail() {
                 <View style={[styles.detailsCard, { backgroundColor: colors.surfaceElevated }]}>
                     {[
                         { label: 'Category', value: cat, icon: 'Tag' as const },
-                        { label: 'Date', value: dayjs(params?.date).format('DD MMM YYYY, hh:mm A'), icon: 'Calendar' as const },
+                        { label: 'Date', value: dayjs(params?.date).format('DD MMM YYYY'), icon: 'Calendar' as const },
                         ...(params?.note ? [{ label: 'Note', value: params.note, icon: 'FileText' as const }] : []),
                     ].map((row, i, arr) => (
                         <View key={row.label}>
@@ -170,12 +170,12 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     heroTitle: {
-        fontSize: 18,
+        fontSize: nf(18),
         fontWeight: '700',
         textAlign: 'center',
     },
     heroAmount: {
-        fontSize: 32,
+        fontSize: nf(32),
         fontWeight: '800',
         letterSpacing: 0.5,
     },
@@ -209,14 +209,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     detailLabel: {
-        fontSize: 11,
+        fontSize: nf(11),
         fontWeight: '600',
         textTransform: 'uppercase',
         letterSpacing: 0.4,
         marginBottom: 2,
     },
     detailValue: {
-        fontSize: 15,
+        fontSize: nf(15),
         fontWeight: '600',
     },
     divider: {
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     modalTitle: {
-        fontSize: 20,
+        fontSize: nf(20),
         fontWeight: '800',
     },
     modalBody: {
-        fontSize: 14,
+        fontSize: nf(14),
         textAlign: 'center',
         lineHeight: 22,
     },

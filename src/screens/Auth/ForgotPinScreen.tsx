@@ -1,8 +1,9 @@
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
 import OverlayLoader from '@/components/Loader/OverlayLoader';
+import SafeAreaContainer from '@/components/SafeAreaContainer';
 import useTheme from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/useAuthStore';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,41 +37,43 @@ export default function ForgotPinScreen({ navigation }: Readonly<Props>) {
 
   return (
     <MainBG>
-      <OverlayLoader open={loading} text="Loading..." />
-      <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View className="flex-1 px-6 justify-center">
-          <AppText className="text-2xl font-bold mb-6" style={{ color: colors?.textPrimary }}>Forgot PIN</AppText>
-          <AppText className="mb-8" style={{ color: colors?.textPrimary }}>Enter your email to reset your PIN.</AppText>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value } }) => (
-              <AnimatedInput
-                label="Email Address"
-                value={value}
-                onChange={onChange}
-                keyboardType="email-address"
-                error={errors.email?.message}
-                isDark={isDark}
-                autoCapitalize="none"
-                autoComplete="email"
-                textContentType="emailAddress"
-              />
-            )}
-          />
-          <Button
-            title="Send Reset Email"
-            onPress={handleSubmit(onSubmit)}
-            loading={loading}
-            disabled={loading || !isValid}
-            variant="primary"
-            className="mt-8 rounded-3xl"
-          />
-          <TouchableOpacity className="items-center mt-6" onPress={() => navigation.goBack()}>
-            <AppText className="font-medium text-primary">Back to Login</AppText>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+      <SafeAreaContainer>
+        <OverlayLoader open={loading} text="Loading..." />
+        <KeyboardAvoidingView className="flex-1" behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <View className="flex-1 px-6 justify-center">
+            <AppText className="font-bold mb-6" style={{ color: colors?.textPrimary, fontSize: nf(16) }}>Forgot PIN</AppText>
+            <AppText className="mb-8" style={{ color: colors?.textPrimary, fontSize: nf(14) }}>Enter your email to reset your PIN.</AppText>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <AnimatedInput
+                  label="Email Address"
+                  value={value}
+                  onChange={onChange}
+                  keyboardType="email-address"
+                  error={errors.email?.message}
+                  isDark={isDark}
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                />
+              )}
+            />
+            <Button
+              title="Send Reset Email"
+              onPress={handleSubmit(onSubmit)}
+              loading={loading}
+              disabled={loading || !isValid}
+              variant="primary"
+              className="mt-8 rounded-3xl"
+            />
+            <TouchableOpacity className="items-center mt-6" onPress={() => navigation.goBack()}>
+              <AppText className="font-medium text-primary">Back to Login</AppText>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaContainer>
     </MainBG>
   );
 }

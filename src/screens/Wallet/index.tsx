@@ -1,4 +1,4 @@
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 import TranscationCard from '@/components/Cards/TranscationCard'
 import DynamicHeader2 from '@/components/Header/DynamicHeader2'
 import Icon from '@/components/Icon'
@@ -141,8 +141,8 @@ export default function Wallet() {
       ].map(s => (
         <View key={s.label} style={[styles.quickCard, { backgroundColor: colors.surfaceElevated, flex: 1 }]}>
           <Icon name={s.icon} size={18} color={s.color} />
-          <AppText style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{s.label}</AppText>
-          <AppText style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>{s.value}</AppText>
+          <AppText style={{ color: colors.textSecondary, fontSize: nf(10), marginTop: 4 }}>{s.label}</AppText>
+          <AppText style={{ color: colors.textPrimary, fontSize: nf(13), fontWeight: '700', marginTop: 2 }} numberOfLines={1}>{s.value}</AppText>
         </View>
       ))}
     </View>
@@ -160,8 +160,8 @@ export default function Wallet() {
             <View key={cat}>
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
                 <Icon name={(ICON_MAP[cat] || 'CircleEllipsis') as any} size={18} color={color} />
-                <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600', marginLeft: 8, flex: 1 }}>{cat}</AppText>
-                <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>{fmtFull(spent)}</AppText>
+                <AppText style={{ color: colors.textPrimary, fontSize: nf(14), fontWeight: '600', marginLeft: 8, flex: 1 }}>{cat}</AppText>
+                <AppText style={{ color: colors.textSecondary, fontSize: nf(12) }}>{fmtFull(spent)}</AppText>
               </View>
               <View style={{ height: 6, backgroundColor: colors.borderDefault, borderRadius: 3, overflow: 'hidden' }}>
                 <View style={{ height: 6, borderRadius: 3, backgroundColor: color, width: `${Math.round(pct * 100)}%` }} />
@@ -177,7 +177,7 @@ export default function Wallet() {
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
       <AppText style={[styles.sectionTitle, { color: colors.textPrimary, marginBottom: 0 }]}>Recent Transactions</AppText>
       <TouchableOpacity onPress={() => navigate('Transactions')}>
-        <AppText style={{ color: colors.textSecondary, fontSize: 13 }}>See all</AppText>
+        <AppText style={{ color: colors.textSecondary, fontSize: nf(13) }}>See all</AppText>
       </TouchableOpacity>
     </View>
   )
@@ -191,7 +191,7 @@ export default function Wallet() {
   const renderEmpty = () => (
     <View style={{ alignItems: 'center', marginTop: 60, gap: 12 }}>
       <Icon name="Wallet" size={56} color={colors.textTertiary} />
-      <AppText style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
+      <AppText style={{ color: colors.textSecondary, fontSize: nf(16), textAlign: 'center' }}>
         No transactions this month
       </AppText>
     </View>
@@ -237,7 +237,7 @@ export default function Wallet() {
               style={[styles.tab, activeTab === tab && { backgroundColor: colors.primary }]}
               onPress={() => setActiveTab(tab)}
             >
-              <AppText style={{ color: activeTab === tab ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
+              <AppText style={{ color: activeTab === tab ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: nf(14) }}>
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </AppText>
             </TouchableOpacity>
@@ -316,16 +316,16 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderBottomRightRadius: 14,
   },
-  walletCardBadgeText: { fontSize: 11, fontWeight: '600', color: '#000' },
-  walletLabel: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginBottom: 4 },
-  walletBalance: { color: '#fff', fontSize: 32, fontWeight: '800', letterSpacing: 0.5 },
+  walletCardBadgeText: { fontSize: nf(11), fontWeight: '600', color: '#000' },
+  walletLabel: { color: 'rgba(255,255,255,0.8)', fontSize: nf(14), marginBottom: 4 },
+  walletBalance: { color: '#fff', fontSize: nf(32), fontWeight: '800', letterSpacing: 0.5 },
   walletRow: { flexDirection: 'row', marginTop: 16, gap: 16 },
   walletStat: { flex: 1, gap: 2 },
-  walletStatLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 13 },
-  walletStatGreen: { color: '#A8FFAD', fontSize: 16, fontWeight: '700' },
-  walletStatRed: { color: '#FFB3B3', fontSize: 16, fontWeight: '700' },
+  walletStatLabel: { color: 'rgba(255,255,255,0.7)', fontSize: nf(13) },
+  walletStatGreen: { color: '#A8FFAD', fontSize: nf(16), fontWeight: '700' },
+  walletStatRed: { color: '#FFB3B3', fontSize: nf(16), fontWeight: '700' },
   walletDivider: { width: 1, backgroundColor: 'rgba(255,255,255,0.25)', marginVertical: 2 },
-  walletPeriod: { color: 'rgba(255,255,255,0.5)', fontSize: 11, marginTop: 12, alignSelf: 'flex-end' },
+  walletPeriod: { color: 'rgba(255,255,255,0.5)', fontSize: nf(11), marginTop: 12, alignSelf: 'flex-end' },
   quickCard: { borderRadius: 12, padding: 12, alignItems: 'flex-start' },
   card: {
     borderRadius: 16,
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  sectionTitle: { fontSize: 16, fontWeight: '700', marginBottom: 14 },
+  sectionTitle: { fontSize: nf(16), fontWeight: '700', marginBottom: 14 },
   txIcon: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   txRow: {
     flexDirection: 'row',

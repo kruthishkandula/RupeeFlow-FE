@@ -1,5 +1,5 @@
 import { Images } from '@/assets/images';
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import Button from '@/components/Button';
 import useTheme from '@/hooks/useTheme';
 import { createItem } from '@/utility/storage';
@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
     slide: { alignItems: 'center', padding: 24, justifyContent: 'center' },
     imageWrap: { width: '80%', height: 260, alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
     image: { width: '100%', height: '100%', resizeMode: 'contain' },
-    title: { fontSize: 22, fontWeight: '700', textAlign: 'center', marginBottom: 12 },
-    desc: { fontSize: 14, textAlign: 'center', paddingHorizontal: 8, lineHeight: 20 },
+    title: { fontSize: nf(22), fontWeight: '700', textAlign: 'center', marginBottom: 12 },
+    desc: { fontSize: nf(14), textAlign: 'center', paddingHorizontal: 8, lineHeight: 20 },
     footer: { padding: 24, borderTopWidth: 0, alignItems: 'center' },
     dots: { flexDirection: 'row', marginBottom: 12 },
     dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#D1D5DB', marginHorizontal: 6 },
     button: { paddingVertical: 12, paddingHorizontal: 36, borderRadius: 24 },
     buttonText: { color: '#fff', fontWeight: '700' },
     skip: { marginTop: 12 },
-    skipText: { fontSize: 14 },
+    skipText: { fontSize: nf(14) },
 });

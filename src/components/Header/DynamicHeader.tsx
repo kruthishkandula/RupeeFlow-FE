@@ -1,10 +1,9 @@
 import useTheme from '@/hooks/useTheme';
-import { gpsh } from '@/style/theme';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import AppText, { nf } from '../AppText';
 import Icon from '../Icon';
-import AppText from '../AppText';
 
 type Variant = 'default' | 'back' | 'search' | 'custom';
 
@@ -48,7 +47,7 @@ export default function DynamicHeader({
       </View>
 
       {/* Title */}
-      <AppText className="text-lg font-bold flex-1 text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '700', fontSize: gpsh(16), color: colors?.textPrimary }}>
+      <AppText className="text-lg font-bold flex-1 text-start" numberOfLines={2} ellipsizeMode="tail" style={{ maxWidth: '100%', textAlign: 'center', fontWeight: '700', fontSize: nf(16), color: colors?.textPrimary }}>
         {title}
       </AppText>
 

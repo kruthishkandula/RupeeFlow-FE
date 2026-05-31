@@ -8,7 +8,7 @@ import {
   UIManager,
   View
 } from 'react-native';
-import AppText from '../AppText';
+import AppText, { nf } from '../AppText';
 
 if (
   Platform.OS === 'android' &&
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 6,
     color: '#000000',
-    fontSize: 13,
+    fontSize: nf(13),
     marginLeft: 6,
   },
 
@@ -408,16 +408,16 @@ const styles = StyleSheet.create({
   },
 
   calendarIcon: {
-    fontSize: 18,
+    fontSize: nf(18),
   },
 
   value: {
-    fontSize: 16,
+    fontSize: nf(16),
     color: '#111827',
   },
 
   arrow: {
-    fontSize: 14,
+    fontSize: nf(14),
     color: '#6B7280',
   },
 
@@ -450,13 +450,13 @@ const styles = StyleSheet.create({
   },
 
   navArrow: {
-    fontSize: 22,
+    fontSize: nf(22),
     color: '#374151',
     lineHeight: 26,
   },
 
   monthYear: {
-    fontSize: 15,
+    fontSize: nf(15),
     fontWeight: '600',
     color: '#111827',
     letterSpacing: 0.2,
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   dayHeader: {
     width: CELL_SIZE,
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: nf(12),
     color: '#9CA3AF',
     fontWeight: '600',
     marginBottom: 4,
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   },
 
   dayText: {
-    fontSize: 14,
+    fontSize: nf(14),
     color: '#111827',
   },
 
@@ -574,7 +574,7 @@ const styles = StyleSheet.create({
   },
 
   monthCellText: {
-    fontSize: 14,
+    fontSize: nf(14),
     color: '#111827',
     fontWeight: '500',
   },
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
   },
 
   yearText: {
-    fontSize: 14,
+    fontSize: nf(14),
     color: '#111827',
     fontWeight: '500',
   },
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
 
   yearSwitchText: {
     color: '#6366F1',
-    fontSize: 13,
+    fontSize: nf(13),
     fontWeight: '600',
   },
 
@@ -626,13 +626,13 @@ const styles = StyleSheet.create({
 
   todayBtnText: {
     color: '#6366F1',
-    fontSize: 13,
+    fontSize: nf(13),
     fontWeight: '600',
   },
 
   error: {
     marginTop: 6,
     color: '#EF4444',
-    fontSize: 12,
+    fontSize: nf(12),
   },
 });

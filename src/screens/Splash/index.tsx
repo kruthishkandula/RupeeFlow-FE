@@ -1,5 +1,5 @@
 import { Images } from '@/assets/images'
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 import useTheme from '@/hooks/useTheme'
 import { StatusBarTheme } from '@/Themes/theme-config'
 import {
@@ -169,7 +169,7 @@ const SplashScreen = ({
             </Animated.View>
             {/* Version - Bottom Right */}
             <View style={{ position: 'absolute', right: 20, bottom: 40 }} pointerEvents="none">
-                <AppText style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
+                <AppText style={{ color: colors.textPrimary, fontSize: nf(12), fontWeight: '600', opacity: 0.7 }}>
                     v{APP_VERSION}
                 </AppText>
             </View>
@@ -224,16 +224,18 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 34,
+        fontSize: nf(34),
         fontWeight: '800',
         letterSpacing: 1,
+        textAlign: 'center',
     },
 
     subtitle: {
         marginTop: 10,
-        fontSize: 15,
+        fontSize: nf(15),
         color: '#94A3B8',
         letterSpacing: 1,
+        textAlign: 'center',
     },
 })
 

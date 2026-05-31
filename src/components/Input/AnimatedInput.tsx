@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import Icon from '@/components/Icon';
 import useTheme from '@/hooks/useTheme';
-import AppText from '../AppText';
+import AppText, { nf } from '../AppText';
+import { ALLOW_FONT_SCALING } from '@/utility/config';
 
 interface Props extends TextInputProps {
   label: string;
@@ -23,6 +24,7 @@ interface Props extends TextInputProps {
   amount?: boolean;
   currency?: string;
   isDark?: boolean;
+  bgColor?: string;
 }
 
 function formatAmount(raw: string): string {
@@ -54,8 +56,10 @@ export default function AnimatedInput({
   currency = '₹',
   isDark = false,
   secureTextEntry,
+  search = false,
+  onClear,
   ...rest
-}: Readonly<Props>) {
+}: Readonly<Props & { search?: boolean; onClear?: () => void }>) {
   // Single animated value drives both label float AND border color
   const floatAnim = useRef(new Animated.Value(value ? 1 : 0)).current;
   const borderAnim = useRef(new Animated.Value(0)).current;
@@ -67,7 +71,7 @@ export default function AnimatedInput({
 
   const inputRef = useRef<TextInput>(null);
 
-  const bgColor = isDark ? '#1E1E2E' : '#FFFFFF';
+  const bgColor = rest?.bgColor || isDark ? '#1E1E2E' : '#FFFFFF';
   const textColor = isDark ? '#F0F0F0' : '#000000';
 
   useEffect(() => {
@@ -112,7 +116,7 @@ export default function AnimatedInput({
   };
 
   const labelTop = floatAnim.interpolate({ inputRange: [0, 1], outputRange: [18, -8] });
-  const labelFontSize = floatAnim.interpolate({ inputRange: [0, 1], outputRange: [16, 12] });
+  const labelFontSize = floatAnim.interpolate({ inputRange: [0, 1], outputRange: [nf(14), nf(10)] });
   const labelColor = error
     ? '#EF4444'
     : floatAnim.interpolate({
@@ -134,8 +138,12 @@ export default function AnimatedInput({
           pointerEvents="none"
           style={[
             styles.label,
-            { top: labelTop, fontSize: labelFontSize, color: labelColor, backgroundColor: bgColor },
-          ]}>
+            { top: labelTop, fontSize: labelFontSize, color: labelColor, backgroundColor: bgColor, maxWidth: '90%', flexShrink: 1 },
+          ]}
+          allowFontScaling={ALLOW_FONT_SCALING}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
           {label}
         </Animated.Text>
 
@@ -148,6 +156,7 @@ export default function AnimatedInput({
           <TextInput
             ref={inputRef}
             value={amount ? formatAmount(value ?? '') : value}
+            allowFontScaling={ALLOW_FONT_SCALING}
             onChangeText={(text) => {
               if (amount) {
                 const filtered = text.replaceAll(',', '');
@@ -168,7 +177,16 @@ export default function AnimatedInput({
             {...rest}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onSubmitEditing={rest?.onSubmitEditing}
           />
+           {search && value?.length == 0 && (
+            <Icon name="Search" size={16} color={'#9CA3AF'} style={{ marginRight: 8 }} />
+          )}
+          {search && value?.length > 0 && (
+            <TouchableOpacity onPress={onClear} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <Icon name="X" size={20} color="#9CA3AF" style={{ marginLeft: 8 }} />
+            </TouchableOpacity>
+          )}
           {amount && <AppText style={[styles.currency, { color: textColor }]}>{currency}</AppText>}
           {secureTextEntry && (
             <TouchableOpacity
@@ -212,13 +230,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   currency: {
-    fontSize: 16,
+    fontSize: nf(16),
     marginRight: 4,
   },
   innerInput: {
     flex: 1,
     height: 56,
-    fontSize: 16,
+    fontSize: nf(16),
   },
   eyeButton: {
     padding: 4,
@@ -227,7 +245,7 @@ const styles = StyleSheet.create({
   error: {
     marginTop: 6,
     color: '#EF4444',
-    fontSize: 12,
+    fontSize: nf(12),
   },
 });
 

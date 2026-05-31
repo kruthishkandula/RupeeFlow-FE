@@ -1,4 +1,4 @@
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 import MainBG from '@/components/Backgrounds/MainBG'
 import DynamicHeader from '@/components/Header/DynamicHeader'
 import Icon from '@/components/Icon'
@@ -54,7 +54,7 @@ function FeatureCard({ item, colors, isDark, open, onToggle }: Readonly<{ item: 
             if (!line.trim()) return <View key={i} style={{ height: 6 }} />
             const parts = line.split(/\*\*(.*?)\*\*/g)
             return (
-                <AppText key={i} style={{ color: colors.textSecondary, fontSize: 13, lineHeight: 20 }}>
+                <AppText key={i} style={{ color: colors.textSecondary, fontSize: nf(13), lineHeight: 20 }}>
                     {parts.map((p, j) =>
                         j % 2 === 1
                             ? <AppText key={j} style={{ color: colors.textPrimary, fontWeight: '700' }}>{p}</AppText>
@@ -84,7 +84,7 @@ function FeatureCard({ item, colors, isDark, open, onToggle }: Readonly<{ item: 
                 }}>
                     <Icon name={item.icon} size={20} color={item.color} />
                 </View>
-                <AppText style={{ flex: 1, color: colors.textPrimary, fontSize: 15, fontWeight: '700' }}>
+                <AppText style={{ flex: 1, color: colors.textPrimary, fontSize: nf(15), fontWeight: '700' }}>
                     {item.label}
                 </AppText>
                 <View style={{
@@ -124,21 +124,22 @@ export default function About() {
                     <View style={{
                         margin: 16, borderRadius: 24, padding: 28,
                         backgroundColor: colors.surfaceBase, alignItems: 'center',
+                        flex: 1,
                     }}>
                         <View style={{
                             width: 80, height: 80, borderRadius: 24,
                             backgroundColor: `${colors?.primary}18`,
                             alignItems: 'center', justifyContent: 'center', marginBottom: 16,
                         }}>
-                            <AppText style={{ fontSize: 36, color: colors?.primary }}>₹</AppText>
+                            <AppText style={{ fontSize: nf(36), color: colors?.primary }}>₹</AppText>
                         </View>
-                        <AppText style={{ color: colors.textPrimary, fontSize: 24, fontWeight: '800' }}>RupeeFlow</AppText>
-                        <AppText style={{ color: colors.textSecondary, fontSize: 13, marginTop: 4 }}>Version {APP_VERSION}</AppText>
+                        <AppText style={{ color: colors.textPrimary, fontSize: nf(24), fontWeight: '800' }}>RupeeFlow</AppText>
+                        <AppText style={{ color: colors.textSecondary, fontSize: nf(13), marginTop: 4, textAlign: 'center', minWidth: 200, alignSelf: 'center' }}>Version {APP_VERSION}</AppText>
                         <View style={{
                             marginTop: 14, paddingHorizontal: 16, paddingVertical: 6,
                             backgroundColor: '#2F7E7918', borderRadius: 20,
                         }}>
-                            <AppText style={{ color: '#2F7E79', fontSize: 12, fontWeight: '600' }}>Personal Finance Tracker</AppText>
+                            <AppText style={{ color: '#2F7E79', fontSize: nf(12), fontWeight: '600' }}>Personal Finance Tracker</AppText>
                         </View>
                     </View>
 
@@ -146,7 +147,7 @@ export default function About() {
                         <FeatureCard key={i} item={f} colors={colors} isDark={isDark} open={openIndex === i} onToggle={() => setOpenIndex(openIndex === i ? null : i)} />
                     ))}
 
-                    <AppText style={{ color: colors.textTertiary, fontSize: 12, textAlign: 'center', marginTop: 16 }}>
+                    <AppText style={{ color: colors.textTertiary, fontSize: nf(12), textAlign: 'center', marginTop: 16 }}>
                         Made with ❤️ · © {new Date().getFullYear()} RupeeFlow
                     </AppText>
                 </ScrollView>

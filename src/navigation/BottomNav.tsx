@@ -9,7 +9,7 @@ import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanim
 import Icon from '../components/Icon';
 import Profile from '../screens/Profile';
 import Statistics from '../screens/Statistics';
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 
 const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -131,7 +131,7 @@ export default function BottomNav() {
                                 style={[styles.tabItemStyle, { backgroundColor: isFocused ? colors.cardOverlayLight : colors.transparent }]}
                             >
                                 {renderTabIcon({ label: label as CustomButtonProps['label'], focused: isFocused })}
-                                {isFocused && <AnimatedText entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)} style={{ color: colors.primary }}>
+                                {isFocused && <AnimatedText entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)} style={{ color: colors.primary, fontSize: nf(16), fontWeight: '600' }}>
                                     {label}
                                 </AnimatedText>}
                             </AnimatedPressable>

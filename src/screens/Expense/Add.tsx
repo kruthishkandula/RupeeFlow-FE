@@ -1,5 +1,5 @@
 import Alert from '@/components/Alert/Alert';
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import DynamicHeader from '@/components/Header/DynamicHeader';
@@ -10,6 +10,7 @@ import SafeAreaContainer from '@/components/SafeAreaContainer';
 import { CATEGORY_COLORS, CATEGORY_ICON_MAP, EXPENSE_CATEGORIES, INCOME_CATEGORIES, QUICK_AMOUNTS } from '@/fixtures/constants';
 import useTheme from '@/hooks/useTheme';
 import { useExpenseStore } from '@/store/useExpenseStore';
+import { ALLOW_FONT_SCALING } from '@/utility/config';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -138,7 +139,7 @@ export default function AddExpenseScreen() {
     const {
         control,
         handleSubmit,
-        formState: { isValid },
+        formState: { isValid, isDirty },
         watch,
         setValue,
     } = useForm<ExpenseForm>({
@@ -263,6 +264,7 @@ export default function AddExpenseScreen() {
                                             placeholderTextColor="#D1D5DB"
                                             cursorColor={accentColor}
                                             selectionColor={accentColor}
+                                            allowFontScaling={ALLOW_FONT_SCALING}
                                         />
                                     </View>
                                     {fieldState.error && (
@@ -372,10 +374,10 @@ export default function AddExpenseScreen() {
                     <View style={[styles.mx4, { marginTop: 20 }]}>
                         <Button
                             title={isEditing ? `Update ${type}` : `Save ${type}`}
-                            disabled={!isValid}
+                            disabled={!isValid || !isDirty}
                             onPress={handleSubmit(isEditing ? onUpdate : onSubmit)}
                             className='rounded-3xl'
-                            style={{ backgroundColor: isValid ? accentColor : undefined }}
+                            style={{ backgroundColor: isValid && isDirty ? accentColor : undefined }}
                         />
                     </View>
 
@@ -419,7 +421,7 @@ export const styles = StyleSheet.create({
         zIndex: 1,
     },
     toggleText: {
-        fontSize: 14,
+        fontSize: nf(14),
         fontWeight: '600',
         color: 'rgba(255,255,255,0.75)',
     },
@@ -440,7 +442,7 @@ export const styles = StyleSheet.create({
         elevation: 6,
     },
     amountLabel: {
-        fontSize: 12,
+        fontSize: nf(12),
         fontWeight: '600',
         marginBottom: 4,
         letterSpacing: 0.5,
@@ -451,13 +453,13 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     currencySymbol: {
-        fontSize: 28,
+        fontSize: nf(28),
         fontWeight: '700',
         marginRight: 4,
     },
     amountTextInput: {
         flex: 1,
-        fontSize: 36,
+        fontSize: nf(36),
         fontWeight: '700',
         paddingVertical: 4,
     },
@@ -473,7 +475,7 @@ export const styles = StyleSheet.create({
         marginRight: 8,
     },
     chipText: {
-        fontSize: 13,
+        fontSize: nf(10),
         fontWeight: '600',
     },
     // Category grid
@@ -481,7 +483,7 @@ export const styles = StyleSheet.create({
         paddingBottom: 4,
     },
     sectionLabel: {
-        fontSize: 13,
+        fontSize: nf(13),
         fontWeight: '700',
         color: '#374151',
         marginBottom: 12,
@@ -512,14 +514,14 @@ export const styles = StyleSheet.create({
         marginBottom: 6,
     },
     categoryLabel: {
-        fontSize: 10,
+        fontSize: nf(10),
         fontWeight: '500',
         color: '#4B5563',
         textAlign: 'center',
     },
     errorText: {
         color: '#EF4444',
-        fontSize: 12,
+        fontSize: nf(12),
         marginTop: 6,
     },
     warnBanner: {
@@ -537,10 +539,10 @@ export const styles = StyleSheet.create({
     },
     warnText: {
         flex: 1,
-        fontSize: 12,
+        fontSize: nf(12),
         fontWeight: '600',
         color: '#92400E',
-        lineHeight: 18,
+        lineHeight: nf(18),
     },
     // Glass card
     glassCard: {

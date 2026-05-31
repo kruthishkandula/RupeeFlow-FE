@@ -9,7 +9,7 @@ import {
   UIManager,
   View
 } from 'react-native';
-import AppText from '../AppText';
+import AppText, { nf } from '../AppText';
 
 if (
   Platform.OS === 'android' &&
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
   label: {
     marginBottom: 6,
     color: '#6B7280',
-    fontSize: 13,
+    fontSize: nf(13),
     marginLeft: 6,
     fontWeight: '500',
   },
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   },
 
   value: {
-    fontSize: 16,
+    fontSize: nf(16),
     color: '#111827',
   },
 
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   },
 
   arrow: {
-    fontSize: 13,
+    fontSize: nf(13),
     color: '#6B7280',
   },
 
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
   },
 
   checkmark: {
-    fontSize: 16,
+    fontSize: nf(16),
     fontWeight: '700',
   },
 
   optionText: {
-    fontSize: 15,
+    fontSize: nf(15),
     color: '#111827',
   },
 
@@ -334,13 +334,13 @@ const styles = StyleSheet.create({
   },
 
   scrollHintArrow: {
-    fontSize: 18,
+    fontSize: nf(18),
     fontWeight: '600',
   },
 
   error: {
     marginTop: 6,
     color: '#EF4444',
-    fontSize: 12,
+    fontSize: nf(12),
   },
 });

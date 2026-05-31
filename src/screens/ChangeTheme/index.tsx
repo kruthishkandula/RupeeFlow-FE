@@ -1,4 +1,4 @@
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import DynamicHeader from '@/components/Header/DynamicHeader';
 import Icon from '@/components/Icon';
@@ -48,7 +48,7 @@ const ChangeTheme = () => {
         <ScrollView
           contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}>
-          <AppText style={{ color: colors.textSecondary, fontSize: 13, marginBottom: 16, marginLeft: 4 }}>
+          <AppText style={{ color: colors.textSecondary, fontSize: nf(13), marginBottom: 16, marginLeft: 4 }}>
             Choose how RupeeFlow looks to you
           </AppText>
           {allThemes.map(([t]) => {
@@ -85,15 +85,15 @@ const ChangeTheme = () => {
                   backgroundColor: colors.surfaceElevated,
                   alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <AppText style={{ fontSize: 26 }}>{meta.emoji}</AppText>
+                  <AppText style={{ fontSize: nf(26) }}>{meta.emoji}</AppText>
                 </View>
 
                 {/* Info */}
                 <View style={{ flex: 1 }}>
-                  <AppText style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>
+                  <AppText style={{ color: colors.textPrimary, fontSize: nf(16), fontWeight: '700' }}>
                     {upperFirst(t)}
                   </AppText>
-                  <AppText style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>
+                  <AppText style={{ color: colors.textSecondary, fontSize: nf(12), marginTop: 2 }}>
                     {meta.description}
                   </AppText>
                   {/* Color palette dots */}

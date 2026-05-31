@@ -10,7 +10,7 @@ import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'reac
 import { G, Path, Svg, Text as SvgText } from 'react-native-svg'
 import MainBG from '../../components/Backgrounds/MainBG'
 import DynamicHeader from '../../components/Header/DynamicHeader'
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const CHART_SIZE = SCREEN_WIDTH * 0.55;
@@ -159,10 +159,10 @@ function DonutChart({ data }: Readonly<{ data: { label: string; value: number; c
           const path = describeDonutSlice(cx, cy, outerR, innerR, slice.startAngle, slice.endAngle);
           return <Path key={slice.label} d={path} fill={slice.color} />;
         })}
-        <SvgText x={cx} y={cy - 10} textAnchor="middle" fill="#888888" fontSize={13} fontWeight="400">
+        <SvgText x={cx} y={cy - 10} textAnchor="middle" fill="#888888" fontSize={nf(13)} fontWeight="400">
           Total
         </SvgText>
-        <SvgText x={cx} y={cy + 12} textAnchor="middle" fill="#222222" fontSize={16} fontWeight="700">
+        <SvgText x={cx} y={cy + 12} textAnchor="middle" fill="#222222" fontSize={nf(16)} fontWeight="700">
           {formatted}
         </SvgText>
       </G>
@@ -195,7 +195,7 @@ function BarChart({ labels, income, expense }: Readonly<{ labels: string[]; inco
                 borderRadius: 4,
               }} />
             </View>
-            <AppText style={{ color: colors.textSecondary, fontSize: 10, marginTop: 4 }}>{label}</AppText>
+            <AppText style={{ color: colors.textSecondary, fontSize: nf(10), marginTop: 4 }}>{label}</AppText>
           </View>
         ))}
       </View>
@@ -203,11 +203,11 @@ function BarChart({ labels, income, expense }: Readonly<{ labels: string[]; inco
       <View style={{ flexDirection: 'row', gap: 16, marginTop: 8, justifyContent: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <View style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: '#4CAF50' }} />
-          <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>Income</AppText>
+          <AppText style={{ color: colors.textSecondary, fontSize: nf(12) }}>Income</AppText>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           <View style={{ width: 10, height: 10, borderRadius: 2, backgroundColor: '#FF4C4C' }} />
-          <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>Expense</AppText>
+          <AppText style={{ color: colors.textSecondary, fontSize: nf(12) }}>Expense</AppText>
         </View>
       </View>
     </View>
@@ -277,7 +277,7 @@ export default function Statistics() {
                 onPress={() => setPeriod(p.value)}
                 style={[styles.periodTab, period === p.value && { backgroundColor: colors.primary }]}
               >
-                <AppText style={{ color: period === p.value ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: 14 }}>
+                <AppText style={{ color: period === p.value ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: nf(14) }}>
                   {p.label}
                 </AppText>
               </TouchableOpacity>
@@ -293,8 +293,8 @@ export default function Statistics() {
             ].map(item => (
               <View key={item.label} style={[styles.summaryCard, { backgroundColor: colors.surfaceElevated, flex: 1 }]}>
                 <Icon name={item.icon} size={18} color={item.color} />
-                <AppText style={{ color: colors.textSecondary, fontSize: 11, marginTop: 4 }}>{item.label}</AppText>
-                <AppText style={{ color: item.color, fontSize: 13, fontWeight: '700', marginTop: 2 }} numberOfLines={1}>
+                <AppText style={{ color: colors.textSecondary, fontSize: nf(11), marginTop: 4 }}>{item.label}</AppText>
+                <AppText style={{ color: item.color, fontSize: nf(13), fontWeight: '700', marginTop: 2 }} numberOfLines={1}>
                   ₹{Math.abs(item.value).toLocaleString('en-IN')}
                 </AppText>
               </View>
@@ -317,8 +317,8 @@ export default function Statistics() {
                   {categoryData.slice(0, 5).map(cat => (
                     <View key={cat.label} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                       <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: cat.color, flexShrink: 0 }} />
-                      <AppText style={{ color: colors.textSecondary, fontSize: 11, flex: 1 }} numberOfLines={1}>{cat.label}</AppText>
-                      <AppText style={{ color: colors.textPrimary, fontSize: 11, fontWeight: '600' }}>
+                      <AppText style={{ color: colors.textSecondary, fontSize: nf(11), flex: 1 }} numberOfLines={1}>{cat.label}</AppText>
+                      <AppText style={{ color: colors.textPrimary, fontSize: nf(11), fontWeight: '600' }}>
                         {totalExpensePie > 0 ? Math.round((cat.value / totalExpensePie) * 100) : 0}%
                       </AppText>
                     </View>
@@ -340,9 +340,9 @@ export default function Statistics() {
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                           <Icon name={(iconMap[cat.label] || 'CircleEllipsis') as any} size={18} color={cat.color} />
-                          <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500' }}>{cat.label}</AppText>
+                          <AppText style={{ color: colors.textPrimary, fontSize: nf(14), fontWeight: '500' }}>{cat.label}</AppText>
                         </View>
-                        <AppText style={{ color: colors.textSecondary, fontSize: 13 }}>₹{cat.value.toLocaleString('en-IN')}</AppText>
+                        <AppText style={{ color: colors.textSecondary, fontSize: nf(13) }}>₹{cat.value.toLocaleString('en-IN')}</AppText>
                       </View>
                       <View style={{ height: 6, backgroundColor: colors.borderDefault, borderRadius: 3 }}>
                         <View style={{ height: 6, backgroundColor: cat.color, borderRadius: 3, width: `${Math.round(pct * 100)}%` }} />
@@ -362,13 +362,13 @@ export default function Statistics() {
                 {topExpense.map((t, i) => (
                   <View key={t.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                     <View style={[styles.rank, { backgroundColor: colors.primary }]}>
-                      <AppText style={{ color: '#fff', fontSize: 12, fontWeight: '700' }}>#{i + 1}</AppText>
+                      <AppText style={{ color: '#fff', fontSize: nf(12), fontWeight: '700' }}>#{i + 1}</AppText>
                     </View>
                     <View style={{ flex: 1 }}>
-                      <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }} numberOfLines={1}>{t.title}</AppText>
-                      <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>{capitalize(t.category)}</AppText>
+                      <AppText style={{ color: colors.textPrimary, fontSize: nf(14), fontWeight: '600' }} numberOfLines={1}>{t.title}</AppText>
+                      <AppText style={{ color: colors.textSecondary, fontSize: nf(12) }}>{capitalize(t.category)}</AppText>
                     </View>
-                    <AppText style={{ color: '#FF4C4C', fontSize: 15, fontWeight: '700' }}>₹{t.amount.toLocaleString('en-IN')}</AppText>
+                    <AppText style={{ color: '#FF4C4C', fontSize: nf(15), fontWeight: '700' }}>₹{t.amount.toLocaleString('en-IN')}</AppText>
                   </View>
                 ))}
               </View>
@@ -379,7 +379,7 @@ export default function Statistics() {
           {filtered.length === 0 && (
             <View style={{ alignItems: 'center', marginTop: 60, gap: 12 }}>
               <Icon name="ChartNoAxesColumn" size={56} color={colors.textTertiary} />
-              <AppText style={{ color: colors.textSecondary, fontSize: 16, textAlign: 'center' }}>
+              <AppText style={{ color: colors.textSecondary, fontSize: nf(16), textAlign: 'center' }}>
                 No transactions found{'\n'}for this period
               </AppText>
             </View>

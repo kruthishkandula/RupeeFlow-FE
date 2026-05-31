@@ -1,7 +1,8 @@
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import AnimatedInput from '@/components/Input/AnimatedInput';
+import SafeAreaContainer from '@/components/SafeAreaContainer';
 import useTheme from '@/hooks/useTheme';
 import { useAuthStore } from '@/store/useAuthStore';
 import { APP_VERSION } from '@/utility/config';
@@ -88,139 +89,142 @@ export default function SignupScreen({ navigation }: Readonly<Props>) {
 
   return (
     <MainBG>
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled">
-          <View className="flex-1 px-6 justify-center">
-            {/* Header */}
-            <View className="mb-10">
-              <AppText
-                className="text-4xl font-bold mb-2"
-                style={{ color: colors?.textPrimary }}>
-                Create Account ✨
-              </AppText>
-              <AppText
-                className="text-base"
-                style={{
-                  color: colors?.textPrimary
-                }}>
-                Start tracking your finances today
-              </AppText>
-            </View>
+      <SafeAreaContainer>
+        <KeyboardAvoidingView
+          className="flex-1"
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled">
+            <View className="flex-1 px-6 justify-center">
+              {/* Header */}
+              <View className="mb-10">
+                <AppText
+                  className="font-bold mb-2"
+                  fontSize={nf(32)}
+                  style={{ color: colors?.textPrimary }}>
+                  Create Account ✨
+                </AppText>
+                <AppText
+                  fontSize={nf(20)}
+                  style={{
+                    color: colors?.textPrimary
+                  }}>
+                  Start tracking your finances today
+                </AppText>
+              </View>
 
-            {/* Form */}
-            <View className="gap-y-5 mb-8">
-              <Controller
-                control={control}
-                name="name"
-                render={({ field: { onChange, value } }) => (
-                  <AnimatedInput
-                    label="Full Name"
-                    value={value}
-                    onChange={onChange}
-                    error={errors.name?.message}
-                    isDark={isDark}
-                    autoCapitalize="words"
-                    autoComplete="name"
-                    textContentType="name"
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, value } }) => (
-                  <AnimatedInput
-                    label="Email Address"
-                    value={value}
-                    onChange={onChange}
-                    keyboardType="email-address"
-                    error={errors.email?.message}
-                    isDark={isDark}
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    textContentType="emailAddress"
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, value } }) => (
-                  <>
+              {/* Form */}
+              <View className="gap-y-5 mb-8">
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { onChange, value } }) => (
                     <AnimatedInput
-                      label="Password"
+                      label="Full Name"
                       value={value}
                       onChange={onChange}
-                      error={errors.password?.message}
+                      error={errors.name?.message}
+                      isDark={isDark}
+                      autoCapitalize="words"
+                      autoComplete="name"
+                      textContentType="name"
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { onChange, value } }) => (
+                    <AnimatedInput
+                      label="Email Address"
+                      value={value}
+                      onChange={onChange}
+                      keyboardType="email-address"
+                      error={errors.email?.message}
+                      isDark={isDark}
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { onChange, value } }) => (
+                    <>
+                      <AnimatedInput
+                        label="Password"
+                        value={value}
+                        onChange={onChange}
+                        error={errors.password?.message}
+                        isDark={isDark}
+                        secureTextEntry
+                        autoComplete="new-password"
+                        textContentType="newPassword"
+                      />
+                      {!!value && (
+                        <View style={{ marginTop: -16, marginBottom: 16 }}>
+                          <View style={{ height: 4, borderRadius: 2, backgroundColor: isDark ? '#3A3A4A' : '#E5E7EB', overflow: 'hidden' }}>
+                            <View style={{ height: '100%', width: Number(passwordStrength.width.replace('%', '')) || 0, backgroundColor: passwordStrength.color, borderRadius: 2 }} />
+                          </View>
+                          <AppText style={{ fontSize: nf(11), color: passwordStrength.color, marginTop: 4, fontWeight: '600' }}>
+                            {passwordStrength.label}
+                          </AppText>
+                        </View>
+                      )}
+                    </>
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name="confirmPassword"
+                  render={({ field: { onChange, value } }) => (
+                    <AnimatedInput
+                      label="Confirm Password"
+                      value={value}
+                      onChange={onChange}
+                      error={errors.confirmPassword?.message}
                       isDark={isDark}
                       secureTextEntry
                       autoComplete="new-password"
                       textContentType="newPassword"
                     />
-                    {!!value && (
-                      <View style={{ marginTop: -16, marginBottom: 16 }}>
-                        <View style={{ height: 4, borderRadius: 2, backgroundColor: isDark ? '#3A3A4A' : '#E5E7EB', overflow: 'hidden' }}>
-                          <View style={{ height: '100%', width: Number(passwordStrength.width.replace('%', '')) || 0, backgroundColor: passwordStrength.color, borderRadius: 2 }} />
-                        </View>
-                        <AppText style={{ fontSize: 11, color: passwordStrength.color, marginTop: 4, fontWeight: '600' }}>
-                          {passwordStrength.label}
-                        </AppText>
-                      </View>
-                    )}
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, value } }) => (
-                  <AnimatedInput
-                    label="Confirm Password"
-                    value={value}
-                    onChange={onChange}
-                    error={errors.confirmPassword?.message}
-                    isDark={isDark}
-                    secureTextEntry
-                    autoComplete="new-password"
-                    textContentType="newPassword"
-                  />
-                )}
-              />
-            </View>
+                  )}
+                />
+              </View>
 
-            {/* Submit */}
-            <Button
-              title="Create Account"
-              onPress={handleSubmit(onSubmit)}
-              loading={loading}
-              disabled={!isValid || loading}
-              className="mb-6 rounded-3xl"
-            />
+              {/* Submit */}
+              <Button
+                title="Create Account"
+                onPress={handleSubmit(onSubmit)}
+                loading={loading}
+                disabled={!isValid || loading}
+                className="mb-6 rounded-3xl"
+              />
 
-            {/* Footer */}
-            <View className="flex-row justify-center items-center">
-              <AppText style={{ color: colors.textPrimary }}>
-                Already have an account?{' '}
-              </AppText>
-              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                <AppText className="font-semibold text-primary">
-                  Sign In
+              {/* Footer */}
+              <View className="flex-row justify-center items-center">
+                <AppText style={{ color: colors.textPrimary }} fontSize={nf(16)}>
+                  Already have an account?{' '}
                 </AppText>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                  <AppText className="font-semibold text-primary" fontSize={nf(16)}>
+                    Sign In
+                  </AppText>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          {/* Version - Bottom Right */}
-          <View style={{ position: 'absolute', right: 25, bottom: 30 }} pointerEvents="none">
-            <AppText style={{ color: colors.textPrimary, fontSize: 12, fontWeight: '600', opacity: 0.7 }}>
-              v{APP_VERSION}
-            </AppText>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+            {/* Version - Bottom Right */}
+            <View style={{ position: 'absolute', right: 25, bottom: 30 }} pointerEvents="none">
+              <AppText style={{ color: colors.textPrimary, fontSize: nf(12), fontWeight: '600', opacity: 0.7 }}>
+                v{APP_VERSION}
+              </AppText>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaContainer>
     </MainBG>
   );
 }

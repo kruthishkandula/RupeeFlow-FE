@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
-import AppText from './AppText';
+import AppText, { nf } from './AppText';
 
 export type ButtonProps = {
     variant?: "primary" | "secondary" | "tertiary" | "danger" | "success";
@@ -28,6 +28,7 @@ export default function Button({
     disabled = false,
     ...props
 }: Readonly<ButtonProps>) {
+    let extraStyle: Record<string, string | number> = {};
 
     let borderRadis = 36
 
@@ -49,16 +50,16 @@ export default function Button({
 
     // Adjust size classes
     if (size === "small") {
-        ButtonClassName += " text-sm";
+        extraStyle.fontSize = nf(12);
     } else if (size === "large") {
-        ButtonClassName += " text-lg";
+        extraStyle.fontSize = nf(14);
     } else {
-        ButtonClassName += " text-base";
+        extraStyle.fontSize = nf(16);
     }
 
     return (
         <TouchableOpacity className={`min-h-12 justify-center ${ButtonClassName} ${className}`} onPress={onPress} style={[style, disabled && { backgroundColor: '#afafaf' }]} disabled={disabled}>
-            {loading ? <ActivityIndicator size={'small'} className='text-text2' /> : <AppText className={`text-center ${textClassName}`} style={textStyle}>{title}</AppText>}
+            {loading ? <ActivityIndicator size={'small'} className='text-text2' /> : <AppText className={`text-center ${textClassName}`} style={[textStyle, extraStyle]}>{title}</AppText>}
         </TouchableOpacity>
     )
 }

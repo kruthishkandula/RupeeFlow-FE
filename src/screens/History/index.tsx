@@ -1,8 +1,9 @@
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import TranscationCard from '@/components/Cards/TranscationCard';
 import DynamicHeader from '@/components/Header/DynamicHeader';
 import Icon from '@/components/Icon';
+import AnimatedInput from '@/components/Input/AnimatedInput';
 import Empty from '@/components/Organisms/Empty';
 import useTheme from '@/hooks/useTheme';
 import { useExpenseStore } from '@/store/useExpenseStore';
@@ -100,23 +101,16 @@ export default function Transactions() {
                 />
 
                 {/* Search bar */}
-                <View style={[styles.searchRow, { borderColor: colors?.borderSubtle ?? '#E5E7EB', backgroundColor: colors?.surfaceOverlay }]}>
-                    <Icon name='Search' size={16} color='#9CA3AF' />
-                    <TextInput
-                        style={[styles.searchInput, { color: colors?.textPrimary ?? '#111827' }]}
-                        placeholder='Search by title, category…'
-                        placeholderTextColor='#9CA3AF'
+                <View style={{ marginHorizontal: 16, marginTop: 8, marginBottom: 4 }}>
+                    <AnimatedInput
                         value={search}
                         onChangeText={setSearch}
                         returnKeyType='search'
                         clearButtonMode='while-editing'
-
+                        label="Search by title, category…"
+                        search
+                        onClear={() => setSearch('')}
                     />
-                    {search.length > 0 && (
-                        <Pressable onPress={() => setSearch('')}>
-                            <Icon name='X' size={14} color='#9CA3AF' />
-                        </Pressable>
-                    )}
                 </View>
 
                 {/* Sort chips */}
@@ -209,7 +203,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         flex: 1,
-        fontSize: 18,
+        fontSize: nf(18),
         paddingVertical: 16,
     },
     filterSection: {
@@ -221,7 +215,7 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
     },
     filterLabel: {
-        fontSize: 12,
+        fontSize: nf(12),
         fontWeight: '600',
         textTransform: 'uppercase',
         letterSpacing: 0.5,
@@ -248,11 +242,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#F3F4F6',
     },
     chipText: {
-        fontSize: 13,
+        fontSize: nf(13),
         fontWeight: '600',
     },
     resultCount: {
-        fontSize: 13,
+        fontSize: nf(13),
     },
     clearChip: {
         flexDirection: 'row',
@@ -264,7 +258,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FEE2E2',
     },
     clearChipText: {
-        fontSize: 13,
+        fontSize: nf(13),
         fontWeight: '600',
         color: '#EF4444',
     },

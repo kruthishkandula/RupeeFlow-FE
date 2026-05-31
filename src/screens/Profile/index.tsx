@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import { Modal, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
 import MainBG from '../../components/Backgrounds/MainBG'
 import DynamicHeader from '../../components/Header/DynamicHeader'
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 
 const SETTINGS = [
   {
@@ -72,12 +72,12 @@ export default function Profile() {
               alignItems: 'center', justifyContent: 'center',
               borderWidth: 3, borderColor: '#2F7E7940',
             }}>
-              <AppText style={{ fontSize: 34, color: '#fff', fontWeight: '800' }}>{initials}</AppText>
+              <AppText style={{ fontSize: nf(34), color: '#fff', fontWeight: '800' }}>{initials}</AppText>
             </View>
-            <AppText style={{ color: colors.textPrimary, fontSize: 20, fontWeight: '700', marginTop: 14 }}>
+            <AppText style={{ color: colors.textPrimary, fontSize: nf(20), fontWeight: '700', marginTop: 14 }}>
               {displayName}
             </AppText>
-            <AppText style={{ color: colors.textSecondary, fontSize: 13, marginTop: 4 }}>{email}</AppText>
+            <AppText style={{ color: colors.textSecondary, fontSize: nf(13), marginTop: 4 }}>{email}</AppText>
           </View>
 
           {/* Settings */}
@@ -103,8 +103,8 @@ export default function Profile() {
                   <Icon name={item.icon} size={20} color={item.iconBg} />
                 </View>
                 <View style={{ flex: 1 }}>
-                  <AppText style={{ color: colors.textPrimary, fontSize: 15, fontWeight: '600' }}>{item.title}</AppText>
-                  <AppText style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2 }}>{item.subtitle}</AppText>
+                  <AppText style={{ color: colors.textPrimary, fontSize: nf(15), fontWeight: '600' }}>{item.title}</AppText>
+                  <AppText style={{ color: colors.textSecondary, fontSize: nf(12), marginTop: 2 }}>{item.subtitle}</AppText>
                 </View>
                 <Icon name='ChevronRight' size={18} color={colors.textSecondary} />
               </TouchableOpacity>
@@ -118,11 +118,11 @@ export default function Profile() {
             className='mx-4 mt-4 rounded-2xl py-4 flex-row items-center justify-center gap-2'
             style={{ backgroundColor: '#EF444415', borderWidth: 1, borderColor: '#EF444430' }}>
             <Icon name='LogOut' size={20} color='#EF4444' />
-            <AppText style={{ color: '#EF4444', fontSize: 15, fontWeight: '700' }}>Logout</AppText>
+            <AppText style={{ color: '#EF4444', fontSize: nf(15), fontWeight: '700' }}>Logout</AppText>
           </TouchableOpacity>
 
           <View className='flex-1 justify-center items-center mt-8' >
-            <AppText style={{ color: colors.textSecondary, fontSize: 13, marginTop: 4 }}>Version {APP_VERSION}</AppText>
+            <AppText style={{ color: colors.textSecondary, fontSize: nf(13), marginTop: 4 }}>Version {APP_VERSION}</AppText>
           </View>
 
         </ScrollView>
@@ -151,10 +151,10 @@ export default function Profile() {
                   }}>
                     <Icon name='LogOut' size={28} color='#EF4444' />
                   </View>
-                  <AppText style={{ color: colors.textPrimary, fontSize: 20, fontWeight: '800' }}>
+                  <AppText style={{ color: colors.textPrimary, fontSize: nf(20), fontWeight: '800' }}>
                     Logout
                   </AppText>
-                  <AppText style={{ color: colors.textSecondary, fontSize: 14, marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
+                  <AppText style={{ color: colors.textSecondary, fontSize: nf(14), marginTop: 8, textAlign: 'center', lineHeight: 20 }}>
                     Are you sure you want to logout?{`\n`}You'll need to sign in again to access your data.
                   </AppText>
                 </View>
@@ -170,11 +170,11 @@ export default function Profile() {
                     backgroundColor: '#2F7E79',
                     alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <AppText style={{ color: '#fff', fontWeight: '700', fontSize: 16 }}>{initials}</AppText>
+                    <AppText style={{ color: '#fff', fontWeight: '700', fontSize: nf(16) }}>{initials}</AppText>
                   </View>
                   <View>
-                    <AppText style={{ color: colors.textPrimary, fontWeight: '600', fontSize: 14 }}>{displayName}</AppText>
-                    <AppText style={{ color: colors.textSecondary, fontSize: 12 }}>{email}</AppText>
+                    <AppText style={{ color: colors.textPrimary, fontWeight: '600', fontSize: nf(14) }}>{displayName}</AppText>
+                    <AppText style={{ color: colors.textSecondary, fontSize: nf(12) }}>{email}</AppText>
                   </View>
                 </View>
 
@@ -186,7 +186,7 @@ export default function Profile() {
                     backgroundColor: '#EF4444', borderRadius: 16,
                     paddingVertical: 16, alignItems: 'center', marginBottom: 12,
                   }}>
-                  <AppText style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Yes, Logout</AppText>
+                  <AppText style={{ color: '#fff', fontSize: nf(16), fontWeight: '700' }}>Yes, Logout</AppText>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -196,7 +196,7 @@ export default function Profile() {
                     backgroundColor: isDark ? '#2a2a2a' : '#F0F0F0',
                     borderRadius: 16, paddingVertical: 16, alignItems: 'center',
                   }}>
-                  <AppText style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '600' }}>Cancel</AppText>
+                  <AppText style={{ color: colors.textPrimary, fontSize: nf(16), fontWeight: '600' }}>Cancel</AppText>
                 </TouchableOpacity>
               </View>
             </Pressable>

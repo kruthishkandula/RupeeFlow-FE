@@ -1,4 +1,4 @@
-import AppText from '@/components/AppText';
+import AppText, { nf } from '@/components/AppText';
 import MainBG from '@/components/Backgrounds/MainBG';
 import Button from '@/components/Button';
 import SafeAreaContainer from '@/components/SafeAreaContainer';
@@ -99,7 +99,7 @@ export default function EmailVerificationScreen({ navigation, route }: Readonly<
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <AppText style={{ fontSize: 36 }}>📧</AppText>
+              <AppText style={{ fontSize: nf(36) }}>📧</AppText>
             </View>
           </View>
 

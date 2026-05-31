@@ -21,7 +21,7 @@ import {
   fmtFull,
   ICON_MAP,
 } from './walletConstants'
-import AppText from '@/components/AppText'
+import AppText, { nf } from '@/components/AppText'
 
 // ── Animated progress bar ────────────────────────────────────────────────────
 function ProgressBar({ pct, color }: Readonly<{ pct: number; color: string }>) {
@@ -180,7 +180,7 @@ export default function BudgetTab({
         </View>
         <View style={{ flex: 1, gap: 4 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <AppText style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '600' }}>{cat}</AppText>
+            <AppText style={{ color: colors.textPrimary, fontSize: nf(14), fontWeight: '600' }}>{cat}</AppText>
             <View className='mt-4' style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
               {!!budget && (
                 <TouchableOpacity onPress={() => removeBudget(cat)} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
@@ -197,14 +197,14 @@ export default function BudgetTab({
             </View>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <AppText style={{ color: over ? '#F59E0B' : colors.textSecondary, fontSize: 12, fontWeight: over ? '600' : '400' }}>
+            <AppText style={{ color: over ? '#F59E0B' : colors.textSecondary, fontSize: nf(12), fontWeight: over ? '600' : '400' }}>
               Spent: {fmtFull(spent)}
             </AppText>
             {budget
-              ? <AppText style={{ color: over ? '#F59E0B' : '#4CAF50', fontSize: 12, fontWeight: '600' }}>
+              ? <AppText style={{ color: over ? '#F59E0B' : '#4CAF50', fontSize: nf(12), fontWeight: '600' }}>
                 Limit: {fmtFull(budget)}
               </AppText>
-              : <AppText style={{ color: colors.textTertiary, fontSize: 12 }}>No limit set</AppText>
+              : <AppText style={{ color: colors.textTertiary, fontSize: nf(12) }}>No limit set</AppText>
             }
           </View>
           {!!budget && <ProgressBar pct={pct} color={over ? '#F59E0B' : color} />}
@@ -228,15 +228,15 @@ export default function BudgetTab({
           {budgetUsedPct > 1 && (
             <View style={styles.overallWarnBanner}>
               <Icon name="TriangleAlert" size={14} color="#FDE68A" />
-              <AppText style={{ color: '#FDE68A', fontWeight: '600', fontSize: 13 }}>Budget limit reached</AppText>
+              <AppText style={{ color: '#FDE68A', fontWeight: '600', fontSize: nf(13) }}>Budget limit reached</AppText>
             </View>
           )}
           <AppText style={styles.overallLabel}>Monthly Budget</AppText>
           <AppText style={styles.overallBalance}>{fmtFull(totalBudget)}</AppText>
           <View style={{ marginTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
-              <AppText style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>Spent {fmtFull(budgetedSpend)}</AppText>
-              <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 13, fontWeight: '700' }}>
+              <AppText style={{ color: 'rgba(255,255,255,0.9)', fontSize: nf(13), fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>Spent {fmtFull(budgetedSpend)}</AppText>
+              <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: nf(13), fontWeight: '700' }}>
                 {Math.round(budgetUsedPct * 100)}% used
               </AppText>
             </View>
@@ -247,7 +247,7 @@ export default function BudgetTab({
                 width: `${Math.min(100, Math.round(budgetUsedPct * 100))}%`,
               }} />
             </View>
-            <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: 12, marginTop: 6, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>
+            <AppText style={{ color: budgetUsedPct > 1 ? '#FDE68A' : 'rgba(255,255,255,0.8)', fontSize: nf(12), marginTop: 6, fontWeight: budgetUsedPct > 1 ? '600' : '400' }}>
               {budgetedSpend <= totalBudget
                 ? `${fmtFull(totalBudget - budgetedSpend)} remaining`
                 : `Over budget by ${fmtFull(budgetedSpend - totalBudget)}`}
@@ -262,7 +262,7 @@ export default function BudgetTab({
       {categories.length === 0 && (
         <View style={{ alignItems: 'center', paddingVertical: 40, gap: 10 }}>
           <Icon name="PiggyBank" size={48} color={colors.textTertiary} />
-          <AppText style={{ color: colors.textSecondary, fontSize: 15, textAlign: 'center' }}>
+          <AppText style={{ color: colors.textSecondary, fontSize: nf(15), textAlign: 'center' }}>
             No spending categories this month yet.
           </AppText>
         </View>
@@ -274,7 +274,7 @@ export default function BudgetTab({
   const ListFooter = () => (
     <View style={[styles.tipCard, { backgroundColor: `${colors.primary}18`, borderColor: `${colors.primary}44` }]}>
       <Icon name="Lightbulb" size={18} color={colors.primary} />
-      <AppText style={{ color: colors.textSecondary, fontSize: 13, flex: 1 }}>
+      <AppText style={{ color: colors.textSecondary, fontSize: nf(13), flex: 1 }}>
         Tap <AppText style={{ fontWeight: '700', color: colors.textPrimary }}>Set</AppText> next to a category to define a monthly spending limit.
       </AppText>
     </View>
@@ -343,9 +343,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  overallLabel: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginBottom: 4 },
-  overallBalance: { color: '#fff', fontSize: 32, fontWeight: '800' },
-  overallPeriod: { color: 'rgba(255,255,255,0.5)', fontSize: 11, marginTop: 12, alignSelf: 'flex-end' },
+  overallLabel: { color: 'rgba(255,255,255,0.8)', fontSize: nf(14), marginBottom: 4 },
+  overallBalance: { color: '#fff', fontSize: nf(32), fontWeight: '800' },
+  overallPeriod: { color: 'rgba(255,255,255,0.5)', fontSize: nf(11), marginTop: 12, alignSelf: 'flex-end' },
   overallWarnBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     borderBottomLeftRadius: 8,
   },
-  overBannerText: { color: '#fff', fontSize: 10, fontWeight: '600' },
+  overBannerText: { color: '#fff', fontSize: nf(10), fontWeight: '600' },
   overPill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -383,12 +383,12 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     alignSelf: 'flex-start',
   },
-  overPillText: { color: '#F59E0B', fontSize: 11, fontWeight: '600' },
+  overPillText: { color: '#F59E0B', fontSize: nf(11), fontWeight: '600' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
   modalSheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 36 },
   modalHandle: { width: 40, height: 4, borderRadius: 2, backgroundColor: '#ccc', alignSelf: 'center', marginBottom: 20 },
-  modalTitle: { fontSize: 18, fontWeight: '700', marginBottom: 6 },
+  modalTitle: { fontSize: nf(18), fontWeight: '700', marginBottom: 6 },
   inputRow: { flexDirection: 'row', alignItems: 'center', borderWidth: 1.5, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10 },
-  input: { flex: 1, fontSize: 22, fontWeight: '700' },
+  input: { flex: 1, fontSize: nf(22), fontWeight: '700' },
   btn: { paddingVertical: 14, borderRadius: 12, alignItems: 'center' },
 })
