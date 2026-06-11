@@ -78,3 +78,7 @@ yarn-error.log
 ios/RupeeFlow/GoogleService-Info.plist
 *.keystore.zip
 android/gradle.properties
+android/gradle.properties
+android/app/google-services.json
+android/app/*.keystore
+ios/**/GoogleService-Info.plist
