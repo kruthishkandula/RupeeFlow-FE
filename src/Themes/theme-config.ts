@@ -138,6 +138,130 @@ const themeSpecificDefinitions: Record<string, ThemeSpecificColors> = {
     isDark: false,
     bgType: 'XmasBg'
   },
+  lavender: {
+    primary: '#8B5CF6',
+    primaryHover: '#7C3AED',
+    secondary: '#A78BFA',
+    accent: '#C4B5FD',
+
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#6366F1',
+
+    surfaceBase: '#F8F6FF',
+    surfaceElevated: '#FFFFFF',
+    surfaceOverlay: '#F2EEFF',
+
+    borderDefault: '#DDD6FE',
+    borderSubtle: '#EDE9FE',
+
+    textPrimary: '#312E81',
+    textSecondary: '#6D5DB3',
+    textTertiary: '#9A8FD1',
+    textInverse: '#FFFFFF',
+
+    focusRing: '#4C1D95',
+    linkDefault: '#7C3AED',
+
+    dark: commonColors.black,
+    light: commonColors.white,
+
+    isDark: false,
+    bgType: 'LavendarBg'
+  },
+  mint: {
+    primary: '#10B981',
+    primaryHover: '#059669',
+    secondary: '#6EE7B7',
+    accent: '#A7F3D0',
+
+    success: '#16A34A',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    info: '#06B6D4',
+
+    surfaceBase: '#F0FDF8',
+    surfaceElevated: '#FFFFFF',
+    surfaceOverlay: '#DCFCE7',
+
+    borderDefault: '#BBF7D0',
+    borderSubtle: '#D1FAE5',
+
+    textPrimary: '#064E3B',
+    textSecondary: '#047857',
+    textTertiary: '#6B7280',
+    textInverse: '#FFFFFF',
+
+    focusRing: '#065F46',
+    linkDefault: '#059669',
+
+    dark: commonColors.black,
+    light: commonColors.white,
+    isDark: false,
+    bgType: 'MintBg'
+  },
+  ocean: {
+    primary: '#2563EB',
+    primaryHover: '#1D4ED8',
+    secondary: '#60A5FA',
+    accent: '#93C5FD',
+    success: '#059669',
+    warning: '#F59E0B',
+    error: '#DC2626',
+    info: '#0EA5E9',
+
+    surfaceBase: '#F5FAFF',
+    surfaceElevated: '#FFFFFF',
+    surfaceOverlay: '#EAF4FF',
+
+    borderDefault: '#BFDBFE',
+    borderSubtle: '#DBEAFE',
+
+    textPrimary: '#0F172A',
+    textSecondary: '#475569',
+    textTertiary: '#64748B',
+    textInverse: '#FFFFFF',
+
+    focusRing: '#1E3A8A',
+    linkDefault: '#2563EB',
+
+    dark: commonColors.black,
+    light: commonColors.white,
+    isDark: false,
+    bgType: 'OceanBg'
+  },
+  royalpurple: {
+    primary: '#A78BFA',
+    primaryHover: '#8B5CF6',
+    secondary: '#C4B5FD',
+    accent: '#DDD6FE',
+
+    success: '#34D399',
+    warning: '#FBBF24',
+    error: '#F87171',
+    info: '#818CF8',
+
+    surfaceBase: '#1A1333',
+    surfaceElevated: '#241B45',
+    surfaceOverlay: '#2E225A',
+
+    borderDefault: '#4C3F7A',
+    borderSubtle: '#3B2F65',
+
+    textPrimary: '#F5F3FF',
+    textSecondary: '#D8CCFF',
+    textTertiary: '#B8A9F0',
+    textInverse: '#FFFFFF',
+
+    focusRing: '#C4B5FD',
+    linkDefault: '#A78BFA',
+
+    dark: commonColors.black,
+    light: commonColors.white,
+    isDark: true,
+    bgType: 'RoyalpurpleBg'
+  }
 };
 
 export const themeDefinitions: Record<string, ThemeColors> = Object.fromEntries(

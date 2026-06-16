@@ -32,6 +32,26 @@ const THEME_META: Record<string, { emoji: string; description: string; palette: 
     description: 'Festive holiday vibes',
     palette: ['#BB2528', '#146B3A', '#D4AF37', '#FFF8E7'],
   },
+  lavender: {
+    emoji: '💜',
+    description: 'Calm and soothing vibes',
+    palette: ['#8B5CF6', '#A78BFA', '#C4B5FD', '#F8F6FF'],
+  },
+  mint: {
+    emoji: '🌿',
+    description: 'Fresh and modern look',
+    palette: ['#10B981', '#6EE7B7', '#D1FAE5', '#F0FFF4'],
+  },
+  ocean: {
+    emoji: '🌊',
+    description: 'Cool and refreshing tones',
+    palette: ['#2563EB', '#60A5FA', '#D1E9FF', '#F0F9FF'],
+  },
+  royalpurple: {
+    emoji: '👑',
+    description: 'Luxurious and elegant',
+    palette: ['#A78BFA', '#C4B5FD', '#EDE9FE', '#F8F4FF'],
+  },
 };
 
 const ChangeTheme = () => {
@@ -67,9 +87,7 @@ const ChangeTheme = () => {
                   }
                 }}
                 style={{
-                  backgroundColor: isSelected
-                    ? (isDark ? '#2F7E7925' : '#2F7E7912')
-                    : colors.surfaceBase,
+                  backgroundColor: colors.surfaceBase,
                   borderRadius: 20,
                   padding: 18,
                   marginBottom: 12,

@@ -1,12 +1,13 @@
 import Icon from '@/components/Icon'
 import SafeAreaContainer from '@/components/SafeAreaContainer'
+import TypeToggle, { TypeToggleOption } from '@/components/TypeToggle'
 import useTheme from '@/hooks/useTheme'
 import { useExpenseStore } from '@/store/useExpenseStore'
 import { gpsw } from '@/style/theme'
 import { TransactionType } from '@/typings/global'
 import { capitalize } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native'
 import { G, Path, Svg, Text as SvgText } from 'react-native-svg'
 import MainBG from '../../components/Backgrounds/MainBG'
 import DynamicHeader from '../../components/Header/DynamicHeader'
@@ -216,9 +217,22 @@ function BarChart({ labels, income, expense }: Readonly<{ labels: string[]; inco
 
 // ── Main Screen ──────────────────────────────────────────────────────────────
 export default function Statistics() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
   const { expenses, getStoreExpenses } = useExpenseStore();
   const [period, setPeriod] = useState<Period>('month');
+
+  const glassCardBg = colors.surfaceBase + '33';
+  const glassCardBgSoft = colors.surfaceBase + '33';
+  const glassBorder = colors.surfaceBase + '33';
+  const toggleTrackBg = colors.surfaceElevated + '80';
+
+  const periodToggleOptions = useMemo((): ReadonlyArray<TypeToggleOption<Period>> => {
+    return PERIODS.map((p) => ({
+      value: p.value,
+      label: p.label,
+      activeColor: colors.primary,
+    }));
+  }, [colors.primary]);
 
   useEffect(() => {
     getStoreExpenses();
@@ -270,46 +284,43 @@ export default function Statistics() {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16, gap: 16 }}>
 
           {/* Period Selector */}
-          <View style={[styles.card, { backgroundColor: colors.surfaceElevated, flexDirection: 'row', padding: 4 }]}>
-            {PERIODS.map(p => (
-              <TouchableOpacity
-                key={p.value}
-                onPress={() => setPeriod(p.value)}
-                style={[styles.periodTab, period === p.value && { backgroundColor: colors.primary }]}
-              >
-                <AppText style={{ color: period === p.value ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: nf(14) }}>
-                  {p.label}
-                </AppText>
-              </TouchableOpacity>
-            ))}
+          <View >
+            <TypeToggle
+              value={period}
+              onChange={setPeriod}
+              options={periodToggleOptions}
+              trackStyle={{ backgroundColor: toggleTrackBg, borderColor: glassBorder }}
+              textColor={colors.textPrimary}
+              selectedTextColor="#fff"
+            />
           </View>
 
           {/* Summary Cards */}
           <View style={{ flexDirection: 'row', gap: 10 }}>
             {[
-              { label: 'Income', value: totalIncome, color: '#4CAF50', icon: 'ArrowDownLeft' as const },
-              { label: 'Expense', value: totalExpense, color: '#FF4C4C', icon: 'ArrowUpRight' as const },
-              { label: 'Balance', value: balance, color: colors.primary, icon: 'Wallet' as const },
+              { key: 'income', label: 'Income', value: totalIncome, color: '#4CAF50', icon: 'ArrowDownLeft' as const },
+              { key: 'expense', label: 'Expense', value: totalExpense, color: '#FF4C4C', icon: 'ArrowUpRight' as const },
+              { key: 'balance', label: 'Balance', value: balance, color: balance < 0 ? '#FF4C4C' : colors.primary, icon: 'Wallet' as const },
             ].map(item => (
-              <View key={item.label} style={[styles.summaryCard, { backgroundColor: colors.surfaceElevated, flex: 1 }]}>
+              <View key={item.label} style={[styles.summaryCard, { backgroundColor: glassCardBgSoft, borderColor: glassBorder, borderWidth: 1, flex: 1 }]}> 
                 <Icon name={item.icon} size={18} color={item.color} />
                 <AppText style={{ color: colors.textSecondary, fontSize: nf(11), marginTop: 4 }}>{item.label}</AppText>
                 <AppText style={{ color: item.color, fontSize: nf(13), fontWeight: '700', marginTop: 2 }} numberOfLines={1}>
-                  ₹{Math.abs(item.value).toLocaleString('en-IN')}
+                  {item.key === 'balance' && item.value < 0 ? '-' : ''}₹{Math.abs(item.value).toLocaleString('en-IN')}
                 </AppText>
               </View>
             ))}
           </View>
 
           {/* Bar Chart */}
-          <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
+          <View style={[styles.card, { backgroundColor: glassCardBg, borderColor: glassBorder, borderWidth: 1 }]}> 
             <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Income vs Expense</AppText>
             <BarChart labels={labels} income={incomeB} expense={expenseB} />
           </View>
 
           {/* Donut Chart + Category Legend */}
           {categoryData.length > 0 ? (
-            <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
+            <View style={[styles.card, { backgroundColor: glassCardBg, borderColor: glassBorder, borderWidth: 1 }]}> 
               <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Expenses by Category</AppText>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                 <DonutChart data={categoryData} />
@@ -330,7 +341,7 @@ export default function Statistics() {
 
           {/* Category Breakdown */}
           {categoryData.length > 0 && (
-            <View style={[styles.card, { backgroundColor: colors.surfaceElevated }]}>
+            <View style={[styles.card, { backgroundColor: glassCardBg, borderColor: glassBorder, borderWidth: 1 }]}> 
               <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Category Breakdown</AppText>
               <View style={{ gap: 14 }}>
                 {categoryData.map(cat => {
@@ -356,7 +367,7 @@ export default function Statistics() {
 
           {/* Top Expenses */}
           {topExpense.length > 0 && (
-            <View style={[styles.card, { backgroundColor: colors.surfaceElevated, marginBottom: 30 }]}>
+            <View style={[styles.card, { backgroundColor: glassCardBg, borderColor: glassBorder, borderWidth: 1, marginBottom: 30 }]}> 
               <AppText style={[styles.sectionTitle, { color: colors.textPrimary }]}>Top Expenses</AppText>
               <View style={{ gap: 12 }}>
                 {topExpense.map((t, i) => (
@@ -400,12 +411,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 4,
     elevation: 3,
-  },
-  periodTab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderRadius: 10,
   },
   summaryCard: {
     borderRadius: 12,

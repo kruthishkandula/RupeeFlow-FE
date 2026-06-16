@@ -85,8 +85,8 @@ android {
         applicationId "com.rupeeflow"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.1"
         // ndk.abiFilters removed to avoid conflict with splits.abi.include
     }
         signingConfigs {

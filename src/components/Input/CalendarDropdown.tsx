@@ -9,6 +9,7 @@ import {
   View
 } from 'react-native';
 import AppText, { nf } from '../AppText';
+import useTheme from '@/hooks/useTheme';
 
 if (
   Platform.OS === 'android' &&
@@ -65,6 +66,7 @@ export default function CalendarDropdown({
   maxDate,
 }: Props) {
   const today = new Date();
+  const { colors } = useTheme()
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<'day' | 'month' | 'year'>('day');
   const [yearDecadeStart, setYearDecadeStart] = useState(
@@ -200,7 +202,7 @@ export default function CalendarDropdown({
                 <TouchableOpacity
                   style={[
                     styles.pillSegment,
-                    mode === 'month' && styles.pillSegmentActive,
+                    mode === 'month' && { ...styles.pillSegmentActive, backgroundColor: colors.primary },
                   ]}
                   onPress={() => {
                     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -209,7 +211,7 @@ export default function CalendarDropdown({
                 >
                   <AppText style={[styles.monthYear, mode === 'month' && styles.pillSegmentActiveText]}>
                     {MONTHS[viewMonth].slice(0, 3)}
-                    <AppText style={styles.modeCaret}>{mode === 'month' ? ' ▴' : ' ▾'}</AppText>
+                    <AppText style={[styles.modeCaret, { color: colors.primary }]}>{mode === 'month' ? ' ▴' : ' ▾'}</AppText>
                   </AppText>
                 </TouchableOpacity>
 
@@ -219,16 +221,16 @@ export default function CalendarDropdown({
                 <TouchableOpacity
                   style={[
                     styles.pillSegment,
-                    mode === 'year' && styles.pillSegmentActive,
+                    mode === 'year' && { ...styles.pillSegmentActive, backgroundColor: colors.primary },
                   ]}
                   onPress={() => {
                     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                     setMode(prev => prev === 'year' ? 'day' : 'year');
                   }}
                 >
-                  <AppText style={[styles.yearPill, mode === 'year' && styles.pillSegmentActiveText]}>
+                  <AppText style={[{ ...styles.yearPill, color: colors.primary }, mode === 'year' && styles.pillSegmentActiveText]}>
                     {viewYear}
-                    <AppText style={styles.modeCaret}>{mode === 'year' ? ' ▴' : ' ▾'}</AppText>
+                    <AppText style={[styles.modeCaret, { color: colors.primary }]}>{mode === 'year' ? ' ▴' : ' ▾'}</AppText>
                   </AppText>
                 </TouchableOpacity>
               </View>
@@ -263,12 +265,12 @@ export default function CalendarDropdown({
                     return (
                       <TouchableOpacity
                         key={y}
-                        style={[styles.yearCell, isSelected && styles.selectedCell]}
+                        style={[styles.yearCell]}
                         onPress={() => handleYearSelect(y)}
                       >
                         <AppText style={[
                           styles.yearText,
-                          isCurrent && !isSelected && styles.todayText,
+                          isCurrent && !isSelected && { ...styles.todayText, color: colors.primary },
                           isSelected && styles.selectedText,
                         ]}>
                           {y}
@@ -289,7 +291,7 @@ export default function CalendarDropdown({
                   return (
                     <TouchableOpacity
                       key={m}
-                      style={[styles.monthCell, isSelected && styles.selectedCell]}
+                      style={[styles.monthCell, isSelected && { backgroundColor: colors.primary }]}
                       onPress={() => handleMonthSelect(idx)}
                     >
                       <AppText style={[
@@ -329,8 +331,9 @@ export default function CalendarDropdown({
                           key={idx}
                           style={[
                             styles.dayCell,
-                            todayCell && !selected && styles.todayCell,
-                            selected && styles.selectedCell,
+                            todayCell && !selected && { ...styles.todayCell, borderColor: colors.primary },
+                            todayCell && !selected && { borderColor: colors.primary },
+                            selected && { backgroundColor: colors.primary },
                             disabled && styles.disabledCell,
                           ]}
                           onPress={() => handleDayPress(day)}
@@ -362,7 +365,7 @@ export default function CalendarDropdown({
                     rotate.setValue(0);
                   }}
                 >
-                  <AppText style={styles.todayBtnText}>Today</AppText>
+                  <AppText style={[styles.todayBtnText, { color: colors.primary }]}>Today</AppText>
                 </TouchableOpacity>
               </>
             )}
@@ -487,11 +490,10 @@ const styles = StyleSheet.create({
 
   todayCell: {
     borderWidth: 1.5,
-    borderColor: '#6366F1',
   },
 
   selectedCell: {
-    backgroundColor: '#6366F1',
+
   },
 
   disabledCell: {
@@ -504,7 +506,6 @@ const styles = StyleSheet.create({
   },
 
   todayText: {
-    color: '#6366F1',
     fontWeight: '700',
   },
 
@@ -531,7 +532,6 @@ const styles = StyleSheet.create({
   },
 
   pillSegmentActive: {
-    backgroundColor: '#6366F1',
     borderRadius: 10,
   },
 
@@ -546,13 +546,11 @@ const styles = StyleSheet.create({
 
   yearPill: {
     fontSize: 15,
-    fontWeight: '700',
-    color: '#6366F1',
+    fontWeight: '700'
   },
 
   modeCaret: {
     fontSize: 11,
-    color: '#6366F1',
     marginLeft: 2,
   },
 
@@ -609,12 +607,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
 
-  yearSwitchText: {
-    color: '#6366F1',
-    fontSize: nf(13),
-    fontWeight: '600',
-  },
-
   todayBtn: {
     marginTop: 10,
     alignSelf: 'center',
@@ -625,7 +617,6 @@ const styles = StyleSheet.create({
   },
 
   todayBtnText: {
-    color: '#6366F1',
     fontSize: nf(13),
     fontWeight: '600',
   },

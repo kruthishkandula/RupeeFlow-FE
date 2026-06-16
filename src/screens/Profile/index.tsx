@@ -121,8 +121,8 @@ export default function Profile() {
             <AppText style={{ color: '#EF4444', fontSize: nf(15), fontWeight: '700' }}>Logout</AppText>
           </TouchableOpacity>
 
-          <View className='flex-1 justify-center items-center mt-8' >
-            <AppText style={{ color: colors.textSecondary, fontSize: nf(13), marginTop: 4 }}>Version {APP_VERSION}</AppText>
+          <View className='flex-1 justify-center items-center mt-16' >
+            <AppText style={{ color: colors.textPrimary, fontSize: nf(13), fontWeight: '800', marginTop: 4 }}>Version {APP_VERSION}</AppText>
           </View>
 
         </ScrollView>

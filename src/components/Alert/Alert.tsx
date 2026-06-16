@@ -37,7 +37,11 @@ function CustomToast({ type, text1, text2 }: Readonly<ToastConfigParams<any>>) {
       </View>
       <View style={styles.textWrapper}>
         {!!text1 && <AppText style={styles.title} numberOfLines={1}>{text1}</AppText>}
-        {!!text2 && <AppText style={styles.message} numberOfLines={2}>{text2}</AppText>}
+        {!!text2 && (
+          <Markdown style={markdownStyles}>
+            {String(text2)}
+          </Markdown>
+        )}
       </View>
     </View>
   );
@@ -117,5 +121,24 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#6B7280',
     marginTop: 2,
+  },
+});
+
+const markdownStyles = StyleSheet.create({
+  body: {
+    marginTop: 2,
+  },
+  paragraph: {
+    marginTop: 0,
+    marginBottom: 0,
+  },
+  text: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  strong: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#6B7280',
   },
 });

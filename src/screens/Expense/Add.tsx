@@ -7,6 +7,7 @@ import Icon from '@/components/Icon';
 import AnimatedInput from '@/components/Input/AnimatedInput';
 import CalendarDropdown from '@/components/Input/CalendarDropdown';
 import SafeAreaContainer from '@/components/SafeAreaContainer';
+import TypeToggle, { TypeToggleOption } from '@/components/TypeToggle';
 import { CATEGORY_COLORS, CATEGORY_ICON_MAP, EXPENSE_CATEGORIES, INCOME_CATEGORIES, QUICK_AMOUNTS } from '@/fixtures/constants';
 import useTheme from '@/hooks/useTheme';
 import { useExpenseStore } from '@/store/useExpenseStore';
@@ -15,7 +16,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-    Animated,
     ScrollView,
     StyleSheet,
     TextInput,
@@ -51,51 +51,14 @@ function getRawValue(formatted: string): string {
     return formatted.replaceAll(',', '');
 }
 
-function TypeToggle({ value, onChange }: Readonly<{ value: string; onChange: (v: string) => void }>) {
-    const incomeAnim = useRef(new Animated.Value(value === 'income' ? 1 : 0)).current;
-    const handlePress = (type: 'income' | 'expense') => {
-        Animated.timing(incomeAnim, {
-            toValue: type === 'income' ? 1 : 0,
-            duration: 220,
-            useNativeDriver: false,
-        }).start();
-        onChange(type);
-    };
-
-    const sliderLeft = incomeAnim.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0%', '50%'],
-    });
-    const sliderColor = incomeAnim.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['#EF4444', '#22C55E'],
-    });
-
-    return (
-        <View style={styles.toggleTrack}>
-            <Animated.View style={[styles.toggleSlider, { left: sliderLeft, backgroundColor: sliderColor }]} />
-            {(['expense', 'income'] as const).map((type) => (
-                <TouchableOpacity
-                    key={type}
-                    activeOpacity={0.8}
-                    style={styles.toggleOption}
-                    onPress={() => handlePress(type)}
-                >
-                    <AppText style={[
-                        styles.toggleText,
-                        value === type && styles.toggleTextActive,
-                    ]}>
-                        {type === 'income' ? '📈 Income' : '📉 Expense'}
-                    </AppText>
-                </TouchableOpacity>
-            ))}
-        </View>
-    );
-}
+const TYPE_TOGGLE_OPTIONS: ReadonlyArray<TypeToggleOption<ExpenseForm['type']>> = [
+    { value: 'expense', label: '📉 Expense', activeColor: '#EF4444' },
+    { value: 'income', label: '📈 Income', activeColor: '#22C55E' },
+];
 
 function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string; onChange: (v: string) => void; error?: string; type: string }>) {
     const list = (type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map(c => ({ label: c, value: c }));
-    const { colors } = useTheme();
+    const { colors, isDark } = useTheme();
 
     return (
         <View style={[styles.categoryWrapper]}>
@@ -105,6 +68,22 @@ function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string
                     const selected = value === cat.value;
                     const color = CATEGORY_COLORS[cat.value] || '#9CA3AF';
                     const iconName = (CATEGORY_ICON_MAP[cat.value] || 'Ellipsis') as any;
+                    const itemBg = isDark ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.6)';
+                    const itemBorder = isDark ? 'rgba(255,255,255,0.18)' : 'transparent';
+
+                    let iconBg = color + '22';
+                    if (selected) {
+                        iconBg = color;
+                    } else if (isDark) {
+                        iconBg = 'rgba(255,255,255,0.08)';
+                    }
+
+                    let iconBorder = 'transparent';
+                    if (!selected) {
+                        iconBorder = isDark ? color + '99' : color + '55';
+                    }
+                    const labelColor = selected ? color : colors?.textSecondary;
+
                     return (
                         <TouchableOpacity
                             key={cat.value}
@@ -112,15 +91,30 @@ function CategoryGrid({ value, onChange, error, type }: Readonly<{ value: string
                             onPress={() => onChange(cat.value)}
                             style={[
                                 styles.categoryItem,
+                                { backgroundColor: itemBg, borderColor: itemBorder, borderWidth: 1.5 },
                                 selected && { borderColor: color, borderWidth: 2, backgroundColor: color + '22' },
                             ]}
                         >
-                            <View style={[styles.categoryIconBg, { backgroundColor: selected ? color : color + '33' }]}>
-                                <Icon name={iconName} size={18} color={selected ? '#fff' : color} />
+                            <View
+                                style={[
+                                    styles.categoryIconBg,
+                                    {
+                                        backgroundColor: iconBg,
+                                        borderWidth: selected ? 0 : 1,
+                                        borderColor: iconBorder,
+                                    },
+                                ]}
+                            >
+                                <Icon
+                                    name={iconName}
+                                    size={18}
+                                    color={selected ? '#fff' : color}
+                                    strokeWidth={selected ? 2.4 : 2.6}
+                                />
                             </View>
-                            <AppText 
+                            <AppText
                                 numberOfLines={1}
-                                style={[styles.categoryLabel, { color: colors?.dark }, selected && { color, fontWeight: '700', }]}
+                                style={[styles.categoryLabel, { color: labelColor }, selected && { fontWeight: '700', }]}
                             >
                                 {cat.label}
                             </AppText>
@@ -155,21 +149,43 @@ export default function AddExpenseScreen() {
     const { addStoreExpense, updateStoreExpense, expenses } = useExpenseStore();
     const type = watch('type');
     const amount = watch('amount');
-    const isEditing = Boolean(params?.amount);
+    const isEditing = Boolean(params?.id);
     const accentColor = type === 'income' ? '#22C55E' : '#EF4444';
     const { colors } = useTheme();
+    const now = useMemo(() => new Date(), []);
 
-    const allTimeBalance = useMemo(() => {
+    const currentMonthBalance = useMemo(() => {
         let inc = 0, exp = 0;
         expenses.forEach(t => {
+            const d = new Date(t.date);
+            const isCurrentMonth = d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+            if (!isCurrentMonth) return;
             if (t.type === 'income') inc += t.amount;
             else exp += t.amount;
         });
         return inc - exp;
-    }, [expenses]);
+    }, [expenses, now]);
+
+    const originalTransaction = useMemo(
+        () => expenses.find((t) => t.id === params?.id),
+        [expenses, params?.id],
+    );
+
+    const originalType = originalTransaction?.type ?? params?.type;
+    const originalAmount = Number(originalTransaction?.amount ?? params?.amount ?? 0);
+    const originalDate = originalTransaction?.date ?? params?.date;
+    const originalDateObj = originalDate ? new Date(originalDate) : null;
+    const originalInCurrentMonth = originalDateObj
+        ? originalDateObj.getFullYear() === now.getFullYear() && originalDateObj.getMonth() === now.getMonth()
+        : false;
+    let originalContribution = 0;
+    if (isEditing && originalInCurrentMonth) {
+        originalContribution = originalType === 'income' ? originalAmount : -originalAmount;
+    }
+    const effectiveBalance = currentMonthBalance - originalContribution;
 
     const enteredAmount = Number.parseFloat(amount) || 0;
-    const showBalanceWarn = type === 'expense' && enteredAmount > 0 && enteredAmount > allTimeBalance;
+    const showBalanceWarn = type === 'expense' && enteredAmount > 0 && enteredAmount > effectiveBalance;
 
     // Clear category when switching type, since lists differ
     const prevType = useRef(type);
@@ -194,7 +210,7 @@ export default function AddExpenseScreen() {
             Alert.success({ title: 'Updated!', message: `Your __${data.type}__ updated successfully.`, position: 'top' });
             pop(2);
         } catch {
-            Alert.error({ title: 'Error!', message: 'Something went wrong. Please try updating again.', position: 'top' });
+            Alert.error({ title: 'Update error', message: 'Failed to update, Please try again.', position: 'top' });
         }
     };
 
@@ -229,7 +245,11 @@ export default function AddExpenseScreen() {
                             control={control}
                             name="type"
                             render={({ field }) => (
-                                <TypeToggle value={field.value} onChange={field.onChange} />
+                                <TypeToggle
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={TYPE_TOGGLE_OPTIONS}
+                                />
                             )}
                         />
                     </View>
@@ -295,7 +315,7 @@ export default function AddExpenseScreen() {
                         <View style={styles.warnBanner}>
                             <Icon name="TriangleAlert" size={16} color="#92400E" />
                             <AppText style={styles.warnText}>
-                                This expense (₹{enteredAmount.toLocaleString('en-IN')}) exceeds your current balance of ₹{allTimeBalance.toLocaleString('en-IN', { maximumFractionDigits: 2 })}.
+                                This expense (₹{enteredAmount.toLocaleString('en-IN')}) exceeds your current balance of ₹{effectiveBalance.toLocaleString('en-IN', { maximumFractionDigits: 2 })}.
                             </AppText>
                         </View>
                     )}
@@ -360,11 +380,17 @@ export default function AddExpenseScreen() {
                         <Controller
                             control={control}
                             name="note"
-                            render={({ field }) => (
+                            render={({ field, fieldState }) => (
                                 <AnimatedInput
                                     label="Note (optional)"
                                     value={field.value}
                                     onChange={field.onChange}
+                                    error={fieldState.error?.message}
+                                    inputHeight={200}
+                                    multiline
+                                    autoCorrect={false}
+                                    spellCheck={false}
+                                    numberOfLines={8}
                                 />
                             )}
                         />
@@ -396,37 +422,6 @@ export const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginTop: 8,
         marginBottom: 4,
-    },
-    // Type toggle
-    toggleTrack: {
-        flexDirection: 'row',
-        backgroundColor: 'rgba(255,255,255,0.25)',
-        borderRadius: 50,
-        overflow: 'hidden',
-        height: 48,
-        position: 'relative',
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.4)',
-    },
-    toggleSlider: {
-        position: 'absolute',
-        width: '50%',
-        height: '100%',
-        borderRadius: 50,
-    },
-    toggleOption: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1,
-    },
-    toggleText: {
-        fontSize: nf(14),
-        fontWeight: '600',
-        color: 'rgba(255,255,255,0.75)',
-    },
-    toggleTextActive: {
-        color: '#fff',
     },
     // Amount card
     amountCard: {

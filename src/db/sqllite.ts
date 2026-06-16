@@ -32,6 +32,7 @@ export const initDB = async (): Promise<void> => {
         type TEXT,
         date TEXT,
         category TEXT,
+        note TEXT,
         created_at TEXT
       );
     `);

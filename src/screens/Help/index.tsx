@@ -28,7 +28,7 @@ function FAQItem({ q, a, colors, isDark, open, onToggle }: Readonly<{ q: string;
                 <AppText style={{ flex: 1, color: colors.textPrimary, fontSize: nf(14), fontWeight: '600', lineHeight: nf(20) }}>{q}</AppText>
             </View>
             {open && (
-                <AppText style={{
+                <AppText numberOfLines={5} style={{
                     color: colors.textSecondary, fontSize: nf(13), lineHeight: nf(20),
                     marginTop: 10, marginLeft: 40,
                 }}>{a}</AppText>

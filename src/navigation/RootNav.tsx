@@ -53,7 +53,7 @@ export default function RootNav() {
     }, []);
 
     const getFCMToken = async (): Promise<string | null> => {
-        if (Platform.OS !== 'ios') return null;
+        if (Platform.OS == 'ios') return null;
         try {
             const messagingClient = messaging();
 
@@ -78,7 +78,7 @@ export default function RootNav() {
     };
 
     useEffect(() => {
-        if (Platform.OS !== 'ios') return;
+        if (Platform.OS == 'ios') return;
         (async () => {
             const token = await getFCMToken();
             if (token) {

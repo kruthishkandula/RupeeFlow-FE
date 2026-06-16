@@ -52,6 +52,8 @@ export default function ExpenseDetail() {
         }
     };
 
+    console.log('params?.note', params?.note)
+
     return (
         <SafeAreaContainer style={{ backgroundColor: colors.surfaceOverlay }}>
             <DynamicHeader title='Transaction Details' />
@@ -89,7 +91,7 @@ export default function ExpenseDetail() {
                                 </View>
                                 <View style={{ flex: 1 }}>
                                     <AppText style={[styles.detailLabel, { color: colors.textSecondary }]}>{row.label}</AppText>
-                                    <AppText style={[styles.detailValue, { color: colors.textPrimary }]}>{row.value}</AppText>
+                                    <AppText style={[styles.detailValue, { color: colors.textPrimary }]} numberOfLines={10}>{row.value}</AppText>
                                 </View>
                             </View>
                             {i < arr.length - 1 && <View style={[styles.divider, { backgroundColor: colors.borderSubtle ?? '#F3F4F6' }]} />}

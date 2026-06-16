@@ -3,6 +3,7 @@ import TranscationCard from '@/components/Cards/TranscationCard'
 import DynamicHeader2 from '@/components/Header/DynamicHeader2'
 import Icon from '@/components/Icon'
 import SafeAreaContainer from '@/components/SafeAreaContainer'
+import TypeToggle, { TypeToggleOption } from '@/components/TypeToggle'
 import useTheme from '@/hooks/useTheme'
 import { useAuthStore } from '@/store/useAuthStore'
 import { useExpenseStore } from '@/store/useExpenseStore'
@@ -45,6 +46,11 @@ export default function Wallet() {
   const { user } = useAuthStore();
   const [activeTab, setActiveTab] = useState<'overview' | 'budget'>('overview')
 
+  const walletToggleOptions = useMemo((): ReadonlyArray<TypeToggleOption<'overview' | 'budget'>> => [
+    { value: 'overview', label: 'Overview', activeColor: colors.primary },
+    { value: 'budget', label: 'Budget', activeColor: colors.primary },
+  ], [colors.primary, colors.accent])
+
   useEffect(() => {
     getStoreExpenses()
   }, [])
@@ -73,14 +79,7 @@ export default function Wallet() {
     return { totalIncome, totalExpense, categorySpend }
   }, [currentMonth])
 
-  const allTimeBalance = useMemo(() => {
-    let inc = 0, exp = 0
-    expenses.forEach(t => {
-      if (t.type === 'income') inc += t.amount
-      else exp += t.amount
-    })
-    return inc - exp
-  }, [expenses])
+  const monthBalance = useMemo(() => totalIncome - totalExpense, [totalIncome, totalExpense])
 
   const categories = useMemo(
     () => Object.keys(categorySpend).sort((a, b) => categorySpend[b] - categorySpend[a]),
@@ -114,7 +113,7 @@ export default function Wallet() {
         <AppText style={styles.walletCardBadgeText}>Main Wallet</AppText>
       </View>
       <AppText style={styles.walletLabel}>Total Balance</AppText>
-      <AppText style={styles.walletBalance}>{allTimeBalance < 0 ? '-' : ''}{fmtFull(allTimeBalance)}</AppText>
+      <AppText style={styles.walletBalance}>{monthBalance < 0 ? '-' : ''}{fmtFull(monthBalance)}</AppText>
       <View style={styles.walletRow}>
         <View style={styles.walletStat}>
           <Icon name="ArrowDownLeft" size={16} color="#fff" />
@@ -230,18 +229,12 @@ export default function Wallet() {
         />
 
         {/* Tab Bar */}
-        <View style={[styles.tabBar, { backgroundColor: colors.surfaceElevated }]}>
-          {(['overview', 'budget'] as const).map(tab => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && { backgroundColor: colors.primary }]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <AppText style={{ color: activeTab === tab ? '#fff' : colors.textSecondary, fontWeight: '600', fontSize: nf(14) }}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </AppText>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.tabContainer}>
+          <TypeToggle
+            value={activeTab}
+            onChange={setActiveTab}
+            options={walletToggleOptions}
+          />
         </View>
 
         {activeTab === 'overview' ? (
@@ -281,18 +274,9 @@ export default function Wallet() {
 
 const styles = StyleSheet.create({
   scroll: { paddingBottom: 110, paddingHorizontal: 16, paddingTop: 4 },
-  tabBar: {
-    flexDirection: 'row',
+  tabContainer: {
     marginHorizontal: 16,
     marginBottom: 8,
-    borderRadius: 12,
-    padding: 4,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 9,
-    borderRadius: 10,
   },
   walletCard: {
     marginTop: 8,
