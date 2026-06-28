@@ -75,6 +75,11 @@ def enableProguardInReleaseBuilds = true
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+// Use CI-provided VERSION_CODE when present; otherwise derive from offset epoch seconds for local builds.
+def versionCodeEpochBase = 1704067200L // 2024-01-01T00:00:00Z
+def localVersionCode = ((System.currentTimeMillis() / 1000L) - versionCodeEpochBase).toInteger()
+def resolvedVersionCode = (project.findProperty("VERSION_CODE") ?: localVersionCode).toString().toInteger()
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -85,7 +90,7 @@ android {
         applicationId "com.rupeeflow"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
+        versionCode resolvedVersionCode
         versionName "1.0.1"
         // ndk.abiFilters removed to avoid conflict with splits.abi.include
     }

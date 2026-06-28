@@ -44,6 +44,13 @@ export const initDB = async (): Promise<void> => {
       // Column already exists in upgraded installs.
     }
 
+    // Migrate existing table: add note column if missing
+    try {
+      await db.executeSql(`ALTER TABLE expenses ADD COLUMN note TEXT DEFAULT ''`);
+    } catch {
+      // Column already exists in upgraded installs.
+    }
+
     // Ensure budgets table exists first, then migrate legacy schemas if needed.
     await db.executeSql(`
       CREATE TABLE IF NOT EXISTS budgets (

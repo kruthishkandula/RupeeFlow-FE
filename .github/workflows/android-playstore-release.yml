@@ -34,8 +34,9 @@ jobs:
 
       - name: Build Android Release AAB
         run: |
+          VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
           cd android
-          ./gradlew bundleRelease -Pandroid.injected.signing.store.file=app/release.keystore \
+          ./gradlew bundleRelease -PVERSION_CODE=$VERSION_CODE -Pandroid.injected.signing.store.file=app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
@@ -44,7 +45,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}
-          packageName: com.your.package # <-- Replace with your app's package name
+          packageName: com.rupeeflow
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           track: production
           status: completed
