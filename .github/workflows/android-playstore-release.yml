@@ -76,6 +76,7 @@ jobs:
           cd android
 
           ./gradlew bundleRelease \
+            -PhermesEnabled=true \
             --build-cache \
             --configuration-cache \
             -PVERSION_CODE=$VERSION_CODE \
