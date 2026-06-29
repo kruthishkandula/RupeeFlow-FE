@@ -1,12 +1,23 @@
 name: Android Play Store Release
 
 on:
+  # Manual trigger from Actions tab
+  workflow_dispatch:
+
+  # Trigger on pushes to main
   push:
     branches:
-      - prod-release
+      - main
 
 jobs:
   build-and-deploy:
+    # Run if:
+    # 1. Triggered manually OR
+    # 2. Push to main contains 'bundle-deploy' in commit message
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, 'bundle-deploy')
+
     runs-on: ubuntu-latest
 
     permissions:
@@ -16,7 +27,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Node + Yarn cache
+      # Setup Node + cache Yarn dependencies
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -26,23 +37,23 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Java
+      # Setup Java
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
 
-      # Gradle cache + configuration cache support
+      # Setup Gradle cache + configuration cache
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      # Decode keystore from GitHub Secret
+      # Decode Android Keystore
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
 
-      # Build signed AAB
+      # Build Signed AAB
       - name: Build Release AAB
         run: |
           VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
@@ -58,7 +69,7 @@ jobs:
             -Pandroid.injected.signing.key.alias="${{ secrets.KEY_ALIAS }}" \
             -Pandroid.injected.signing.key.password="${{ secrets.KEY_PASSWORD }}"
 
-      # Optional - Upload generated AAB as GitHub artifact
+      # Upload AAB as artifact
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
