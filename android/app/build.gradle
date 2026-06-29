@@ -7,6 +7,9 @@ apply plugin: "com.google.gms.google-services"
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("keystore.properties")
+def enableHermes = project.hasProperty("hermesEnabled")
+        ? project.hermesEnabled.toBoolean()
+        : false
 
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
@@ -164,7 +167,7 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    if (hermesEnabled.toBoolean()) {
+    if (enableHermes) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
