@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: "24.3.0"
           cache: "yarn"
-          
+
       - name: Debug Yarn config
         run: |
           yarn -v
@@ -58,6 +58,15 @@ jobs:
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+      
+      - name: Create keystore.properties
+        run: |
+          cat > android/keystore.properties <<EOF
+          MYAPP_UPLOAD_STORE_FILE=app/release.keystore
+          MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          EOF
 
       # Build Signed AAB
       - name: Build Release AAB
