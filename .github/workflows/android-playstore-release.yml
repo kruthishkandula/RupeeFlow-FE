@@ -33,6 +33,12 @@ jobs:
         with:
           node-version: "24.3.0"
           cache: "yarn"
+          
+      - name: Debug Yarn config
+        run: |
+          yarn -v
+          cat .yarnrc.yml || true
+          ls -la patches || true
 
       - name: Install dependencies
         run: yarn install --immutable
