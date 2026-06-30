@@ -27,11 +27,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache Yarn Berry
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       # Setup Node + cache Yarn dependencies
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "24.3.0"
+          node-version: "20"
           cache: "yarn"
 
       - name: Debug Yarn config
@@ -84,7 +94,7 @@ jobs:
             --build-cache \
             --configuration-cache \
             -PVERSION_CODE=$VERSION_CODE \
-            -Pandroid.injected.signing.store.file=app/release.keystore \
+            -Pandroid.injected.signing.store.file=release.keystore \
             -Pandroid.injected.signing.store.password="${{ secrets.KEYSTORE_PASSWORD }}" \
             -Pandroid.injected.signing.key.alias="${{ secrets.KEY_ALIAS }}" \
             -Pandroid.injected.signing.key.password="${{ secrets.KEY_PASSWORD }}"
