@@ -83,7 +83,7 @@ jobs:
           echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       # Build Signed AAB
-     - name: Build Release AAB
+      - name: Build Release AAB
         run: |
           VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
 
