@@ -67,7 +67,7 @@ jobs:
       # Decode Android Keystore
       - name: Decode Android Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/release.keystore
       
       - name: Create keystore.properties
         run: |
@@ -83,7 +83,7 @@ jobs:
           echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       # Build Signed AAB
-      - name: Build Release AAB
+     - name: Build Release AAB
         run: |
           VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
 
@@ -93,11 +93,7 @@ jobs:
             -PhermesEnabled=true \
             --build-cache \
             --configuration-cache \
-            -PVERSION_CODE=$VERSION_CODE \
-            -Pandroid.injected.signing.store.file=release.keystore \
-            -Pandroid.injected.signing.store.password="${{ secrets.KEYSTORE_PASSWORD }}" \
-            -Pandroid.injected.signing.key.alias="${{ secrets.KEY_ALIAS }}" \
-            -Pandroid.injected.signing.key.password="${{ secrets.KEY_PASSWORD }}"
+            -PVERSION_CODE=$VERSION_CODE
 
       # Upload AAB as artifact
       - name: Upload AAB Artifact
