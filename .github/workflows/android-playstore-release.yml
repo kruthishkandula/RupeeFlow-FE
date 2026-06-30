@@ -2,6 +2,30 @@ name: Android Play Store Release
 
 on:
   workflow_dispatch:
+    inputs:
+      upload_mode:
+        description: "Choose upload mode"
+        required: true
+        default: "build"
+        type: choice
+        options:
+          - build
+          - artifact
+
+      artifact_name:
+        description: "Artifact name (only for artifact mode)"
+        required: false
+        default: "app-release-aab"
+
+      track:
+        description: "Google Play Track"
+        required: true
+        default: "internal"
+        type: choice
+        options:
+          - internal
+          - closed
+          - production
 
   push:
     branches:
@@ -17,63 +41,57 @@ jobs:
 
     permissions:
       contents: read
+      actions: read
 
     env:
       CI: true
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Setup Node.js
+      #########################################################
+      # Build mode only
+      #########################################################
+
       - name: Setup Node.js
+        if: github.event.inputs.upload_mode != 'artifact'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "yarn"
+          cache: yarn
 
-      # Cache Yarn Berry
       - name: Cache Yarn Berry
+        if: github.event.inputs.upload_mode != 'artifact'
         uses: actions/cache@v4
         with:
           path: |
             .yarn/cache
             .yarn/install-state.gz
           key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
 
-      # Debug (optional)
-      - name: Debug Yarn Config
-        run: |
-          yarn -v
-          cat .yarnrc.yml || true
-          ls -la patches || true
-
-      # Install dependencies
       - name: Install dependencies
+        if: github.event.inputs.upload_mode != 'artifact'
         run: yarn install --immutable
 
-      # Setup Java
-      - name: Setup JDK 17
+      - name: Setup Java
+        if: github.event.inputs.upload_mode != 'artifact'
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
+          distribution: temurin
           java-version: "17"
 
-      # Setup Gradle with cache
       - name: Setup Gradle
+        if: github.event.inputs.upload_mode != 'artifact'
         uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: false
 
-      # Decode Android Keystore
       - name: Decode Android Keystore
+        if: github.event.inputs.upload_mode != 'artifact'
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" \
+            | base64 --decode > android/app/release.keystore
 
-      # Create keystore.properties
       - name: Create keystore.properties
+        if: github.event.inputs.upload_mode != 'artifact'
         run: |
           cat > android/keystore.properties <<EOF
           MYAPP_UPLOAD_STORE_FILE=release.keystore
@@ -82,21 +100,14 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
 
-      # Create google-services.json
       - name: Create google-services.json
+        if: github.event.inputs.upload_mode != 'artifact'
         run: |
-          echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+          echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" \
+            | base64 --decode > android/app/google-services.json
 
-      # Verify generated files (optional)
-      - name: Verify files
-        run: |
-          ls -la android
-          ls -la android/app
-          test -f android/app/release.keystore
-          test -f android/app/google-services.json
-
-      # Build Signed AAB
       - name: Build Release AAB
+        if: github.event.inputs.upload_mode != 'artifact'
         run: |
           VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
 
@@ -112,19 +123,56 @@ jobs:
             -x test \
             -x lint
 
-      # Upload generated AAB as artifact
-      - name: Upload AAB Artifact
+      - name: Upload Build Artifact
+        if: github.event.inputs.upload_mode != 'artifact'
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: android/app/build/outputs/bundle/release/app-release.aab
 
-      # Upload to Play Store
-      - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
+      #########################################################
+      # Artifact mode
+      #########################################################
+
+      - name: Download Existing Artifact
+        if: github.event.inputs.upload_mode == 'artifact'
+        uses: actions/download-artifact@v4
         with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}
-          packageName: com.rupeeflow
-          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          tracks: production
-          status: completed
+          name: ${{ github.event.inputs.artifact_name }}
+          path: artifact
+
+      #########################################################
+      # Fastlane Upload
+      #########################################################
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Create Play Service Account JSON
+        run: |
+          echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}' \
+            > play-service-account.json
+
+      - name: Upload to Google Play via Fastlane
+        run: |
+          if [ "${{ github.event.inputs.upload_mode }}" = "artifact" ]; then
+            AAB_PATH=$(find artifact -name "*.aab" | head -n 1)
+          else
+            AAB_PATH="android/app/build/outputs/bundle/release/app-release.aab"
+          fi
+
+          fastlane supply \
+            --aab "$AAB_PATH" \
+            --json_key play-service-account.json \
+            --package_name com.rupeeflow \
+            --track ${{ github.event.inputs.track || 'internal' }} \
+            --skip_upload_metadata true \
+            --skip_upload_images true \
+            --skip_upload_screenshots true \
+            --skip_upload_changelogs true
