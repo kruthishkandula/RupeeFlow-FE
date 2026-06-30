@@ -67,6 +67,10 @@ jobs:
           MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
+          
+      - name: Create google-services.json
+        run: |
+          echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       # Build Signed AAB
       - name: Build Release AAB
