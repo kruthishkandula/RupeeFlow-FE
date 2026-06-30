@@ -35,19 +35,24 @@ jobs:
       version_code: ${{ steps.version.outputs.version_code }}
 
     steps:
+      ######################################################################
+      # Checkout
+      ######################################################################
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      #########################################################
-      # Node
-      #########################################################
-
+      ######################################################################
+      # Node Setup
+      ######################################################################
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: yarn
 
+      ######################################################################
+      # Cache Yarn Berry
+      ######################################################################
       - name: Cache Yarn Berry
         uses: actions/cache@v4
         with:
@@ -58,47 +63,64 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      ######################################################################
+      # Install Dependencies
+      ######################################################################
       - name: Install dependencies
         run: yarn install --immutable
 
-      #########################################################
-      # Java + Android
-      #########################################################
-
+      ######################################################################
+      # Setup Java
+      ######################################################################
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
+      ######################################################################
+      # Cache Android SDK (reuse existing cache)
+      ######################################################################
       - name: Cache Android SDK
         uses: actions/cache@v4
         with:
           path: |
             /usr/local/lib/android/sdk/cmake
             /usr/local/lib/android/sdk/ndk
-          key: ${{ runner.os }}-android-sdk-v1
+          key: ${{ runner.os }}-android-sdk-${{ hashFiles('android/build.gradle', 'android/app/build.gradle', 'android/gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-android-sdk-
 
+      ######################################################################
+      # Cache Native Build Artifacts (reuse existing cache)
+      ######################################################################
       - name: Cache Native Build Artifacts
         uses: actions/cache@v4
         with:
           path: |
             android/.cxx
             android/app/.cxx
-          key: ${{ runner.os }}-cxx-v1
+          key: ${{ runner.os }}-cxx-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties', 'yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cxx-
 
+      ######################################################################
+      # Setup Gradle
+      ######################################################################
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      #########################################################
-      # Signing
-      #########################################################
-
+      ######################################################################
+      # Decode Android Keystore
+      ######################################################################
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" \
             | base64 --decode > android/app/release.keystore
 
+      ######################################################################
+      # Create keystore.properties
+      ######################################################################
       - name: Create keystore.properties
         run: |
           cat > android/keystore.properties <<EOF
@@ -108,15 +130,17 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
 
+      ######################################################################
+      # Create google-services.json
+      ######################################################################
       - name: Create google-services.json
         run: |
           echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" \
             | base64 --decode > android/app/google-services.json
 
-      #########################################################
-      # Version Code
-      #########################################################
-
+      ######################################################################
+      # Generate Version Code
+      ######################################################################
       - name: Generate Version Code
         id: version
         run: |
@@ -124,10 +148,9 @@ jobs:
           echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "Generated Version Code: $VERSION_CODE"
 
-      #########################################################
-      # Build
-      #########################################################
-
+      ######################################################################
+      # Build Release AAB
+      ######################################################################
       - name: Build Release AAB
         run: |
           cd android
@@ -138,14 +161,14 @@ jobs:
             --parallel \
             --build-cache \
             --configuration-cache \
+            --configuration-cache-problems=warn \
             --daemon \
             -x test \
             -x lint
 
-      #########################################################
-      # Upload Artifact
-      #########################################################
-
+      ######################################################################
+      # Upload Build Artifact
+      ######################################################################
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -153,10 +176,9 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 7
 
-      #########################################################
+      ######################################################################
       # Cleanup
-      #########################################################
-
+      ######################################################################
       - name: Cleanup
         if: always()
         run: |
@@ -172,20 +194,18 @@ jobs:
       contents: read
 
     steps:
-      #########################################################
-      # Download AAB
-      #########################################################
-
+      ######################################################################
+      # Download Artifact
+      ######################################################################
       - name: Download AAB Artifact
         uses: actions/download-artifact@v4
         with:
           name: app-release-aab
           path: artifact
 
-      #########################################################
+      ######################################################################
       # Setup Ruby
-      #########################################################
-
+      ######################################################################
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -194,19 +214,17 @@ jobs:
       - name: Install Fastlane
         run: gem install fastlane
 
-      #########################################################
-      # Service Account
-      #########################################################
-
+      ######################################################################
+      # Create Service Account JSON
+      ######################################################################
       - name: Create Play Service Account JSON
         run: |
           echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}' \
             > play-service-account.json
 
-      #########################################################
-      # Upload to Play Store
-      #########################################################
-
+      ######################################################################
+      # Upload to Google Play
+      ######################################################################
       - name: Upload to Google Play
         continue-on-error: true
         run: |
@@ -226,10 +244,9 @@ jobs:
             --skip_upload_screenshots true \
             --skip_upload_changelogs true
 
-      #########################################################
+      ######################################################################
       # Cleanup
-      #########################################################
-
+      ######################################################################
       - name: Cleanup
         if: always()
         run: rm -f play-service-account.json
