@@ -90,6 +90,11 @@ def versionCodeEpochBase = 1704067200L // 2024-01-01T00:00:00Z
 def localVersionCode = ((System.currentTimeMillis() / 1000L) - versionCodeEpochBase).toInteger()
 def resolvedVersionCode = (project.findProperty("VERSION_CODE") ?: localVersionCode).toString().toInteger()
 
+def envStoreFile = System.getenv("RUPEEFLOW_APP_UPLOAD_STORE_FILE")
+def envStorePassword = System.getenv("RUPEEFLOW_APP_UPLOAD_STORE_PASSWORD")
+def envKeyAlias = System.getenv("RUPEEFLOW_APP_UPLOAD_KEY_ALIAS")
+def envKeyPassword = System.getenv("RUPEEFLOW_APP_UPLOAD_KEY_PASSWORD")
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -112,21 +117,21 @@ android {
                 keyPassword 'android'
             }
 
-            if (keystorePropertiesFile.exists()) {
+            if (envStoreFile && envStorePassword && envKeyAlias && envKeyPassword) {
                 release {
-                        storeFile file(keystoreProperties['RUPEEFLOW_APP_UPLOAD_STORE_FILE'])
-                        storePassword keystoreProperties['RUPEEFLOW_APP_UPLOAD_STORE_PASSWORD']
-                        keyAlias keystoreProperties['RUPEEFLOW_APP_UPLOAD_KEY_ALIAS']
-                        keyPassword keystoreProperties['RUPEEFLOW_APP_UPLOAD_KEY_PASSWORD']
+                    storeFile file(envStoreFile)
+                    storePassword envStorePassword
+                    keyAlias envKeyAlias
+                    keyPassword envKeyPassword
                 }
             }
-            
-            if (project.hasProperty('RUPEEFLOW_APP_UPLOAD_STORE_FILE')) {
+
+            else if (keystorePropertiesFile.exists()) {
                 release {
-                    storeFile file(RUPEEFLOW_APP_UPLOAD_STORE_FILE)
-                    storePassword RUPEEFLOW_APP_UPLOAD_STORE_PASSWORD
-                    keyAlias RUPEEFLOW_APP_UPLOAD_KEY_ALIAS
-                    keyPassword RUPEEFLOW_APP_UPLOAD_KEY_PASSWORD
+                    storeFile file(keystoreProperties['RUPEEFLOW_APP_UPLOAD_STORE_FILE'])
+                    storePassword keystoreProperties['RUPEEFLOW_APP_UPLOAD_STORE_PASSWORD']
+                    keyAlias keystoreProperties['RUPEEFLOW_APP_UPLOAD_KEY_ALIAS']
+                    keyPassword keystoreProperties['RUPEEFLOW_APP_UPLOAD_KEY_PASSWORD']
                 }
             }
     }
