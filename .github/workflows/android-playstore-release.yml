@@ -1,19 +1,14 @@
 name: Android Play Store Release
 
 on:
-  # Manual trigger from Actions tab
   workflow_dispatch:
 
-  # Trigger on pushes to main
   push:
     branches:
       - main
 
 jobs:
   build-and-deploy:
-    # Run if:
-    # 1. Triggered manually OR
-    # 2. Push to main contains 'bundle-deploy' in commit message
     if: |
       github.event_name == 'workflow_dispatch' ||
       contains(github.event.head_commit.message, 'bundle-deploy')
@@ -23,33 +18,40 @@ jobs:
     permissions:
       contents: read
 
+    env:
+      CI: true
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache Yarn Berry
-        uses: actions/cache@v4
-        with:
-          path: |
-            .yarn/cache
-            .yarn/install-state.gz
-          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      # Setup Node + cache Yarn dependencies
+      # Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "yarn"
 
-      - name: Debug Yarn config
+      # Cache Yarn Berry
+      - name: Cache Yarn Berry
+        uses: actions/cache@v4
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+            node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # Debug (optional)
+      - name: Debug Yarn Config
         run: |
           yarn -v
           cat .yarnrc.yml || true
           ls -la patches || true
 
+      # Install dependencies
       - name: Install dependencies
         run: yarn install --immutable
 
@@ -60,15 +62,18 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      # Setup Gradle cache + configuration cache
+      # Setup Gradle with cache
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
 
       # Decode Android Keystore
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
-      
+
+      # Create keystore.properties
       - name: Create keystore.properties
         run: |
           cat > android/keystore.properties <<EOF
@@ -77,10 +82,19 @@ jobs:
           MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
-          
+
+      # Create google-services.json
       - name: Create google-services.json
         run: |
           echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
+
+      # Verify generated files (optional)
+      - name: Verify files
+        run: |
+          ls -la android
+          ls -la android/app
+          test -f android/app/release.keystore
+          test -f android/app/google-services.json
 
       # Build Signed AAB
       - name: Build Release AAB
@@ -91,11 +105,15 @@ jobs:
 
           ./gradlew bundleRelease \
             -PhermesEnabled=true \
+            -PVERSION_CODE=$VERSION_CODE \
+            --parallel \
             --build-cache \
             --configuration-cache \
-            -PVERSION_CODE=$VERSION_CODE
+            --daemon \
+            -x test \
+            -x lint
 
-      # Upload AAB as artifact
+      # Upload generated AAB as artifact
       - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -109,5 +127,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}
           packageName: com.rupeeflow
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: production
+          tracks: production
           status: completed
