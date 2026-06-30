@@ -51,7 +51,7 @@ jobs:
           cache: yarn
 
       ######################################################################
-      # Cache Yarn Berry
+      # Yarn Cache
       ######################################################################
       - name: Cache Yarn Berry
         uses: actions/cache@v4
@@ -64,13 +64,38 @@ jobs:
             ${{ runner.os }}-yarn-
 
       ######################################################################
+      # node_modules Cache
+      ######################################################################
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      ######################################################################
+      # Metro Cache
+      ######################################################################
+      - name: Cache Metro
+        uses: actions/cache@v4
+        with:
+          path: |
+            .metro-cache
+            /tmp/metro-*
+          key: ${{ runner.os }}-metro-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-metro-
+
+      ######################################################################
       # Install Dependencies
       ######################################################################
       - name: Install dependencies
         run: yarn install --immutable
 
       ######################################################################
-      # Setup Java
+      # Java
       ######################################################################
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -79,20 +104,7 @@ jobs:
           java-version: "17"
 
       ######################################################################
-      # Cache Android SDK (reuse existing cache)
-      ######################################################################
-      - name: Cache Android SDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            /usr/local/lib/android/sdk/cmake
-            /usr/local/lib/android/sdk/ndk
-          key: ${{ runner.os }}-android-sdk-${{ hashFiles('android/build.gradle', 'android/app/build.gradle', 'android/gradle.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-android-sdk-
-
-      ######################################################################
-      # Cache Native Build Artifacts (reuse existing cache)
+      # Native C++ Cache
       ######################################################################
       - name: Cache Native Build Artifacts
         uses: actions/cache@v4
@@ -100,56 +112,66 @@ jobs:
           path: |
             android/.cxx
             android/app/.cxx
+            node_modules/**/android/.cxx
           key: ${{ runner.os }}-cxx-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties', 'yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-cxx-
+
+      ######################################################################
+      # Gradle Build Output Cache
+      ######################################################################
+      - name: Cache Gradle Build Outputs
+        uses: actions/cache@v4
+        with:
+          path: |
+            android/build
+            android/app/build
+          key: ${{ runner.os }}-gradle-build-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties', 'yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-build-
 
       ######################################################################
       # Setup Gradle
       ######################################################################
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+          gradle-home-cache-cleanup: true
 
       ######################################################################
-      # Decode Android Keystore
+      # Signing Files
       ######################################################################
       - name: Decode Android Keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" \
             | base64 --decode > android/app/release.keystore
 
-      ######################################################################
-      # Create keystore.properties
-      ######################################################################
       - name: Create keystore.properties
         run: |
           cat > android/keystore.properties <<EOF
-          MYAPP_UPLOAD_STORE_FILE=release.keystore
-          MYAPP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
-          MYAPP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
-          MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
+          RUPEEFLOW_APP_UPLOAD_STORE_FILE=release.keystore
+          RUPEEFLOW_APP_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}
+          RUPEEFLOW_APP_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}
+          RUPEEFLOW_APP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
 
-      ######################################################################
-      # Create google-services.json
-      ######################################################################
       - name: Create google-services.json
         run: |
           echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" \
             | base64 --decode > android/app/google-services.json
 
       ######################################################################
-      # Generate Version Code
+      # Version Code
       ######################################################################
       - name: Generate Version Code
         id: version
         run: |
           VERSION_CODE=$(date +%s)
           echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
-          echo "Generated Version Code: $VERSION_CODE"
 
       ######################################################################
-      # Build Release AAB
+      # Build AAB
       ######################################################################
       - name: Build Release AAB
         run: |
@@ -163,11 +185,21 @@ jobs:
             --configuration-cache \
             --configuration-cache-problems=warn \
             --daemon \
+            --profile \
             -x test \
             -x lint
 
       ######################################################################
-      # Upload Build Artifact
+      # Upload Gradle Profile
+      ######################################################################
+      - name: Upload Gradle Profile
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-profile
+          path: android/build/reports/profile/
+
+      ######################################################################
+      # Upload AAB
       ######################################################################
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
@@ -204,7 +236,7 @@ jobs:
           path: artifact
 
       ######################################################################
-      # Setup Ruby
+      # Ruby
       ######################################################################
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -215,7 +247,7 @@ jobs:
         run: gem install fastlane
 
       ######################################################################
-      # Create Service Account JSON
+      # Play Service Account
       ######################################################################
       - name: Create Play Service Account JSON
         run: |

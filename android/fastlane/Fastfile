@@ -1,0 +1,14 @@
+# android/fastlane/Fastfile
+
+default_platform(:android)
+
+platform :android do
+  lane :upload do
+    upload_to_play_store(
+      track: 'internal',
+      json_key: 'play-service-account.json',
+      package_name: 'com.rupeeflow',
+      aab: './app/build/outputs/bundle/release/app-release.aab'
+    )
+  end
+end
