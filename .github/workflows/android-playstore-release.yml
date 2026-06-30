@@ -48,7 +48,7 @@ jobs:
           cache: yarn
 
       ######################################################################
-      # Yarn Cache
+      # Cache Yarn Berry
       ######################################################################
       - name: Cache Yarn Berry
         uses: actions/cache@v4
@@ -67,7 +67,7 @@ jobs:
         run: yarn install --immutable
 
       ######################################################################
-      # Java Setup
+      # Setup Java
       ######################################################################
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -84,18 +84,12 @@ jobs:
           path: |
             /usr/local/lib/android/sdk/cmake
             /usr/local/lib/android/sdk/ndk
-          key: >
-            ${{ runner.os }}-android-sdk-${{
-            hashFiles(
-            'android/build.gradle',
-            'android/app/build.gradle',
-            'android/gradle.properties'
-            ) }}
+          key: ${{ runner.os }}-android-sdk-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-android-sdk-
 
       ######################################################################
-      # Cache Native C++ Build Outputs
+      # Cache Native Build Artifacts
       ######################################################################
       - name: Cache Native Build Artifacts
         uses: actions/cache@v4
@@ -103,35 +97,23 @@ jobs:
           path: |
             android/.cxx
             android/app/.cxx
-          key: >
-            ${{ runner.os }}-cxx-${{
-            hashFiles(
-            'android/**/*.gradle*',
-            'android/gradle.properties',
-            'yarn.lock'
-            ) }}
+          key: ${{ runner.os }}-cxx-${{ hashFiles('android/**/*.gradle*', 'android/gradle.properties', 'yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-cxx-
 
       ######################################################################
-      # Gradle Setup + Cache
+      # Setup Gradle
       ######################################################################
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: false
 
       ######################################################################
-      # Decode Android Keystore
+      # Create Android signing files
       ######################################################################
       - name: Decode Android Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" \
-            | base64 --decode > android/app/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
 
-      ######################################################################
-      # Create keystore.properties
-      ######################################################################
       - name: Create keystore.properties
         run: |
           cat > android/keystore.properties <<EOF
@@ -141,36 +123,30 @@ jobs:
           MYAPP_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}
           EOF
 
-      ######################################################################
-      # Firebase google-services.json
-      ######################################################################
       - name: Create google-services.json
         run: |
-          echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" \
-            | base64 --decode > android/app/google-services.json
+          echo "${{ secrets.ANDROID_GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       ######################################################################
-      # Verify Required Files
+      # Generate unique Version Code
       ######################################################################
-      - name: Verify generated files
+      - name: Generate Version Code
+        id: version
         run: |
-          ls -la android
-          ls -la android/app
-          test -f android/app/release.keystore
-          test -f android/app/google-services.json
+          VERSION_CODE=$(date +%s)
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "Generated Version Code: $VERSION_CODE"
 
       ######################################################################
       # Build Release AAB
       ######################################################################
       - name: Build Release AAB
         run: |
-          VERSION_CODE=$((GITHUB_RUN_NUMBER * 100 + GITHUB_RUN_ATTEMPT))
-
           cd android
 
           ./gradlew bundleRelease \
             -PhermesEnabled=true \
-            -PVERSION_CODE=$VERSION_CODE \
+            -PVERSION_CODE=${{ env.VERSION_CODE }} \
             --parallel \
             --build-cache \
             --configuration-cache \
@@ -180,17 +156,17 @@ jobs:
             -x lint
 
       ######################################################################
-      # Upload Artifact
+      # Upload AAB Artifact
       ######################################################################
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
+          name: app-release-aab-${{ env.VERSION_CODE }}
           path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 7
 
       ######################################################################
-      # Ruby + Fastlane
+      # Setup Ruby
       ######################################################################
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -198,6 +174,9 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      ######################################################################
+      # Install Fastlane
+      ######################################################################
       - name: Install Fastlane
         run: gem install fastlane
 
@@ -206,8 +185,7 @@ jobs:
       ######################################################################
       - name: Create Play Service Account JSON
         run: |
-          echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}' \
-            > play-service-account.json
+          echo '${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}' > play-service-account.json
 
       ######################################################################
       # Upload to Google Play
@@ -220,11 +198,14 @@ jobs:
             TRACK="internal"
           fi
 
+          echo "Uploading to track: $TRACK"
+
           fastlane supply \
             --aab android/app/build/outputs/bundle/release/app-release.aab \
             --json_key play-service-account.json \
             --package_name com.rupeeflow \
             --track "$TRACK" \
+            --release_status completed \
             --skip_upload_metadata true \
             --skip_upload_images true \
             --skip_upload_screenshots true \
@@ -238,4 +219,4 @@ jobs:
         run: |
           rm -f android/app/release.keystore
           rm -f android/keystore.properties
-          rm -f play-service-account.json
+          rm -f play-service-account.json 
